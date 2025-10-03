@@ -1,0 +1,41 @@
+<nav class="p-3 flex space-x-3 justify-center space-x-9">
+    <a href="/admin"
+       class="px-4 py-2 border-[1.5px] rounded-lg shadow text-xl text-center
+       <%= activePage === 'payment' 
+            ? 'bg-[#A5848F] border-[#7D5865] text-white' 
+            : 'bg-[#F1EEE9] bg-opacity-30 border-[#7D5865] text-[#A5848F] hover:bg-[#A5848F] hover:text-white' %>">
+       ระบบจัดการชำระเงิน
+    </a>
+
+    <a href="/admin/manage-employee"
+       class="px-4 py-2 border-[1.5px] rounded-lg shadow text-xl text-center
+       <%= activePage === 'employee' 
+            ? 'bg-[#A5848F] border-[#7D5865] text-white' 
+            : 'bg-[#F1EEE9] bg-opacity-30 border-[#7D5865] text-[#A5848F] hover:bg-[#A5848F] hover:text-white' %>">
+       ระบบบริหารพนักงาน
+    </a>
+
+    <a href="/admin/manage-service"
+       class="px-4 py-2 border-[1.5px] rounded-lg shadow text-xl text-center
+       <%= activePage === 'service' 
+            ? 'bg-[#A5848F] border-[#7D5865] text-white' 
+            : 'bg-[#F1EEE9] bg-opacity-30 border-[#7D5865] text-[#A5848F] hover:bg-[#A5848F] hover:text-white' %>">
+       ระบบจัดการบริการ
+    </a>
+
+    <a href="/admin/manage-customer"
+       class="px-4 py-2 border-[1.5px] rounded-lg shadow text-xl text-center
+       <%= activePage === 'customer' 
+            ? 'bg-[#A5848F] border-[#7D5865] text-white' 
+            : 'bg-[#F1EEE9] bg-opacity-30 border-[#7D5865] text-[#A5848F] hover:bg-[#A5848F] hover:text-white' %>">
+       ระบบจัดการลูกค้า
+    </a>
+
+    <a href="/admin/manage-stock"
+       class="px-4 py-2 border-[1.5px] rounded-lg shadow text-xl text-center
+       <%= activePage === 'stock' 
+            ? 'bg-[#A5848F] border-[#7D5865] text-white' 
+            : 'bg-[#F1EEE9] bg-opacity-30 border-[#7D5865] text-[#A5848F] hover:bg-[#A5848F] hover:text-white' %>">
+       ระบบจัดการสต็อก
+    </a>
+</nav>

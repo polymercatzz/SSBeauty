@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>SSBeauty - admin ระบบจัดการสต็อก</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-gradient-to-r from-[#DBB3C1] to-[#F2F1EB] min-h-screen  m-5">
+    <!-- Header -->
+    <div class="flex items-center justify-between bg-gray-100 p-4 mt-8 shadow  rounded-lg bg-gradient-to-r from-[#B4919D] to-[#616162]">
+        <div class="flex items-center space-x-2">
+            <img src="" alt="logo" class="rounded-full">
+            <span class="text-xl font-bold ">SSBeauty</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <!-- เหลือใส่กดเชื่อม -->
+            <button  class="bg-white bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">หน้าหลัก</button>
+            <button class="hover:bg-white hover:bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">สถิติ</button>
+            <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer hover:bg-pink-50"></div>
+
+            
+        </div>
+    </div>
+    <!-- <nav class=" p-3 flex space-x-3 justify-center space-x-9">
+        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการชำระเงิน</button>
+        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบบริหารพนักงาน</button>
+        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 vhover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการบริการ</button>
+        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการลูกค้า</button>
+        <button class="px-4 py-2 bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-white">ระบบจัดการสต็อก</button>
+    </nav> -->
+    <%- include('nav_main_admin', { activePage: 'stock' }) %>
+    <!-- Filter เหลือทำให้filter-->
+    <div id="filter1" class="flex mt-4 w-80 border rounded-lg bg-white p-4 bg-opacity-60">
+        <div>
+            <p class="text-gray-500">ค้นหาสินค้า</p>
+            <input type="text" value="" class="w-40 border rounded-lg px-3 py-1">
+        </div>
+        <div class="pt-6 mx-3">
+            <button class="bg-pink-400 hover:bg-pink-500 text-white px-4 rounded-lg h-8">ค้นหา</button>
+        </div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-4 px-7 cursor-pointer " >
+        <!-- ทำให้มีหลายๆอัน -->
+        <div onclick="openPopup()">
+            <div class="bg-white bg-opacity-60 p-4 rounded shadow text-[#A5848F]">
+                <div class="text-center">
+                    <img src="/img/product1.png" alt="Product" class="mx-auto rounded-lg h-40">
+                    <p>ชื่อผลิตภัณฑ์ :แชมพู</p>
+                </div>
+                <p>ราคา : 150 บาท</p>
+            <div class="flex space-x-2">
+                <p class="">จำนวนคงเหลือ</p>
+                <p class="bg-[#A5848F] px-2 text-sm rounded-lg text-white mt-1">20</p>
+            </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="popup" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center">
+        <div class="h-10 bg-gray-100"></div>
+        <div class="bg-[#F2F1EB] rounded-xl shadow-lg w-[auto] p-6 relative">
+            <!-- ปุ่มปิด -->
+            <button class="absolute top-3 right-3 text-gray-500 hover:text-red-500" onclick="closePopup()">✖</button>
+      
+            <div class="flex">
+                        <label class="block text-gray-600 p-1 font-bold">โปรไฟล์:</label>
+                        <input type="file" id="profile" accept="image/*" 
+                            class="file:mr-4 file:py-2 file:px-4 
+                                    file:rounded-lg file:border-0 
+                                    file:text-sm 
+                                    file:bg-[#ffffff] file:text-[#000000]
+                                    hover:file:bg-[#d6d3d1]" onchange="previewImage(event)">
+                        <img id="preview" class="w-20 h-20 ml-2 hidden" alt="Preview Image">
+                    </div>
+            <h2 class="text-l text-gray-600 py-2">ผลิตภัณฑ์</h2>
+            <input type="text" value="" class="w-40 border rounded-lg px-3 py-1">
+            <div class="space-x-10 mt-2 text-l flex">
+                <div class="">
+                    <label class="block text-gray-600 p-1">ราคา:</label>
+                    <select class="w-20 border rounded-lg px-3 py-1">
+                        <option></option>
+                    </select>
+                </div>
+                <div class="">
+                    <label class="block text-gray-600 p-1">จำนวน:</label>
+                    <input type="text" value="" class="w-20 border rounded-lg px-3 py-1">
+                </div>
+            </div>
+            <button class="mt-4 w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg">ยืนยัน</button>
+        </div>
+    </div>
+
+
+<script>
+    function openPopup() {
+        document.getElementById("popup").classList.remove("hidden");
+        document.getElementById("popup").classList.add("flex");
+    }
+    function closePopup() {
+        document.getElementById("popup").classList.add("hidden");
+    }
+    function previewImage(event) {
+        const file = event.target.files[0];
+        if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const preview = document.getElementById('preview');
+            preview.src = e.target.result;
+            preview.classList.remove('hidden');
+        }
+        reader.readAsDataURL(file);
+        }
+    }
+</script>
+
+
+</body>
+</html>

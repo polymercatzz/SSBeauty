@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>SSBeauty - admin ระบบจัดการชำระเงิน</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-gradient-to-r from-[#DBB3C1] to-[#F2F1EB] min-h-screen  m-5">
+    <!-- Header -->
+    <div class="flex items-center justify-between bg-gray-100 p-4 mt-8 shadow  rounded-lg bg-gradient-to-r from-[#B4919D] to-[#616162]">
+        <div class="flex items-center space-x-2">
+            <img src="" alt="logo" class="rounded-full">
+            <span class="text-xl font-bold ">SSBeauty</span>
+        </div>
+        <div class="flex items-center space-x-4">
+            <!-- เหลือใส่กดเชื่อม -->
+            <button  class="bg-white bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">หน้าหลัก</button>
+            <button class="hover:bg-white hover:bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">สถิติ</button>
+            <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer hover:bg-pink-50"></div>
+
+            
+        </div>
+    </div>
+    <!-- <nav class=" p-3 flex space-x-3 justify-center space-x-9">
+        <button class="px-4 py-2 bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-white">ระบบจัดการชำระเงิน</button>
+        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบบริหารพนักงาน</button>
+        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 vhover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการบริการ</button>
+        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการลูกค้า</button>
+        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการสต็อก</button>
+    </nav> -->
+    <%- include('nav_main_admin', { activePage: 'payment' }) %>
+    <div class="flex w-full space-x-2 "> <!-- ใช้ gap-4 แทน margin ซ้าย-ขวา -->
+    <!-- กล่องซ้าย -->
+    <div class="w-[500px] space-y-2 justify-center" id="box1">
+        <div class="bg-white bg-opacity-60 shadow rounded-lg p-2 flex justify-between items-center cursor-pointer hover:bg-pink-50 ">
+            <div class="">
+                <div class="flex py-2 ">
+                    <div class="text-sm text-white bg-[#ECCF7E] rounded-lg p-1 px-1 h-7">จ 20/08/2026</div>
+                    <div class="text-l text-gray-600 p-1">9.00 น</div>
+                </div>
+                <div class="flex">
+                    <div class="flex">
+                        <div class="text-l text-gray-600 p-1">รายการ : </div>
+                        <input type="text" value="" class="w-20 border rounded-lg  py-1 " readonly>
+                    </div>
+                    <div class="flex">
+                        <div class="text-l text-gray-600 p-1 ">ผู้ใช้บริการ : </div>
+                        <input type="text" value="" class=" border rounded-lg  py-1 " readonly>
+                    </div>
+                </div>
+            </div>
+            <div class="text-gray-500">edit</div>
+        </div>
+    </div>
+
+    <!-- กล่องขวา -->
+    <div class="w-[700px] h-[auto] bg-white bg-opacity-60 border-[1.5px] p-4 rounded-lg border-[#7D5865]" id="rightPanel" style="display: none;">
+        <div id="contentDisplay"></div>
+    </div>
+</div>
+
+
+<script>
+    const boxes = document.querySelectorAll('#box1'); // ถ้ามีหลายกล่องก็เพิ่ม #box2, #box3,...
+    const rightPanel = document.getElementById('rightPanel');
+    const contentDisplay = document.getElementById('contentDisplay');
+
+    boxes.forEach(box => {
+        box.addEventListener('click', () => {
+            rightPanel.style.display = 'block'; // แสดงกล่องขวา
+            contentDisplay.innerHTML = `
+                <div class="bg-white p-6 rounded-lg shadow-md text-gray-800">
+                    <h2 class="text-2xl text-center mb-4">ใบเสร็จ</h2>
+                    <div class="border-b pb-2 mb-2">
+                        <p><span class="">ร้าน:</span> SSBeauty</p>
+                        <p><span class="">วันที่:</span> 20/08/2026</p>
+                        <p><span class="">เวลา:</span> 09:00 น.</p>
+                    </div>
+                    
+                    <table class="w-full text-left mb-4">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="py-2">รายการ</th>
+                                <th class="py-2 text-right">ราคา (บาท)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-2">นวดหน้า</td>
+                                <td class="py-2 text-right">500</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">ทำเล็บ</td>
+                                <td class="py-2 text-right">300</td>
+                            </tr>
+                            <tr>
+                                <td class="py-2">รวมทั้งหมด</td>
+                                <td class="py-2 text-right ">800</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <div class="text-center mt-4">
+                        <p class="text-sm">ขอบคุณที่ใช้บริการ</p>
+                    </div>
+                </div>
+            `;
+        });
+    });
+</script>
+
+</body>
+</html>

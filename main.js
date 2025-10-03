@@ -1,6 +1,7 @@
 const express = require("express");
 
 const userRoutes = require("./routes/userRoute"); // import routes user
+const adminRoutes = require("./routes/adminRoute"); // import routes admin
 
 const path = require("path");
 
@@ -19,7 +20,8 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-app.use("/users", userRoutes);
+app.use("/user", userRoutes);
+app.use("/admin", adminRoutes);
 
 // Main route
 app.get("/", (req, res) => {
@@ -34,5 +36,5 @@ app.post("/logout", (req, res) => {
     res.send('logout SSbeauty');
 })
 app.listen(port, () =>{
-    console.log("The server was running on : http://localhost:3000");
+    console.log(`The server was running on : http://localhost:${port}`);
 })
