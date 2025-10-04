@@ -1,7 +1,11 @@
+require('dotenv').config();
+
 const express = require("express");
 
 const userRoutes = require("./routes/userRoute"); // import routes user
 const adminRoutes = require("./routes/adminRoute"); // import routes admin
+
+const { sequelize } = require('./models');  // ดึง instance sequelize
 
 const path = require("path");
 
@@ -35,6 +39,11 @@ app.get("/login", (req, res) => {
 app.post("/logout", (req, res) => {
     res.send('logout SSbeauty');
 })
-app.listen(port, () =>{
-    console.log(`The server was running on : http://localhost:${port}`);
-})
+
+
+sequelize.sync({ alter: true })
+  .then(() => {
+    console.log("Database synced");
+    app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+  })
+  .catch(err => console.error("DB Error:", err));

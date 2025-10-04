@@ -32,45 +32,42 @@
     <%- include('nav_main_admin', { activePage: 'payment' }) %>
     <div class="flex w-full space-x-2 "> <!-- ใช้ gap-4 แทน margin ซ้าย-ขวา -->
     <!-- กล่องซ้าย -->
+    <% appointments.forEach(a => { %>
     <div class="w-[500px] space-y-2 justify-center" id="box1">
         <div class="bg-white bg-opacity-60 shadow rounded-lg p-2 flex justify-between items-center cursor-pointer hover:bg-pink-50 ">
-            <div class="">
-                <div class="flex py-2 ">
-                    <div class="text-sm text-white bg-[#ECCF7E] rounded-lg p-1 px-1 h-7">จ 20/08/2026</div>
-                    <div class="text-l text-gray-600 p-1">9.00 น</div>
-                </div>
-                <div class="flex">
-                    <div class="flex">
-                        <div class="text-l text-gray-600 p-1">รายการ : </div>
-                        <input type="text" value="" class="w-20 border rounded-lg  py-1 " readonly>
-                    </div>
-                    <div class="flex">
-                        <div class="text-l text-gray-600 p-1 ">ผู้ใช้บริการ : </div>
-                        <input type="text" value="" class=" border rounded-lg  py-1 " readonly>
-                    </div>
-                </div>
+        <div class="">
+            <div class="flex py-2">
+            <!-- วันที่และเวลา -->
+            <div class="text-sm text-white bg-[#ECCF7E] rounded-lg p-1 px-1 h-7">
+                <%= new Date(a.appointment_date).toLocaleDateString('th-TH') %>
             </div>
-            <div class="text-gray-500">edit</div>
+            <div class="text-l text-gray-600 p-1">
+                <%= new Date(a.appointment_date).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) %> น
+            </div>
+            </div>
+
+            <div class="flex">
+            <div class="flex">
+                <div class="text-l text-gray-600 p-1">รายการ : </div>
+                <input type="text" value="<%= a.Service ? a.Service.name : '' %>" class="w-20 border rounded-lg py-1" readonly>
+            </div>
+
+            <div class="flex">
+                <div class="text-l text-gray-600 p-1">ผู้ใช้บริการ : </div>
+                <input type="text" value="<%= a.User ? a.User.username : '' %>" class="border rounded-lg py-1" readonly>
+            </div>
+            </div>
+        </div>
+        <div class="text-gray-500">edit</div>
         </div>
     </div>
+    <% }) %>
+
 
     <!-- กล่องขวา -->
     <div class="w-[700px] h-[auto] bg-white bg-opacity-60 border-[1.5px] p-4 rounded-lg border-[#7D5865]" id="rightPanel" style="display: none;">
-        <div id="contentDisplay"></div>
-    </div>
-</div>
-
-
-<script>
-    const boxes = document.querySelectorAll('#box1'); // ถ้ามีหลายกล่องก็เพิ่ม #box2, #box3,...
-    const rightPanel = document.getElementById('rightPanel');
-    const contentDisplay = document.getElementById('contentDisplay');
-
-    boxes.forEach(box => {
-        box.addEventListener('click', () => {
-            rightPanel.style.display = 'block'; // แสดงกล่องขวา
-            contentDisplay.innerHTML = `
-                <div class="bg-white p-6 rounded-lg shadow-md text-gray-800">
+        <div id="contentDisplay">
+            <div class="bg-white p-6 rounded-lg shadow-md text-gray-800">
                     <h2 class="text-2xl text-center mb-4">ใบเสร็จ</h2>
                     <div class="border-b pb-2 mb-2">
                         <p><span class="">ร้าน:</span> SSBeauty</p>
@@ -105,7 +102,18 @@
                         <p class="text-sm">ขอบคุณที่ใช้บริการ</p>
                     </div>
                 </div>
-            `;
+        </div>
+    </div>
+</div>
+
+
+<script>
+    const boxes = document.querySelectorAll('#box1'); // ถ้ามีหลายกล่องก็เพิ่ม #box2, #box3,...
+    const rightPanel = document.getElementById('rightPanel');
+
+    boxes.forEach(box => {
+        box.addEventListener('click', () => {
+            rightPanel.style.display = 'block'; // แสดงกล่องขวา
         });
     });
 </script>
