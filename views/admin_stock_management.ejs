@@ -34,15 +34,15 @@
     <div id="filter1" class="flex mt-4 w-80 border rounded-lg bg-white p-4 bg-opacity-60">
         <div>
             <p class="text-gray-500">ค้นหาสินค้า</p>
-            <input type="text" value="" class="w-40 border rounded-lg px-3 py-1">
+            <input type="text" id="search-input" class="w-40 border rounded-lg px-3 py-1">
         </div>
         <div class="pt-6 mx-3">
-            <button class="bg-pink-400 hover:bg-pink-500 text-white px-4 rounded-lg h-8">ค้นหา</button>
+            <button id="search-btn" class="bg-pink-400 hover:bg-pink-500 text-white px-4 rounded-lg h-8">ค้นหา</button>
         </div>
     </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-4 px-7 cursor-pointer " >
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-4 px-7 cursor-pointer " id="product-grid">
         <!-- ทำให้มีหลายๆอัน -->
-        <div onclick="openPopup()">
+        <div onclick="openPopup()" class="product-item">
             <div class="bg-white bg-opacity-60 p-4 rounded shadow text-[#A5848F]">
                 <div class="text-center">
                     <img src="/img/product1.png" alt="Product" class="mx-auto rounded-lg h-40">
@@ -113,6 +113,22 @@
         reader.readAsDataURL(file);
         }
     }
+    //filter
+    const searchBtn = document.getElementById("search-btn");
+    const searchInput = document.getElementById("search-input");
+    const products = document.querySelectorAll(".product-item");
+
+    searchBtn.addEventListener("click", () => {
+        const searchText = searchInput.value.toLowerCase();
+        products.forEach(product => {
+            const name = product.querySelector(".product-name").textContent.toLowerCase();
+            if(!searchText || name.includes(searchText)) {
+                product.style.display = "block";
+            } else {
+                product.style.display = "none";
+            }
+        });
+    });
 </script>
 
 

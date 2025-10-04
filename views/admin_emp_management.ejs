@@ -35,7 +35,7 @@
         <div id="filter1" class="flex mt-4 w-[380px] border rounded-lg bg-white p-4 bg-opacity-60">
             <div>
                 <p class="text-gray-500">ค้นหาพนักงาน</p>
-                <input type="text" value="" class="w-[250px] border rounded-lg px-3 py-1">
+                <input type="text" id="search-input" value="" class="w-[250px] border rounded-lg px-3 py-1">
             </div>
             <div class="pt-6 mx-3">
                 <button class="bg-pink-400 hover:bg-pink-500 text-white px-4 rounded-lg h-8">ค้นหา</button>
@@ -48,17 +48,19 @@
     
     <div class="flex w-full space-x-2 ">
     <!-- กล่องซ้าย -->
-    <div class="w-[450px] space-y-2 justify-center pt-4 " id="box1">
-        <div class="bg-white bg-opacity-60 shadow rounded-lg p-2 flex justify-between items-center cursor-pointer hover:bg-white border-[1.5px] border-[#A5848F]">
-            <div class="">
-                <div class="flex space-x-4">
-                    <div class="flex">
-                        <div class="text-l text-gray-600 p-1">ชื่อ : </div>
-                        <input type="text" value="" class="w-[220px] border rounded-lg  py-1 " readonly>
-                    </div>
-                    <div class="flex">
-                        <div class="text-l text-gray-600 p-1 ">ชื่อเล่น : </div>
-                        <input type="text" value="" class="w-20 border rounded-lg  py-1 " readonly>
+    <div class="space-y-4">    
+        <div class="w-[450px] space-y-2 justify-center pt-4 employee-item" id="box1">
+            <div class="bg-white bg-opacity-60 shadow rounded-lg p-2 flex justify-between items-center cursor-pointer hover:bg-white border-[1.5px] border-[#A5848F]">
+                <div class="">
+                    <div class="flex space-x-4">
+                        <div class="flex">
+                            <div class="text-l text-gray-600 p-1">ชื่อ : </div>
+                            <input type="text" value="" class="w-[220px] border rounded-lg  py-1 " readonly>
+                        </div>
+                        <div class="flex">
+                            <div class="text-l text-gray-600 p-1 ">ชื่อเล่น : </div>
+                            <input type="text" value="" class="w-20 border rounded-lg  py-1 " readonly>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -73,6 +75,7 @@
 <div>
 
 </div>
+
 
 
 <script>
@@ -128,6 +131,24 @@
             `;
         });
     });
+    //filter
+    const searchBtn = document.getElementById("search-btn");
+    const searchInput = document.getElementById("search-input");
+    const employees = document.querySelectorAll(".employee-item");
+
+    searchBtn.addEventListener("click", () => {
+        const searchText = searchInput.value.toLowerCase().trim();
+
+        employees.forEach(employee => {
+            const name = employee.querySelector(".employee-name").value.toLowerCase();
+            if (!searchText || name.includes(searchText)) {
+                employee.style.display = "block";
+            } else {
+                employee.style.display = "none";
+            }
+        });
+    });
+
 </script>
 
 
