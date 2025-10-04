@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History</title>
+  <!-- <link rel="stylesheet" href="./dist/output.css" /> -->
+   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kapakana:wght@300..400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- font -->
+  <!-- manu -->
+  <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+  <!-- arrow -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+</head>
+
+<body class="bg-gradient-to-t from-[#F2F1EB] to-[#DBB3C1] min-h-screen  m-5">
+
+  <!-- Header -->
+  <div
+    class="flex items-center justify-between bg-gray-100 p-4 mt-8 shadow  rounded-lg bg-gradient-to-r from-[#B4919D] to-[#616162]">
+    <div class="flex items-center space-x-2">
+      <img src="curl.png" alt="logo" class="w-[5vh] m-2">
+      <span class="text-xl font-bold ">SSBeauty</span>
+    </div>
+    <div class="flex items-center space-x-4">
+      <!-- เหลือใส่กดเชื่อม -->
+      <button class="hover:bg-white hover:bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">หน้าหลัก</button>
+      <button class="bg-white bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">สถิติ</button>
+      <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer hover:bg-pink-50">
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  mt-10 gap-10 ">
+    <div id="summery" class="">
+      <div class="bg-[#A5848F] rounded-xl text-center text-white p-4 pt-3">
+        <p class="pb-2">จำนวนผู้ใช้บริการวันนี้</p>
+        <p class="bg-[#FFFFFF] bg-opacity-20 rounded-xl p-3">100 คน</p>
+      </div>
+    </div>
+    <div id="summery" class="">
+      <div class="bg-[#A5848F] rounded-xl text-center text-white pt-3 p-4">
+        <p class="pb-2">รายได้วันนี้</p>
+        <p class="bg-[#FFFFFF] bg-opacity-20 rounded-xl p-3">2000 บาท</p>
+      </div>
+    </div>
+    <div id="summery" class="">
+      <div class="bg-[#A5848F] rounded-xl text-center text-white pt-3 p-4">
+        <p class="pb-2">รายได้เดือนนี้</p>
+        <p class="bg-[#FFFFFF] bg-opacity-20 rounded-xl p-3">2000 บาท</p>
+      </div>
+    </div>
+    <div id="summery" class="">
+      <div class="bg-[#A5848F] rounded-xl text-center text-white pt-3 p-4">
+        <p class="pb-2">กำไรสุทธิ</p>
+        <p class="bg-[#FFFFFF] bg-opacity-20 rounded-xl p-3">2000 บาท</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts grid grid-cols-2 gap-6 p-4 mt-4">
+    <div
+      class="charts-card bg-white mb-5 p-[25px] box-border break-inside-avoid border border-[#d2d2d3] rounded-[16px] shadow-lg ">
+      <p class="chart-title flex items-center justify-center text-[2vh]">ยอดขายรายวัน(เดือนเมษายน)</p>
+      <div id="bar-chart"></div>
+    </div>
+
+    <div>
+      <div
+        class="charts-card bg-white mb-5 p-[25px] box-border break-inside-avoid border border-[#d2d2d3] rounded-[16px] shadow-lg">
+        <p class="chart-title flex items-center justify-center text-[2vh]">
+          รายได้รายเดือนย้อนหลัง</p>
+        <div id="area-chart"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex p-4 max-w-[97%]">
+    <div
+    class="charts-card bg-white mb-5 box-border break-inside-avoid border border-[#d2d2d3] rounded-[16px] shadow-lg w-fit p-4 ">
+    <p class="chart-title flex items-center justify-center text-[2vh]">ยอดขายรายวัน(เดือนเมษายน)</p>
+    <div id="bar-chart2"></div>
+  </div>
+  <div>
+    <div class="p-6   h-full w-[52vh]">
+  <h2 class="text-xl font-bold mb-4">ตารางสินค้า (สต็อก)</h2>
+  
+  <table class=" bg-white w-full border-collapse border border-gray-300 text-center rounded-xl">
+    <thead class="bg-gray-100">
+      <tr >
+        <th class="border border-gray-300 px-4 py-2">ลำดับ</th>
+        <th class="border border-gray-300 px-4 py-2">ชื่อสินค้า</th>
+        <th class="border border-gray-300 px-4 py-2">สถานะ</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="border border-gray-300 px-4 py-2">1</td>
+        <td class="border border-gray-300 px-4 py-2">ครีมบำรุงผิว</td>
+        <td class="border border-gray-300 px-4 py-2 text-red-500 font-semibold">หมดสต็อก</td>
+      </tr>
+      <tr>
+        <td class="border border-gray-300 px-4 py-2">2</td>
+        <td class="border border-gray-300 px-4 py-2">แชมพู</td>
+        <td class="border border-gray-300 px-4 py-2 text-yellow-500 font-semibold">ใกล้หมด</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+  </div>
+  </div>
+
+
+
+  <!-- apexchart -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.7.0/apexcharts.min.js"></script>
+
+  <script>
+    //กราฟแท่ง
+    const barChartOptions = {
+      series: [
+        {
+          name: '',
+          data: [0, 4000, 8000, 20000, 9000, 55000, 10000],
+        },
+      ],
+      chart: {
+        type: 'bar',
+        height: 350,
+        toolbar: {
+          show: false,
+        },
+      },
+      colors: ['#246dec'],
+      plotOptions: {
+        bar: {
+          distributed: false,
+          borderRadius: 4,
+          horizontal: false,
+          columnWidth: '50%',
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      legend: {
+        show: false,
+      },
+      xaxis: {
+        categories: ['วันที่ 1', 'วันที่ 2', 'วันที่ 3', 'วันที่ 4', 'วันที่ 5', 'วันที่ 6', 'วันที่ 7'],
+      },
+      yaxis: {
+        title: {
+          text: 'รายได้',
+        },
+      },
+      tooltip: {
+        y: {
+          formatter: function (val, opts) {
+            const label = opts.w.globals.labels[opts.dataPointIndex];
+            return `ใช้เวลา ${val} นาที`;
+          },
+        },
+      },
+    };
+
+    const barChart = new ApexCharts(
+      document.querySelector('#bar-chart'),
+      barChartOptions
+    );
+    barChart.render();
+
+
+
+    //กราฟเส้น
+    const areaChartOptions = {
+      series: [
+        {
+          name: 'รายได้',
+          data: [12000, 18000, 25000, 40000, 30000, 22000, 15000, 20000, 60000],
+        },
+      ],
+      chart: {
+        height: 350,
+        type: 'area',
+        toolbar: {
+          show: false,
+        },
+      },
+      colors: ['#38bdf8'],
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        curve: 'smooth',
+      },
+      labels: ['มค', 'กพ', 'มีค', 'เมย', 'พค', 'มิย', 'กค', 'สค', 'กย'],
+
+      markers: {
+        size: 0,
+      },
+      yaxis: [
+        {
+          title: {
+            text: 'รายได้่',
+          },
+        },
+
+      ],
+      xaxis: {
+        title: {
+          text: '12 เดือนล่าสุด',
+        },
+      },
+
+      tooltip: {
+        shared: true,
+        intersect: false,
+      },
+    };
+
+    const areaChart = new ApexCharts(
+      document.querySelector('#area-chart'),
+      areaChartOptions
+    );
+    areaChart.render();
+
+
+
+    const barChartOptions2 = {
+      series: [
+        {
+          name: 'รายได้ (฿)',
+          data: [150000, 180000, 170000, 200000, 210000, 220000],
+        },
+        {
+          name: 'ต้นทุน (฿)',
+          data: [70000, 85000, 80000, 95000, 100000, 110000],
+        },
+        {
+          name: 'กำไรสุทธิ (฿)',
+          data: [80000, 95000, 90000, 105000, 110000, 110000],
+        },
+      ],
+      chart: {
+        type: 'bar',
+        height: 400,
+        width: 900,
+        toolbar: {
+          show: false,
+        },
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '50%',
+          borderRadius: 6,
+        },
+      },
+      colors: ['#4A90E2', '#E57373', '#81C784'], // น้ำเงิน แดง เขียว
+      dataLabels: {
+        enabled: false,
+      },
+      stroke: {
+        show: true,
+        width: 2,
+        colors: ['transparent'],
+      },
+      xaxis: {
+        categories: ['เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.'],
+      },
+      yaxis: {
+        title: {
+          text: 'จำนวนเงิน (฿)',
+        },
+      },
+      fill: {
+        opacity: 1,
+      },
+      tooltip: {
+        y: {
+          formatter: function (val) {
+            return val.toLocaleString() + " ฿";
+          },
+        },
+      },
+      legend: {
+        position: 'top',
+        horizontalAlign: 'center',
+      },
+    };
+
+    const barChart2 = new ApexCharts(
+      document.querySelector('#bar-chart2'),
+      barChartOptions2
+    );
+    barChart2.render();
+
+  </script>
+</body>
+
+</html>
