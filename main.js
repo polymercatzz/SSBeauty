@@ -20,6 +20,7 @@ app.use(express.json());
 
 // Set EJS
 app.set('view engine', 'ejs');
+
 // Set public directory
 app.use(express.static(path.join(__dirname, 'public')));
 

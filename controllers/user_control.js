@@ -2,7 +2,7 @@ const { use } = require("../routes/userRoute");
 
 const showMainUser = (req, res) => {
     const username = req.params.username;
-    res.send(`Hello, ${username}! Welcome to your user page.`);
+    res.render("user_home", { username: username });
 }
 
 module.exports = { showMainUser };

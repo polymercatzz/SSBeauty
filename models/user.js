@@ -7,11 +7,17 @@ module.exports = (sequelize) => {
     first_name: { type: DataTypes.STRING(255), allowNull: false },
     last_name: { type: DataTypes.STRING(255), allowNull: false },
     password: { type: DataTypes.STRING(255), allowNull: false },
-    email: { type: DataTypes.STRING(255), unique: true, allowNull: false },
+    email: { type: DataTypes.STRING(255), allowNull: false },
     role: { type: DataTypes.ENUM('customer', 'staff', 'admin'), allowNull: false },
     phone: { type: DataTypes.STRING(15), allowNull: true },
   }, {
     tableName: 'users',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ['email']
+      }
+    ]
   });
 };
