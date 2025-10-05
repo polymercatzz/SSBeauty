@@ -5,7 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>History</title>
-    <link rel="stylesheet" href="./dist/output.css" />
+    <!-- <link rel="stylesheet" href="./dist/output.css" /> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +30,8 @@
 <body class="bg-gradient-to-t from-[#F2F1EB] to-[#DBB3C1] h-screen bg-fixed bg-cover bg-center min-h-screen">
 
     <!--  start navbar -->
-    <header
+    <%- include('nav_user', { activePage: 'history'}) %>
+    <!-- <header
         class="bg-gradient-to-r from-[#DBB3C1] to-[#A5848F] max-w-[93%] mx-auto rounded-3xl shadow-lg shadow-black-200 my-2 font-bold fixed w-full z-50 top-5 left-1/2 -translate-x-1/2 z-50">
         <nav class="font-[tangerine] p-[0.5vh] flex justify-between items-center">
             <div class="flex items-center">
@@ -67,28 +70,93 @@
                 </div>
             </div>
         </nav>
-    </header>
+    </header> -->
     <!--  end navbar -->
 
-    <!-- history --> 
+    <!-- history -->
+   
     <div class="md:pt-[16vh] pt-[13vh] space-y-5 pb-10">
-        <div class="max-w-[75%]  mx-auto rounded-3xl shadow-lg shadow-black-200  
-               bg-white/60 backdrop-blur-md p-5 flex flex-wrap max-[500px]:max-w-[90%]">
+        <% appointments.forEach(appointment => { %>
+            <div class="max-w-[75%]  mx-auto rounded-3xl shadow-lg shadow-black-200  
+                bg-white/60 backdrop-blur-md p-5 flex flex-wrap max-[500px]:max-w-[90%]">
+                <a class="flex gap-2 " href="">
+                    <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
+                        class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
+                    <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
+                        <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
+                            <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
+                            <p>Tensonez</p>
+                        </div>
+                        <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
+                            <img src="/img/pending.png" alt="" class="w-[2vh]">
+                            <p>120 นาที</p>
+                        </div>
+                        <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
+                            <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
+                            <p>760 บาท</p>
+                        </div>
+                    </div>
+                </a>
 
+                <div class="flex ml-[14vh] max-[1248px]:ml-[4vh]">
+                    <div class=" space-y-4 justify-center  flex flex-col">
+                        <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
+                            <img src="/img/user.png" alt="" class="w-[2vh]">
+                            <p>ช่าง: A</p>
+                        </div>
+                        <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
+                            <img src="/img/calendar.png" alt="" class="w-[2vh]">
+                            <div class="flex flex-wrap">
+                                <p>จองวันที่:</p>
+                                <p>20/08/2026</p>
+
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
+                            <img src="/img/alarm-clock.png" alt="" class="w-[2vh]">
+                            <div class="flex flex-wrap">
+                                <p>เวลา:</p>
+                            <p>14:00 น.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ml-5 space-y-4 justify-center  flex flex-col ml-[14vh] max-[1248px]:ml-[4vh]">
+                        <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
+                            <img src="/img/info.png" alt="" class="w-[2vh]">
+                            <div class="flex flex-wrap">
+                                <p>สถานะ:</p>
+                            <p>รอใช้งาน</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
+                            <img src="/img/bill.png" alt="" class="w-[2vh]">
+                            <button class="p-2 bg-white rounded-xl text-[#E5408E]">ใบเสร็จ</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div
+                    class="bg-[#DBB3C1] text-white font-[kanit] text-[2vh] p-2 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300  h-fit self-end ml-auto">
+                    <button>ยกเลิกการจอง</button>
+                </div>
+            </div>
+        <% }) %>
+        <!-- <div class="max-w-[75%]  mx-auto rounded-3xl shadow-lg shadow-black-200  
+               bg-white/60 backdrop-blur-md p-5 flex flex-wrap max-[500px]:max-w-[90%]">
             <a class="flex gap-2 " href="">
                 <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
                     class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
                 <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
                     <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-                        <img src="shopping-cart.png" alt="" class="w-[2vh]">
+                        <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
                         <p>Tensonez</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-                        <img src="pending.png" alt="" class="w-[2vh]">
+                        <img src="/img/pending.png" alt="" class="w-[2vh]">
                         <p>120 นาที</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="usd-circle.png" alt="" class="w-[2vh]">
+                        <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
                         <p>760 บาท</p>
                     </div>
                 </div>
@@ -97,11 +165,11 @@
             <div class="flex ml-[14vh] max-[1248px]:ml-[4vh]">
                 <div class=" space-y-4 justify-center  flex flex-col">
                     <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-                        <img src="user.png" alt="" class="w-[2vh]">
+                        <img src="/img/user.png" alt="" class="w-[2vh]">
                         <p>ช่าง: A</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="calendar.png" alt="" class="w-[2vh]">
+                        <img src="/img/calendar.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>จองวันที่:</p>
                             <p>20/08/2026</p>
@@ -109,7 +177,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="alarm-clock.png" alt="" class="w-[2vh]">
+                        <img src="/img/alarm-clock.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>เวลา:</p>
                         <p>14:00 น.</p>
@@ -118,14 +186,14 @@
                 </div>
                 <div class="ml-5 space-y-4 justify-center  flex flex-col ml-[14vh] max-[1248px]:ml-[4vh]">
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="info.png" alt="" class="w-[2vh]">
+                        <img src="/img/info.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>สถานะ:</p>
                         <p>รอใช้งาน</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-                        <img src="bill.png" alt="" class="w-[2vh]">
+                        <img src="/img/bill.png" alt="" class="w-[2vh]">
                         <button class="p-2 bg-white rounded-xl text-[#E5408E]">ใบเสร็จ</button>
                     </div>
 
@@ -146,15 +214,15 @@
                     class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
                 <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
                     <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-                        <img src="shopping-cart.png" alt="" class="w-[2vh]">
+                        <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
                         <p>Tensonez</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-                        <img src="pending.png" alt="" class="w-[2vh]">
+                        <img src="/img/pending.png" alt="" class="w-[2vh]">
                         <p>120 นาที</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="usd-circle.png" alt="" class="w-[2vh]">
+                        <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
                         <p>760 บาท</p>
                     </div>
                 </div>
@@ -163,11 +231,11 @@
             <div class="flex ml-[14vh] max-[1248px]:ml-[4vh]">
                 <div class=" space-y-4 justify-center  flex flex-col">
                     <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-                        <img src="user.png" alt="" class="w-[2vh]">
+                        <img src="/img/user.png" alt="" class="w-[2vh]">
                         <p>ช่าง: A</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="calendar.png" alt="" class="w-[2vh]">
+                        <img src="/img/calendar.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>จองวันที่:</p>
                             <p>20/08/2026</p>
@@ -175,7 +243,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="alarm-clock.png" alt="" class="w-[2vh]">
+                        <img src="/img/alarm-clock.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>เวลา:</p>
                         <p>14:00 น.</p>
@@ -184,14 +252,14 @@
                 </div>
                 <div class="ml-5 space-y-4 justify-center  flex flex-col ml-[14vh] max-[1248px]:ml-[4vh]">
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="info.png" alt="" class="w-[2vh]">
+                        <img src="/img/info.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>สถานะ:</p>
                         <p>รอใช้งาน</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-                        <img src="bill.png" alt="" class="w-[2vh]">
+                        <img src="/img/bill.png" alt="" class="w-[2vh]">
                         <button class="p-2 bg-white rounded-xl text-[#E5408E]">ใบเสร็จ</button>
                     </div>
 
@@ -210,15 +278,15 @@
                     class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
                 <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
                     <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-                        <img src="shopping-cart.png" alt="" class="w-[2vh]">
+                        <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
                         <p>Tensonez</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-                        <img src="pending.png" alt="" class="w-[2vh]">
+                        <img src="/img/pending.png" alt="" class="w-[2vh]">
                         <p>120 นาที</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="usd-circle.png" alt="" class="w-[2vh]">
+                        <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
                         <p>760 บาท</p>
                     </div>
                 </div>
@@ -227,11 +295,11 @@
             <div class="flex ml-[14vh] max-[1248px]:ml-[4vh]">
                 <div class=" space-y-4 justify-center  flex flex-col">
                     <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-                        <img src="user.png" alt="" class="w-[2vh]">
+                        <img src="/img/user.png" alt="" class="w-[2vh]">
                         <p>ช่าง: A</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="calendar.png" alt="" class="w-[2vh]">
+                        <img src="/img/calendar.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>จองวันที่:</p>
                             <p>20/08/2026</p>
@@ -239,7 +307,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="alarm-clock.png" alt="" class="w-[2vh]">
+                        <img src="/img/alarm-clock.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>เวลา:</p>
                         <p>14:00 น.</p>
@@ -248,14 +316,14 @@
                 </div>
                 <div class="ml-5 space-y-4 justify-center  flex flex-col ml-[14vh] max-[1248px]:ml-[4vh]">
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="info.png" alt="" class="w-[2vh]">
+                        <img src="/img/info.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>สถานะ:</p>
                         <p>รอใช้งาน</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-                        <img src="bill.png" alt="" class="w-[2vh]">
+                        <img src="/img/bill.png" alt="" class="w-[2vh]">
                         <button class="p-2 bg-white rounded-xl text-[#E5408E]">ใบเสร็จ</button>
                     </div>
 
@@ -274,15 +342,15 @@
                     class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
                 <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
                     <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-                        <img src="shopping-cart.png" alt="" class="w-[2vh]">
+                        <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
                         <p>Tensonez</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-                        <img src="pending.png" alt="" class="w-[2vh]">
+                        <img src="/img/pending.png" alt="" class="w-[2vh]">
                         <p>120 นาที</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="usd-circle.png" alt="" class="w-[2vh]">
+                        <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
                         <p>760 บาท</p>
                     </div>
                 </div>
@@ -291,11 +359,11 @@
             <div class="flex ml-[14vh] max-[1248px]:ml-[4vh]">
                 <div class=" space-y-4 justify-center  flex flex-col">
                     <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-                        <img src="user.png" alt="" class="w-[2vh]">
+                        <img src="/img/user.png" alt="" class="w-[2vh]">
                         <p>ช่าง: A</p>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="calendar.png" alt="" class="w-[2vh]">
+                        <img src="/img/calendar.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>จองวันที่:</p>
                             <p>20/08/2026</p>
@@ -303,7 +371,7 @@
                         </div>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="alarm-clock.png" alt="" class="w-[2vh]">
+                        <img src="/img/alarm-clock.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>เวลา:</p>
                         <p>14:00 น.</p>
@@ -312,14 +380,14 @@
                 </div>
                 <div class="ml-5 space-y-4 justify-center  flex flex-col ml-[14vh] max-[1248px]:ml-[4vh]">
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-                        <img src="info.png" alt="" class="w-[2vh]">
+                        <img src="/img/info.png" alt="" class="w-[2vh]">
                         <div class="flex flex-wrap">
                             <p>สถานะ:</p>
                         <p>รอใช้งาน</p>
                         </div>
                     </div>
                     <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-                        <img src="bill.png" alt="" class="w-[2vh]">
+                        <img src="/img/bill.png" alt="" class="w-[2vh]">
                         <button class="p-2 bg-white rounded-xl text-[#E5408E]">ใบเสร็จ</button>
                     </div>
 
@@ -329,7 +397,7 @@
                 class="bg-[#DBB3C1] text-white font-[kanit] text-[2vh] p-2 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300  h-fit self-end ml-auto">
                 <button>ยกเลิกการจอง</button>
             </div>
-        </div>
+        </div> -->
     </div>
 
 

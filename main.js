@@ -37,7 +37,7 @@ app.get("/login", (req, res) => {
     res.send('login SSbeauty');
 })
 
-app.post("/logout", (req, res) => {
+app.get("/logout", (req, res) => {
     res.send('logout SSbeauty');
 })
 

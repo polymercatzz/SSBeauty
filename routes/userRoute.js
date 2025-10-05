@@ -5,6 +5,15 @@ const userControl = require('../controllers/user_control');
 
 // User routers
 
-router.get("/:username", userControl.showMainUser);
+router.get("/home", userControl.showMainUser);
+
+router.get("/hair", userControl.showHair);
+router.get("/hair/booking/:service_id", userControl.showBookingHair);
+
+router.get("/spa", userControl.showSpa);
+router.get("/spa/booking/:serviec_id", userControl.showBookingSpa);
+
+router.get("/history", userControl.showHistory);
+
 
 module.exports = router;

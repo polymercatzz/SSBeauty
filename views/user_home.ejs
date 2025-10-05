@@ -28,7 +28,8 @@
 <body class="bg-gradient-to-t from-[#F2F1EB] to-[#DBB3C1] h-screen bg-fixed bg-cover bg-center min-h-screen">
 
   <!--  start navbar -->
-  <header
+  <%- include('nav_user', { activePage: 'home' }) %>
+  <!-- <header
     class="bg-gradient-to-r from-[#DBB3C1] to-[#A5848F] max-w-[93%] mx-auto rounded-3xl shadow-lg shadow-black-200 my-2 font-bold fixed w-full z-50 top-5 left-1/2 -translate-x-1/2 z-50">
     <nav class="font-[tangerine] p-[0.5vh] flex justify-between items-center">
       <div class="flex items-center">
@@ -67,7 +68,7 @@
         </div>
       </div>
     </nav>
-  </header>
+  </header> -->
   <!--  end navbar -->
 
   <!--  start welcome -->
@@ -85,7 +86,7 @@
           All For The sake of your beauty</p>
       </div>
       <div class="flex justify-center md:justify-end  items-center md:pl-[5vh] max-[900px]:hidden">
-        <img src="barber.png" alt="" class="object-contain h-[56vh]">
+        <img src="/img/barber.png" alt="" class="object-contain h-[56vh]">
       </div>
     </div>
   </div>
@@ -107,22 +108,47 @@
 
     <div class="swiper  p-5 overflow-hidden rounded-2xl">
       <ul class="swiper-wrapper">
-        <li class="swiper-slide">
+        <% services.forEach(service =>{ %>
+            <li class="swiper-slide">
+              <a href="/user/<%= service.type %>/booking/<%= service.service_id %>" class="select-none block bg-white p-4 rounded-2xl no-underline 
+                      border-2 border-transparent shadow-md 
+                      hover:border-[#7B9CC8] active:cursor-grabbing">
+                <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
+                  class="w-full mb-2 aspect-[4/3] object-cover rounded-xl">
+                <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
+                  <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
+                  <p><%= service.name %></p>
+                </div>
+                <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
+                  <img src="/img/pending.png" alt="" class="w-[2vh]">
+                  <p><%= service.duration %> นาที</p>
+                </div>
+                <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
+                  <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
+                  <p><%= service.price %> บาท</p>
+                </div>
+                <div class="flex justify-end">
+                  <span class="material-symbols-outlined text-[#A5848F]">arrow_forward</span>
+                </div>
+              </a>
+            </li>
+        <% }); %>
+        <!-- <li class="swiper-slide">
           <a href="#" class="select-none block bg-white p-4 rounded-2xl no-underline 
                   border-2 border-transparent shadow-md 
                   hover:border-[#7B9CC8] active:cursor-grabbing">
             <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
               class="w-full mb-2 aspect-[4/3] object-cover rounded-xl">
             <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-              <img src="shopping-cart.png" alt="" class="w-[2vh]">
+              <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
               <p>Tensonez</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-              <img src="pending.png" alt="" class="w-[2vh]">
+              <img src="/img/pending.png" alt="" class="w-[2vh]">
               <p>120 นาที</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-              <img src="usd-circle.png" alt="" class="w-[2vh]">
+              <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
               <p>760 บาท</p>
             </div>
             <div class="flex justify-end">
@@ -137,15 +163,15 @@
             <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
               class="w-full mb-2 aspect-[4/3] object-cover rounded-xl">
             <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-              <img src="shopping-cart.png" alt="" class="w-[2vh]">
+              <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
               <p>Tensonez</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-              <img src="pending.png" alt="" class="w-[2vh]">
+              <img src="/img/pending.png" alt="" class="w-[2vh]">
               <p>120 นาที</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-              <img src="usd-circle.png" alt="" class="w-[2vh]">
+              <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
               <p>760 บาท</p>
             </div>
             <div class="flex justify-end">
@@ -160,15 +186,15 @@
             <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
               class="w-full mb-2 aspect-[4/3] object-cover rounded-xl">
             <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-              <img src="shopping-cart.png" alt="" class="w-[2vh]">
+              <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
               <p>Tensonez</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-              <img src="pending.png" alt="" class="w-[2vh]">
+              <img src="/img/pending.png" alt="" class="w-[2vh]">
               <p>120 นาที</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-              <img src="usd-circle.png" alt="" class="w-[2vh]">
+              <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
               <p>760 บาท</p>
             </div>
             <div class="flex justify-end">
@@ -183,15 +209,15 @@
             <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
               class="w-full mb-2 aspect-[4/3] object-cover rounded-xl">
             <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-              <img src="shopping-cart.png" alt="" class="w-[2vh]">
+              <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
               <p>Tensonez</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-              <img src="pending.png" alt="" class="w-[2vh]">
+              <img src="/img/pending.png" alt="" class="w-[2vh]">
               <p>120 นาที</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-              <img src="usd-circle.png" alt="" class="w-[2vh]">
+              <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
               <p>760 บาท</p>
             </div>
             <div class="flex justify-end">
@@ -206,15 +232,15 @@
             <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
               class="w-full mb-2 aspect-[4/3] object-cover rounded-xl">
             <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-              <img src="shopping-cart.png" alt="" class="w-[2vh]">
+              <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
               <p>Tensonez</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-              <img src="pending.png" alt="" class="w-[2vh]">
+              <img src="/img/pending.png" alt="" class="w-[2vh]">
               <p>120 นาที</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-              <img src="usd-circle.png" alt="" class="w-[2vh]">
+              <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
               <p>760 บาท</p>
             </div>
             <div class="flex justify-end">
@@ -229,15 +255,15 @@
             <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
               class="w-full mb-2 aspect-[4/3] object-cover rounded-xl">
             <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-              <img src="shopping-cart.png" alt="" class="w-[2vh]">
+              <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
               <p>Tensonez</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-              <img src="pending.png" alt="" class="w-[2vh]">
+              <img src="/img/pending.png" alt="" class="w-[2vh]">
               <p>120 นาที</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-              <img src="usd-circle.png" alt="" class="w-[2vh]">
+              <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
               <p>760 บาท</p>
             </div>
             <div class="flex justify-end">
@@ -252,22 +278,22 @@
             <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
               class="w-full mb-2 aspect-[4/3] object-cover rounded-xl">
             <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
-              <img src="shopping-cart.png" alt="" class="w-[2vh]">
+              <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
               <p>Tensonez</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-              <img src="pending.png" alt="" class="w-[2vh]">
+              <img src="/img/pending.png" alt="" class="w-[2vh]">
               <p>120 นาที</p>
             </div>
             <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
-              <img src="usd-circle.png" alt="" class="w-[2vh]">
+              <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
               <p>760 บาท</p>
             </div>
             <div class="flex justify-end">
               <span class="material-symbols-outlined text-[#A5848F]">arrow_forward</span>
             </div>
           </a>
-        </li>
+        </li> -->
       </ul>
       <!-- Pagination ต้องอยู่ใน .swiper -->
       <div class="swiper-pagination"></div>
@@ -286,7 +312,26 @@
     </div>
     <div class="swiper2 overflow-hidden rounded-2xl max-w-full">
       <ul class="swiper-wrapper">
-        <li class="swiper-slide ">
+        <% staffs.forEach(staff => { %>
+            <li class="swiper-slide ">
+              <a href="#" class="select-none block bg-white p-4 rounded-2xl no-underline 
+                      border-2 border-transparent shadow-md 
+                      hover:border-[#7B9CC8] active:cursor-grabbing">
+                <div class="flex">
+                  <img src="https://www.shutterstock.com/image-photo/smiling-small-beauty-salon-owner-600nw-2059364630.jpg"
+                    alt="" class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
+                  <div class="font-[inter] text-[#616162]  p-2">
+                    <p class="bg-pink-100 p-2 rounded-xl text-[2vh]">Jane Doe(Hair Stylish)</p>
+                    <p class="text-[1.7vh] p-2">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae et odit
+                      dolorem excepturi qui illo eaquep>
+                    <p class="text-[1.7vh] flex justify-end">rating:4.5⭐️</p>
+
+                  </div>
+                </div>
+              </a>
+            </li>
+          <% }); %>
+        <!-- <li class="swiper-slide ">
           <a href="#" class="select-none block bg-white p-4 rounded-2xl no-underline 
                   border-2 border-transparent shadow-md 
                   hover:border-[#7B9CC8] active:cursor-grabbing">
@@ -352,7 +397,7 @@
               </div>
             </div>
           </a>
-        </li>
+        </li> -->
 
       </ul>
       <div class="swiper-pagination2 items-center justify-center flex my-5"></div>

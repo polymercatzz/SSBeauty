@@ -1,0 +1,55 @@
+  <!--  start navbar -->
+  <header
+    class="bg-gradient-to-r from-[#DBB3C1] to-[#A5848F] max-w-[93%] mx-auto rounded-3xl shadow-lg shadow-black-200 my-2 font-bold fixed w-full z-50 top-5 left-1/2 -translate-x-1/2 z-50">
+    <nav class="font-[tangerine] p-[0.5vh] flex justify-between items-center">
+        <a href="/user/home" class="flex items-center">
+          <img src="/img/curl.png" alt="#" class="w-[5vh] m-2">
+          <span class="text-[#E5408E] text-[4.5vh] align-middle ml-2">SSBeauty</span>
+        </a>
+      <div class="flex items-center gap-5">
+        <div
+          class="nav md:static md:minh-fit md:bg-transparent  absolute bg-white rounded-3xl right-[1%] top-[-1000%] p-3 ">
+          <ul
+            class="flex md:flex-row flex-col items-center md:gap-5 gap-2 text-[3.7vh] md:text-[4.2vh] md:text-white text-[#E5408E]">
+            <li>
+              <a href="/user/hair"
+                class="p-2 <%= activePage == 'hair'
+                                  ? 'md:bg-white md:text-[#E5408E]'
+                                  : 'md:hover:bg-white md:hover:text-[#E5408E]' %>
+                        md:rounded-xl hover:bg-pink-100 rounded-xl ">
+                Hair
+              </a>
+            </li>
+            <li>
+              <a href="/user/spa"
+                class="p-2 <%= activePage == 'spa'
+                                  ? 'md:bg-white md:text-[#E5408E]'
+                                  : 'md:hover:bg-white md:hover:text-[#E5408E]' %>
+                        md:rounded-xl hover:bg-pink-100 rounded-xl ">
+                Spa</a>
+            </li>
+            <li>
+              <a href="/user/history"
+                class="p-2 <%= activePage == 'history'
+                                  ? 'md:bg-white md:text-[#E5408E]'
+                                  : 'md:hover:bg-white md:hover:text-[#E5408E]' %>
+                        md:rounded-xl hover:bg-pink-100 rounded-xl ">
+                History</a>
+            </li>
+            <li>
+              <a href="/logout"
+                class="p-2 md:hover:bg-white text-[#E5408E] md:rounded-xl bg-pink-100 rounded-xl">Logout</a>
+            </li>
+          </ul>
+        </div>
+        <div class="flex items-center">
+          <a href="">
+            <img src="profile.png" alt="" class="w-[5vh] mr-2">
+          </a>
+          <ion-icon onclick="menuToggle(this)" name="menu"
+            class="text-3xl cursor-pointer md:hidden text-white"></ion-icon>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <!--  end navbar -->

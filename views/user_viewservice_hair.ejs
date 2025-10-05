@@ -5,7 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>History</title>
-    <link rel="stylesheet" href="./dist/output.css" />
+    <!-- <link rel="stylesheet" href="./dist/output.css" /> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,7 +30,8 @@
 <body class="bg-gradient-to-t from-[#F2F1EB] to-[#DBB3C1] h-screen bg-fixed bg-cover bg-center min-h-screen">
 
     <!--  start navbar -->
-    <header
+    <%- include('nav_user', { activePage: 'hair' }) %>
+    <!-- <header
         class="bg-gradient-to-r from-[#DBB3C1] to-[#A5848F] max-w-[93%] mx-auto rounded-3xl shadow-lg shadow-black-200 my-2 font-bold fixed w-full z-50 top-5 left-1/2 -translate-x-1/2 z-50">
         <nav class="font-[tangerine] p-[0.5vh] flex justify-between items-center">
             <div class="flex items-center">
@@ -67,7 +70,7 @@
                 </div>
             </div>
         </nav>
-    </header>
+    </header> -->
     <!--  end navbar -->
 
 
@@ -102,22 +105,49 @@
             grid grid-cols-1 lg:grid-cols-2 justify-items-center flex mx-auto gap-x-5 max-[500px]:max-w-[100%]">
   
   <!-- card -->
-  <a class="max-w-[600px] w-full  rounded-3xl shadow-lg shadow-black-200 
+  <% services.forEach(service => { %>
+    <a class="max-w-[600px] w-full  rounded-3xl shadow-lg shadow-black-200 
+          bg-white/60 backdrop-blur-md p-5 flex flex-wrap max-[500px]:max-w-[90%] mt-[2.4vh] justify-center items-center" href="" >
+      <div class="flex gap-2 ">
+        <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
+            class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
+        <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
+          <div class="flex items-center gap-2 font-[inter] text-[#616162] text-[2vh]">
+            <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
+            <p><%= service.name %></p>
+          </div>
+          <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh] ">
+            <img src="/img/pending.png" alt="" class="w-[2vh]">
+            <p><%= service.duration %> นาที</p>
+          </div>
+          <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh]">
+            <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
+            <p><%= service.price %> บาท</p>
+          </div>
+        </div>
+      </div>
+      <div
+        class="bg-[#DBB3C1] text-white font-[kanit] text-[2vh] p-2 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 h-fit self-end ml-auto">
+        <button>จองคิว</button>
+      </div>
+    </a>
+  <% }); %>
+  <!-- <a class="max-w-[600px] w-full  rounded-3xl shadow-lg shadow-black-200 
          bg-white/60 backdrop-blur-md p-5 flex flex-wrap max-[500px]:max-w-[90%] mt-[2.4vh] justify-center items-center" href="" >
     <div class="flex gap-2 ">
       <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
            class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
       <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
         <div class="flex items-center gap-2 font-[inter] text-[#616162] text-[2vh]">
-          <img src="shopping-cart.png" alt="" class="w-[2vh]">
+          <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
           <p>Tensonez</p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh] ">
-          <img src="pending.png" alt="" class="w-[2vh]">
+          <img src="/img/pending.png" alt="" class="w-[2vh]">
           <p>120 นาที</p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh]">
-          <img src="usd-circle.png" alt="" class="w-[2vh]">
+          <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
           <p>760 บาท</p>
         </div>
       </div>
@@ -134,15 +164,15 @@
            class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
       <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
         <div class="flex items-center gap-2 font-[inter] text-[#616162] text-[2vh]">
-          <img src="shopping-cart.png" alt="" class="w-[2vh]">
+          <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
           <p>Tensonez</p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh] ">
-          <img src="pending.png" alt="" class="w-[2vh]">
+          <img src="/img/pending.png" alt="" class="w-[2vh]">
           <p>120 นาที</p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh]">
-          <img src="usd-circle.png" alt="" class="w-[2vh]">
+          <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
           <p>760 บาท</p>
         </div>
       </div>
@@ -159,15 +189,15 @@
            class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
       <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
         <div class="flex items-center gap-2 font-[inter] text-[#616162] text-[2vh]">
-          <img src="shopping-cart.png" alt="" class="w-[2vh]">
+          <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
           <p>Tensonez</p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh] ">
-          <img src="pending.png" alt="" class="w-[2vh]">
+          <img src="/img/pending.png" alt="" class="w-[2vh]">
           <p>120 นาที</p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh]">
-          <img src="usd-circle.png" alt="" class="w-[2vh]">
+          <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
           <p>760 บาท</p>
         </div>
       </div>
@@ -184,15 +214,15 @@
            class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
       <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
         <div class="flex items-center gap-2 font-[inter] text-[#616162] text-[2vh]">
-          <img src="shopping-cart.png" alt="" class="w-[2vh]">
+          <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
           <p>Tensonez</p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh] ">
-          <img src="pending.png" alt="" class="w-[2vh]">
+          <img src="/img/pending.png" alt="" class="w-[2vh]">
           <p>120 นาที</p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh]">
-          <img src="usd-circle.png" alt="" class="w-[2vh]">
+          <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
           <p>760 บาท</p>
         </div>
       </div>
@@ -201,7 +231,7 @@
       class="bg-[#DBB3C1] text-white font-[kanit] text-[2vh] p-2 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 h-fit self-end ml-auto">
       <button>จองคิว</button>
     </div>
-  </a>
+  </a> -->
 
 
 </div>
