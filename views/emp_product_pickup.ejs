@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>SSBeautyp - emp เบิกสินค้า</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gradient-to-r from-[#DBB3C1] to-[#F2F1EB] min-h-screen m-5">
+    <!-- Header -->
+    <%- include('header_emp') %>
+        <!-- Filter เหลือทำให้filter-->
+        <div id="filter1" class="flex mt-4 w-80 border rounded-lg bg-white p-4 bg-opacity-60">
+            <div>
+                <p class="text-gray-500">ค้นหาสินค้า</p>
+                <input type="text" id="search-input" class="w-40 border rounded-lg px-3 py-1">
+            </div>
+            <div class="pt-6 mx-3">
+                <button id="search-btn"
+                    class="bg-pink-400 hover:bg-pink-500 text-white px-4 rounded-lg h-8">ค้นหา</button>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-4 px-7 cursor-pointer " id="product-grid">
+            <!-- ทำให้มีหลายๆอัน -->
+            <% products.forEach(product=> { %>
+                <div onclick="openPopup(<%= product.product_id %>)" class="product-item">
+                    <div class="bg-white bg-opacity-60 p-4 rounded shadow text-[#A5848F]">
+                        <div class="text-center">
+                            <img src="/img/product1.png" alt="Product" class="mx-auto rounded-lg h-40">
+                            <p>ชื่อผลิตภัณฑ์ : <%= product.name %>
+                            </p>
+                        </div>
+                        <p>ราคา : <%= product.price %> บาท</p>
+                        <div class="flex space-x-2">
+                            <p class="">จำนวนคงเหลือ</p>
+                            <p class="bg-[#A5848F] px-2 text-sm rounded-lg text-white mt-1">
+                                <%= product.stock_qty %>
+                            </p>
+                            <p class="">
+                                <%= product.unit %>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+
+
+        <!-- Popupprofile -->
+        <div id="popuppro" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center">
+            <div class="h-10 bg-gray-100"></div>
+            <div class="bg-[#F2F1EB] rounded-xl shadow-lg w-[600px] p-6 relative">
+                <!-- ปุ่มปิด -->
+                <button class="absolute top-3 right-3 text-gray-500 hover:text-red-500"
+                    onclick="closePopupprofile()">✖</button>
+
+                <h2 class="text-lg font-bold mb-4">ข้อมูลพนังงาน</h2>
+
+                <div class="space-y-2 text-sm  p-3 rounded-lg">
+                    <div class="flex">
+                        <div class="flex">
+                            <label class="block text-gray-600 p-1"><b>ชื่อ:</b></label>
+                            <input type="text" value="" class="w-full border rounded-lg px-3 py-1" readonly>
+                        </div>
+                        <div class="flex">
+                            <label class="block text-gray-600 p-1"><b>ชื่อเล่น:</b></label>
+                            <input type="text" value="" class="w-20 border rounded-lg px-3 py-1" readonly>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex">
+                            <label class="block text-gray-600 p-1"><b>เบอร์โทร: </b></label>
+                            <input type="text" value="" class=" border rounded-lg px-3 py-1" readonly>
+                        </div>
+                        <div class="flex">
+                            <label class="block text-gray-600 p-1"><b>Email: </b></label>
+                            <input type="text" value="" class="w-20 border rounded-lg px-3 py-1" readonly>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex">
+                            <label class="block text-gray-600 p-1"><b>หน้าที่:</b></label>
+                            <select class="w-20 border rounded-lg px-3 py-1">
+                                <option value=""></option>
+                            </select>
+                        </div>
+                        <div class="flex">
+                            <label class="block text-gray-600 p-1"><b>โปรไฟล์:</b></label>
+                            <input type="file" accept="image/*" class=" border rounded-lg px-3 py-1"
+                                onchange="previewImage(event)">
+                            <img id="preview" class="w-20 h-20 ml-2 hidden" alt="Preview Image">
+                        </div>
+                    </div>
+                </div>
+                <h3 class="mt-4 font-semibold text-gray-600">สิ่งที่ทำได้:</h3>
+                <div class="flex space-x-3">
+                    <label class="flex items-center ">
+                        <input type="checkbox" name="services" value="" class="mr-2"> ตัดผม
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="services" value="" class="mr-2"> ย้อมผม
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="services" value="" class="mr-2"> ดัดผม
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="services" value="" class="mr-2"> ทำสปาผม
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="services" value="" class="mr-2"> ไดร์ผม
+                    </label>
+                </div>
+                <div class="flex space-x-3">
+                    <label class="flex items-center">
+                        <input type="checkbox" name="services" value="" class="mr-2"> นวดหน้า
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="services" value="" class="mr-2"> ทำเล็บ
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="services" value="" class="mr-2"> สปามือและเท้า
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="services" value="" class="mr-2"> ทำสปาผม
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="services" value="" class="mr-2"> นวดตัว
+                    </label>
+                </div>
+                <h3 class="mt-4 font-semibold text-gray-600">แนะนำตัว:</h3>
+                <textarea class="w-full max-w-md border rounded-lg px-3 py-2 h-24" readonly></textarea>
+
+                <button class="mt-4 w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg">ยืนยัน</button>
+            </div>
+        </div>
+
+        <!-- Popup -->
+        <% products.forEach(product=> { %>
+        <form action="/employee/use/<%= product.product_id %>" method="POST" id="popup-<%= product.product_id %>" class="fixed inset-0 bg-black/30 hidden items-center justify-center backdrop-blur-sm z-50">
+            <div class="bg-white rounded-2xl shadow-2xl w-[360px] p-6 relative transition-all duration-300">
+                <!-- ปุ่มปิด -->
+                <button class="absolute top-3 right-3 text-gray-400 hover:text-pink-500 transition"
+                    onclick="closePopup(<%= product.product_id %>)">
+                    ✕
+                </button>
+
+                <!-- หัวข้อ -->
+                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">รายละเอียดการเบิก</h2>
+
+                <!-- ผู้เบิก -->
+                <div class="mb-3">
+                    <label class="block text-gray-600 mb-1 text-sm">ผู้เบิก</label>
+                    <input type="text" value="<%= staff.User.first_name %> <%= staff.User.last_name %>" readonly
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-gray-700 bg-gray-50 focus:outline-none" />
+                </div>
+
+                <!-- ผลิตภัณฑ์ -->
+                <div class="mb-3">
+                    <label class="block text-gray-600 mb-1 text-sm">ผลิตภัณฑ์</label>
+                    <input type="text" value="<%= product.name %>" readonly
+                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-gray-700 bg-gray-50 focus:outline-none" />
+                </div>
+
+                <!-- จำนวน / สำหรับ -->
+                <div class="grid grid-cols-2 gap-4 mt-3">
+                    <div>
+                        <label class="block text-gray-600 mb-1 text-sm">จำนวน</label>
+                        <input
+                            class="w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-pink-400" name="quantity">
+                        </input>
+                    </div>
+                    <div>
+                        <label class="block text-gray-600 mb-1 text-sm">สำหรับ</label>
+                        <input
+                            class="w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-pink-400">
+                        </input>
+                    </div>
+                </div>
+
+                <!-- ปุ่มยืนยัน -->
+                <button
+                    class="mt-6 w-full bg-pink-500 hover:bg-pink-600 text-white font-medium py-2.5 rounded-lg transition shadow-sm hover:shadow-md">
+                    ยืนยัน
+                </button>
+            </div>
+        </form>
+        <% }); %>
+
+
+
+        <!-- ทำfilter -->
+        <script>
+            function openPopup(productId) {
+                document.getElementById(`popup-${productId}`).classList.remove("hidden");
+                document.getElementById(`popup-${productId}`).classList.add("flex");
+            }
+            function closePopup(productId) {
+                document.getElementById(`popup-${productId}`).classList.add("hidden");
+            }
+            function openPopupprofile() {
+                document.getElementById("popuppro").classList.remove("hidden");
+                document.getElementById("popuppro").classList.add("flex");
+            }
+            function closePopupprofile() {
+                document.getElementById("popuppro").classList.add("hidden");
+            }
+            //filter
+            const searchBtn = document.getElementById("search-btn");
+            const searchInput = document.getElementById("search-input");
+            const products = document.querySelectorAll(".product-item");
+
+            searchBtn.addEventListener("click", () => {
+                const searchText = searchInput.value.toLowerCase();
+                products.forEach(product => {
+                    const name = product.querySelector(".product-name").textContent.toLowerCase();
+                    if (!searchText || name.includes(searchText)) {
+                        product.style.display = "block";
+                    } else {
+                        product.style.display = "none";
+                    }
+                });
+            });
+        </script>
+</body>
+
+</html>

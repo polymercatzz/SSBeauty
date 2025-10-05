@@ -10,6 +10,8 @@ router.get("/manage-employee", adminControl.showManageEmp);
 router.get("/manage-service", adminControl.showManageService);
 router.get("/manage-customer", adminControl.showManageCus);
 router.get("/manage-stock", adminControl.showManageStock);
+router.get("/stat", adminControl.showStat);
+
 
 router.post("/manage-employee/update/:staff_id", adminControl.EditEmp);
 router.post("/manage-customer/add", adminControl.CreateCus);

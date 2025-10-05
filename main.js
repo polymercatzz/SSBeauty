@@ -4,6 +4,7 @@ const express = require("express");
 
 const userRoutes = require("./routes/userRoute"); // import routes user
 const adminRoutes = require("./routes/adminRoute"); // import routes admin
+const empRoutes = require("./routes/empRoute"); // import routes employee
 
 const { sequelize } = require('./models');  // ดึง instance sequelize
 
@@ -27,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Routes
 app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
+app.use("/employee", empRoutes);
 
 // Main route
 app.get("/", (req, res) => {

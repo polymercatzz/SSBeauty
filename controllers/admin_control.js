@@ -40,7 +40,7 @@ const showManageService = async (req, res) => {
     const services = await StaffService.findAll({
         include: [ Staff, Service ]
     });
-    res.json(services);
+    res.render('emp_service');
 };
 
 const showManageCus = async (req, res) => {
@@ -99,5 +99,9 @@ const Deleteproduct = (req, res) => {
     res.redirect("/admin/manage-stock");
 };
 
+const showStat = (req, res) => {
+    res.render("admin_stat");
+}
 
-module.exports = { showManagepayment , showManageEmp, showManageService, showManageCus, showManageStock, EditEmp, CreateCus, EditCus, Createproduct, Editproduct, Deleteproduct };
+
+module.exports = { showManagepayment , showManageEmp, showManageService, showManageCus, showManageStock, EditEmp, CreateCus, EditCus, Createproduct, Editproduct, Deleteproduct, showStat };
