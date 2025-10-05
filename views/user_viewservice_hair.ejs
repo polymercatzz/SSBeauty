@@ -107,7 +107,7 @@
   <!-- card -->
   <% services.forEach(service => { %>
     <a class="max-w-[600px] w-full  rounded-3xl shadow-lg shadow-black-200 
-          bg-white/60 backdrop-blur-md p-5 flex flex-wrap max-[500px]:max-w-[90%] mt-[2.4vh] justify-center items-center" href="" >
+          bg-white/60 backdrop-blur-md p-5 flex flex-wrap max-[500px]:max-w-[90%] mt-[2.4vh] justify-center items-center" href="/user/<%= service.type %>/booking/<%= service.service_id %>" >
       <div class="flex gap-2 ">
         <img src="https://inwfile.com/s-de/pbx3es.jpg" alt="Card Image"
             class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">

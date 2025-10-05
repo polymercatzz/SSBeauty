@@ -7,7 +7,7 @@
     <title>History</title>
     <!-- <link rel="stylesheet" href="./dist/output.css" /> -->
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <script src="/js/popupcancel.js"></script>
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -85,15 +85,15 @@
                     <div class="ml-5 space-y-4 justify-center  flex flex-col max-[1085px]:ml-[2vh]">
                         <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
                             <img src="/img/shopping-cart.png" alt="" class="w-[2vh]">
-                            <p>Tensonez</p>
+                            <p><%= appointment.Service.name %></p>
                         </div>
                         <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
                             <img src="/img/pending.png" alt="" class="w-[2vh]">
-                            <p>120 นาที</p>
+                            <p><%= appointment.Service.duration %> นาที</p>
                         </div>
                         <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
                             <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
-                            <p>760 บาท</p>
+                            <p><%= appointment.Service.price %> บาท</p>
                         </div>
                     </div>
                 </a>
@@ -102,13 +102,20 @@
                     <div class=" space-y-4 justify-center  flex flex-col">
                         <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
                             <img src="/img/user.png" alt="" class="w-[2vh]">
-                            <p>ช่าง: A</p>
+                            <p>ช่าง: <%= appointment.Staff.User.first_name %> <%= appointment.Staff.User.last_name %></p>
                         </div>
                         <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
                             <img src="/img/calendar.png" alt="" class="w-[2vh]">
                             <div class="flex flex-wrap">
                                 <p>จองวันที่:</p>
-                                <p>20/08/2026</p>
+                                <% date = new Date(appointment.appointment_date) 
+                                const hours = date.getHours();
+                                const minutes = date.getMinutes();
+                                const formattedHours = hours < 10 ? '0' + hours : hours;
+                                const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+                                const hhmm = `${formattedHours}:${formattedMinutes}`;
+                                %>
+                                <p> <%= date.toDateString() %></p>
 
                             </div>
                         </div>
@@ -116,7 +123,7 @@
                             <img src="/img/alarm-clock.png" alt="" class="w-[2vh]">
                             <div class="flex flex-wrap">
                                 <p>เวลา:</p>
-                            <p>14:00 น.</p>
+                            <p><%= hhmm %> น.</p>
                             </div>
                         </div>
                     </div>
@@ -125,21 +132,35 @@
                             <img src="/img/info.png" alt="" class="w-[2vh]">
                             <div class="flex flex-wrap">
                                 <p>สถานะ:</p>
-                            <p>รอใช้งาน</p>
+                            <p><%= appointment.showstatus %></p>
                             </div>
                         </div>
-                        <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
-                            <img src="/img/bill.png" alt="" class="w-[2vh]">
-                            <button class="p-2 bg-white rounded-xl text-[#E5408E]">ใบเสร็จ</button>
-                        </div>
-
+                        <% if (appointment.status === 'completed') { %>
+                            <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh] ">
+                                <img src="/img/bill.png" alt="" class="w-[2vh]">
+                                <button class="p-2 bg-white rounded-xl text-[#E5408E]">ใบเสร็จ</button>
+                            </div>
+                        <%  }; %>
                     </div>
                 </div>
-                <div
-                    class="bg-[#DBB3C1] text-white font-[kanit] text-[2vh] p-2 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300  h-fit self-end ml-auto">
-                    <button>ยกเลิกการจอง</button>
-                </div>
+                <% if (appointment.status === 'booked') { %>
+                    <div
+                        class="bg-[#DBB3C1] text-white font-[kanit] text-[2vh] p-2 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300  h-fit self-end ml-auto">
+                        <button onclick="openCancelModal(<%= appointment.appointment_id %>);">ยกเลิกการจอง</button>
+                    </div>
+                <%  }; %>
             </div>
+                <!-- Popup cancelModal -->
+                    <div id="cancelModal-<%= appointment.appointment_id %>" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+                        <div class="bg-white rounded-2xl shadow-lg p-8 max-w-sm w-full text-center">
+                            <h2 class="text-xl font-bold mb-4 text-[#E5408E] font-[kanit]">ยืนยันการยกเลิกการจอง</h2>
+                            <p class="mb-6 text-[#616162] font-[kanit]">คุณต้องการยกเลิกการจองนี้จริงหรือไม่?</p>
+                            <div class="flex justify-center gap-4">
+                                <button onclick="closeCancelModal(<%= appointment.appointment_id %>)" class="px-4 py-2 rounded-xl bg-gray-200 text-[#616162] font-[kanit] hover:bg-gray-300">ไม่</button>
+                                <button onclick="confirmCancel(<%= appointment.appointment_id %>)" class="px-4 py-2 rounded-xl bg-[#E5408E] text-white font-[kanit] hover:bg-pink-600">ใช่, ยกเลิก</button>
+                            </div>
+                        </div>
+                    </div>
         <% }) %>
         <!-- <div class="max-w-[75%]  mx-auto rounded-3xl shadow-lg shadow-black-200  
                bg-white/60 backdrop-blur-md p-5 flex flex-wrap max-[500px]:max-w-[90%]">

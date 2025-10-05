@@ -105,10 +105,7 @@
     <p class="font-[tangerine] text-[#E5408E] text-[5vh] font-bold mb-3">Description</p>
 
     <div class="w-full rounded-3xl shadow-lg bg-white/60 backdrop-blur-md flex flex-col items-start p-5">
-      <p class="font-[kanit] text-[#616162] text-[2.5vh] font-light">
-        การนวดหน้าเป็นการบำบัดที่ช่วยกระตุ้นการไหลเวียนของเลือดและเสริมสร้างสุขภาพผิวหน้า
-        การนวดหน้าช่วยลดความเครียดและความตึงเครียดในกล้ามเนื้อใบหน้า
-        การนวดหน้าควรทำอย่างอ่อนโยนและไม่ควรกดแรงเกินไป เพื่อป้องกันการระคายเคืองหรือบาดเจ็บของผิวหน้า
+      <p class="font-[kanit] text-[#616162] text-[2.5vh] font-light"><%= service.description %>
       </p>
     </div>
 
@@ -117,15 +114,15 @@
       <div class="flex flex-wrap gap-6 justify-center items-center w-full">
         <div class="flex items-center gap-2 font-[inter] text-[#616162] text-[2.5vh]">
           <img src="/img/shopping-cart.png" alt="" class="w-[2.5vh]">
-          <p>Tensonez</p>
+          <p><%= service.name %></p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2.5vh]">
           <img src="/img/pending.png" alt="" class="w-[2.5vh]">
-          <p>120 นาที</p>
+          <p><%= service.duration %> นาที</p>
         </div>
         <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2.5vh]">
           <img src="/img/usd-circle.png" alt="" class="w-[2.5vh]">
-          <p>760 บาท</p>
+          <p><%= service.price %> บาท</p>
         </div>
       </div>
     </div>
@@ -151,78 +148,76 @@
             </button>
 
             <!-- ฟอร์ม -->
-            <form class="space-y-6 mt-10 text-[2vh]">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-[kanit] text-gray-700 mb-1">วันที่:</label>
-                        <input type="date"
-                            class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none">
-                    </div>
-                    <div>
-                        <label class="block font-[kanit] text-gray-700 mb-1">เวลา:</label>
-                        <input type="time"
-                            class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block font-[kanit] text-gray-700 mb-1">บริการ:</label>
-                        <input type="text" value="สปา" readonly
-                            class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none">
-                    </div>
-                    <div class="relative w-full">
-                        <!-- ปุ่มเปิด dropdown -->
-                        <label class="block font-[kanit] text-gray-700 mb-1">บริการเสริม:</label>
-
-                        <button id="dropdownBtn" type="button"
-                            class="w-full border rounded-lg p-2 flex justify-between items-center focus:ring-2 focus:ring-[#DBB3C1]">
-                            <span id="dropdownText" class="text-gray-600">เลือกบริการเสริม</span>
-                            <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 9l-7 7-7-7" />
-                            </svg>
-                        </button>
-
-                        <!-- รายการ dropdown -->
-                        <div id="dropdownMenu"
-                            class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg hidden max-h-40 overflow-y-auto">
-                            <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
-                                <input type="checkbox" value="สครับหน้า" class="w-4 h-4 text-[#A5848F]">
-                                <span>สครับหน้า</span>
-                            </label>
-                            <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
-                                <input type="checkbox" value="นวดคอ" class="w-4 h-4 text-[#A5848F]">
-                                <span>นวดคอ</span>
-                            </label>
-                            <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
-                                <input type="checkbox" value="นวดไหล่" class="w-4 h-4 text-[#A5848F]">
-                                <span>นวดไหล่</span>
-                            </label>
-                            <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
-                                <input type="checkbox" value="นวดเท้า" class="w-4 h-4 text-[#A5848F]">
-                                <span>นวดเท้า</span>
-                            </label>
-                        </div>
-                    </div>
-
-                </div>
-
+            <form id="bookingForm" class="space-y-6 mt-10 text-[2vh]" action="/user/booking/<%= service.service_id %>" method="POST">
+              <div class="grid grid-cols-2 gap-4">
                 <div>
-                    <label class="block font-[kanit] text-gray-700 mb-1">ช่าง:</label>
-                    <select class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none">
-                        <option>-- เลือก --</option>
-                        <option>พี่แอน</option>
-                        <option>พี่ตา</option>
-                        <option>พี่ก้อย</option>
-                    </select>
+                  <label class="block font-[kanit] text-gray-700 mb-1">วันที่:</label>
+                  <input type="date" id="dateInput" name="appointment_date"
+                    class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none" required>
                 </div>
+                <div>
+                  <label class="block font-[kanit] text-gray-700 mb-1">เวลา:</label>
+                  <input type="time" id="timeInput" name="appointment_time"
+                    class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none" required>
+                </div>
+              </div>
 
-                <!-- ปุ่มยืนยัน -->
-                <button type="submit"
-                    class="bg-[#A5848F] text-white font-[kanit] w-fit px-6 py-2 rounded-lg hover:bg-[#8a6f77] transition block mx-auto">
-                    ยืนยันการจอง
-                </button>
+              <div class="grid grid-cols-2 gap-4">
+                <div>
+                  <label class="block font-[kanit] text-gray-700 mb-1">บริการ:</label>
+                  <input type="text" value="Hair" readonly name="type"
+                    class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none">
+                </div>
+                <div class="relative w-full">
+                  <!-- ปุ่มเปิด dropdown -->
+                  <label class="block font-[kanit] text-gray-700 mb-1">บริการเสริม:</label>
+
+                  <button id="dropdownBtn" type="button"
+                    class="w-full border rounded-lg p-2 flex justify-between items-center focus:ring-2 focus:ring-[#DBB3C1]">
+                    <span id="dropdownText" class="text-gray-600">เลือกบริการเสริม</span>
+                    <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  <!-- รายการ dropdown -->
+                  <div id="dropdownMenu"
+                    class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg hidden max-h-40 overflow-y-auto">
+                    <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
+                      <input type="checkbox" name="extra" value="สครับหน้า" class="w-4 h-4 text-[#A5848F]">
+                      <span>สครับหน้า</span>
+                    </label>
+                    <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
+                      <input type="checkbox" name="extra" value="นวดคอ" class="w-4 h-4 text-[#A5848F]">
+                      <span>นวดคอ</span>
+                    </label>
+                    <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
+                      <input type="checkbox" name="extra" value="นวดไหล่" class="w-4 h-4 text-[#A5848F]">
+                      <span>นวดไหล่</span>
+                    </label>
+                    <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
+                      <input type="checkbox" name="extra" value="นวดเท้า" class="w-4 h-4 text-[#A5848F]">
+                      <span>นวดเท้า</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label class="block font-[kanit] text-gray-700 mb-1">ช่าง:</label>
+                <select id="staffSelect" name="staff" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none" required>
+                  <option value="">-- เลือก --</option>
+                  <% service.Staffs.forEach(staff => { %>
+                    <option value="<%= staff.staff_id %>">ช่าง <%= staff.User.first_name %> <%= staff.User.last_name %></option>
+                  <% }); %>
+                </select>
+              </div>
+              <!-- ปุ่มยืนยัน -->
+              <button type="submit"
+                class="bg-[#A5848F] text-white font-[kanit] w-fit px-6 py-2 rounded-lg hover:bg-[#8a6f77] transition block mx-auto">
+                ยืนยันการจอง
+              </button>
             </form>
         </div>
     </div>
@@ -230,6 +225,46 @@
 
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+              const dateInput = document.getElementById('dateInput');
+              const timeInput = document.getElementById('timeInput');
+              const staffSelect = document.getElementById('staffSelect');
+
+              const dateVal = dateInput.value;
+              const timeVal = timeInput.value;
+              const staffVal = staffSelect.value;
+              console.log(staffVal);
+              if (!dateVal) {
+                alert('กรุณาเลือกวันที่');
+                dateInput.focus();
+                e.preventDefault();
+                return;
+              }
+              if (!timeVal) {
+                alert('กรุณาเลือกเวลา');
+                timeInput.focus();
+                e.preventDefault();
+                return;
+              }
+              if (!staffVal) {
+                alert('กรุณาเลือกช่าง');
+                staffSelect.focus();
+                e.preventDefault();
+                return;
+              }
+
+              // ตรวจสอบวันและเวลาไม่ย้อนหลัง
+              const selectedDateTime = new Date(dateVal + 'T' + timeVal);
+              const now = new Date();
+              if (selectedDateTime < now) {
+                alert('วันและเวลาต้องไม่ย้อนหลัง');
+                dateInput.focus();
+                e.preventDefault();
+                return;
+              }
+            });
+  </script>
   <script>
     // nav manu
     const nav = document.querySelector('.nav');
