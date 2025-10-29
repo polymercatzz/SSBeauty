@@ -26,104 +26,102 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
 </head>
 
-<body class="bg-gradient-to-t from-[#F2F1EB] to-[#DBB3C1] min-h-screen  m-5">
+<body class="bg-gray-50 min-h-screen m-0">
+  <%- include('nav_main_admin', { activeTop: 'stat' , activePage: 'admin_stat' }) %>
 
-  <!-- Header -->
-  <div
-    class="flex items-center justify-between bg-gray-100 p-4 mt-8 shadow  rounded-lg bg-gradient-to-r from-[#B4919D] to-[#616162]">
-    <div class="flex items-center space-x-2">
-      <img src="curl.png" alt="logo" class="w-[5vh] m-2">
-      <span class="text-xl font-bold ">SSBeauty</span>
-    </div>
-    <div class="flex items-center space-x-4">
-      <!-- เหลือใส่กดเชื่อม -->
-      <button class="hover:bg-white hover:bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">หน้าหลัก</button>
-      <button class="bg-white bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">สถิติ</button>
-      <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer hover:bg-pink-50">
-      </div>
-    </div>
-  </div>
-
-  <!-- Content -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4  mt-10 gap-10 ">
-    <div id="summery" class="">
-      <div class="bg-[#A5848F] rounded-xl text-center text-white p-4 pt-3">
-        <p class="pb-2">จำนวนผู้ใช้บริการวันนี้</p>
-        <p class="bg-[#FFFFFF] bg-opacity-20 rounded-xl p-3">100 คน</p>
-      </div>
-    </div>
-    <div id="summery" class="">
-      <div class="bg-[#A5848F] rounded-xl text-center text-white pt-3 p-4">
-        <p class="pb-2">รายได้วันนี้</p>
-        <p class="bg-[#FFFFFF] bg-opacity-20 rounded-xl p-3">2000 บาท</p>
-      </div>
-    </div>
-    <div id="summery" class="">
-      <div class="bg-[#A5848F] rounded-xl text-center text-white pt-3 p-4">
-        <p class="pb-2">รายได้เดือนนี้</p>
-        <p class="bg-[#FFFFFF] bg-opacity-20 rounded-xl p-3">2000 บาท</p>
-      </div>
-    </div>
-    <div id="summery" class="">
-      <div class="bg-[#A5848F] rounded-xl text-center text-white pt-3 p-4">
-        <p class="pb-2">กำไรสุทธิ</p>
-        <p class="bg-[#FFFFFF] bg-opacity-20 rounded-xl p-3">2000 บาท</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="charts grid grid-cols-2 gap-6 p-4 mt-4">
-    <div
-      class="charts-card bg-white mb-5 p-[25px] box-border break-inside-avoid border border-[#d2d2d3] rounded-[16px] shadow-lg ">
-      <p class="chart-title flex items-center justify-center text-[2vh]">ยอดขายรายวัน(เดือนเมษายน)</p>
-      <div id="bar-chart"></div>
+  <!-- Main Content -->
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Page Header -->
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">สถิติและรายงาน</h1>
+      <p class="text-sm text-gray-600 mt-1">ภาพรวมรายได้และประสิทธิภาพการทำงาน</p>
     </div>
 
-    <div>
-      <div
-        class="charts-card bg-white mb-5 p-[25px] box-border break-inside-avoid border border-[#d2d2d3] rounded-[16px] shadow-lg">
-        <p class="chart-title flex items-center justify-center text-[2vh]">
-          รายได้รายเดือนย้อนหลัง</p>
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <p class="text-sm font-medium text-gray-600 mb-3">จำนวนผู้ใช้บริการวันนี้</p>
+        <p class="text-2xl font-bold text-[#A5848F]"><%= todayCustomers %> คน</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <p class="text-sm font-medium text-gray-600 mb-3">รายได้วันนี้</p>
+        <p class="text-2xl font-bold text-[#A5848F]"><%= todayRevenue.toLocaleString() %> บาท</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <p class="text-sm font-medium text-gray-600 mb-3">รายได้เดือนนี้</p>
+        <p class="text-2xl font-bold text-[#A5848F]"><%= monthRevenue.toLocaleString() %> บาท</p>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+        <p class="text-sm font-medium text-gray-600 mb-3">กำไรสุทธิเดือนนี้</p>
+        <p class="text-2xl font-bold text-[#A5848F]"><%= netProfit.toLocaleString() %> บาท</p>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">รายได้รายวัน (7 วันล่าสุด)</h3>
+        <div id="bar-chart"></div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">รายได้รายเดือน (9 เดือนล่าสุด)</h3>
         <div id="area-chart"></div>
       </div>
     </div>
-  </div>
 
-  <div class="flex p-4 max-w-[97%]">
-    <div
-    class="charts-card bg-white mb-5 box-border break-inside-avoid border border-[#d2d2d3] rounded-[16px] shadow-lg w-fit p-4 ">
-    <p class="chart-title flex items-center justify-center text-[2vh]">ยอดขายรายวัน(เดือนเมษายน)</p>
-    <div id="bar-chart2"></div>
-  </div>
-  <div>
-    <div class="p-6   h-full w-[52vh]">
-  <h2 class="text-xl font-bold mb-4">ตารางสินค้า (สต็อก)</h2>
-  
-  <table class=" bg-white w-full border-collapse border border-gray-300 text-center rounded-xl">
-    <thead class="bg-gray-100">
-      <tr >
-        <th class="border border-gray-300 px-4 py-2">ลำดับ</th>
-        <th class="border border-gray-300 px-4 py-2">ชื่อสินค้า</th>
-        <th class="border border-gray-300 px-4 py-2">สถานะ</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2">1</td>
-        <td class="border border-gray-300 px-4 py-2">ครีมบำรุงผิว</td>
-        <td class="border border-gray-300 px-4 py-2 text-red-500 font-semibold">หมดสต็อก</td>
-      </tr>
-      <tr>
-        <td class="border border-gray-300 px-4 py-2">2</td>
-        <td class="border border-gray-300 px-4 py-2">แชมพู</td>
-        <td class="border border-gray-300 px-4 py-2 text-yellow-500 font-semibold">ใกล้หมด</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-  </div>
-  </div>
+    <!-- Bottom Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">การวิเคราะห์กำไร (6 เดือนล่าสุด)</h3>
+        <div id="bar-chart2"></div>
+      </div>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">สินค้าใกล้หมด/หมดสต็อก</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-base">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">ลำดับ</th>
+                <th class="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">ชื่อสินค้า</th>
+                <th class="border border-gray-200 px-4 py-3 text-left font-semibold text-gray-900">สถานะ</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% if (lowStockProducts && lowStockProducts.length > 0) { %>
+                <% lowStockProducts.forEach((product, index) => { %>
+              <tr class="hover:bg-gray-50">
+                <td class="border border-gray-200 px-4 py-3 text-gray-700"><%= index + 1 %></td>
+                <td class="border border-gray-200 px-4 py-3 text-gray-900"><%= product.name %></td>
+                <td class="border border-gray-200 px-4 py-3">
+                  <% if (product.stock_qty === 0) { %>
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    หมดสต็อก (<%= product.stock_qty %>)
+                  </span>
+                  <% } else if (product.stock_qty < 5) { %>
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    น้อยมาก (<%= product.stock_qty %>)
+                  </span>
+                  <% } else { %>
+                  <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    ใกล้หมด (<%= product.stock_qty %>)
+                  </span>
+                  <% } %>
+                </td>
+              </tr>
+                <% }); %>
+              <% } else { %>
+              <tr>
+                <td colspan="3" class="border border-gray-200 px-4 py-3 text-center text-gray-500">
+                  ไม่มีสินค้าที่ใกล้หมดหรือหมดสต็อก
+                </td>
+              </tr>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
 
 
 
@@ -131,12 +129,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/4.7.0/apexcharts.min.js"></script>
 
   <script>
-    //กราฟแท่ง
+    // Prepare data from server
+    const dailyRevenue = <%- JSON.stringify(dailyRevenue) %>;
+    const monthlyRevenue = <%- JSON.stringify(monthlyRevenue) %>;
+    const monthlyProfit = <%- JSON.stringify(monthlyProfit) %>;
+
+    // Thai month names
+    const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
+
+    //กราฟแท่ง - รายได้รายวัน (7 วันล่าสุด)
     const barChartOptions = {
       series: [
         {
-          name: '',
-          data: [0, 4000, 8000, 20000, 9000, 55000, 10000],
+          name: 'รายได้',
+          data: dailyRevenue.map(d => d.revenue),
         },
       ],
       chart: {
@@ -162,18 +168,20 @@
         show: false,
       },
       xaxis: {
-        categories: ['วันที่ 1', 'วันที่ 2', 'วันที่ 3', 'วันที่ 4', 'วันที่ 5', 'วันที่ 6', 'วันที่ 7'],
+        categories: dailyRevenue.map(d => {
+          const date = new Date(d.date);
+          return `${date.getDate()}/${date.getMonth() + 1}`;
+        }),
       },
       yaxis: {
         title: {
-          text: 'รายได้',
+          text: 'รายได้ (฿)',
         },
       },
       tooltip: {
         y: {
-          formatter: function (val, opts) {
-            const label = opts.w.globals.labels[opts.dataPointIndex];
-            return `ใช้เวลา ${val} นาที`;
+          formatter: function (val) {
+            return val.toLocaleString() + ' ฿';
           },
         },
       },
@@ -187,12 +195,12 @@
 
 
 
-    //กราฟเส้น
+    //กราฟเส้น - รายได้รายเดือน (9 เดือนล่าสุด)
     const areaChartOptions = {
       series: [
         {
           name: 'รายได้',
-          data: [12000, 18000, 25000, 40000, 30000, 22000, 15000, 20000, 60000],
+          data: monthlyRevenue.map(m => m.revenue),
         },
       ],
       chart: {
@@ -209,7 +217,7 @@
       stroke: {
         curve: 'smooth',
       },
-      labels: ['มค', 'กพ', 'มีค', 'เมย', 'พค', 'มิย', 'กค', 'สค', 'กย'],
+      labels: monthlyRevenue.map(m => thaiMonths[m.month - 1]),
 
       markers: {
         size: 0,
@@ -217,20 +225,25 @@
       yaxis: [
         {
           title: {
-            text: 'รายได้่',
+            text: 'รายได้ (฿)',
           },
         },
 
       ],
       xaxis: {
         title: {
-          text: '12 เดือนล่าสุด',
+          text: '9 เดือนล่าสุด',
         },
       },
 
       tooltip: {
         shared: true,
         intersect: false,
+        y: {
+          formatter: function (val) {
+            return val.toLocaleString() + ' ฿';
+          },
+        },
       },
     };
 
@@ -242,19 +255,20 @@
 
 
 
+    // กราฟแท่งกลุ่ม - การวิเคราะห์กำไร (6 เดือนล่าสุด)
     const barChartOptions2 = {
       series: [
         {
           name: 'รายได้ (฿)',
-          data: [150000, 180000, 170000, 200000, 210000, 220000],
+          data: monthlyProfit.map(m => m.revenue),
         },
         {
           name: 'ต้นทุน (฿)',
-          data: [70000, 85000, 80000, 95000, 100000, 110000],
+          data: monthlyProfit.map(m => m.cost),
         },
         {
           name: 'กำไรสุทธิ (฿)',
-          data: [80000, 95000, 90000, 105000, 110000, 110000],
+          data: monthlyProfit.map(m => m.profit),
         },
       ],
       chart: {
@@ -282,7 +296,7 @@
         colors: ['transparent'],
       },
       xaxis: {
-        categories: ['เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.'],
+        categories: monthlyProfit.map(m => thaiMonths[m.month - 1]),
       },
       yaxis: {
         title: {

@@ -1,29 +1,29 @@
 const sequelize = require('sequelize');
 const {   User,
-  Staff,
+  Employee,
   Service,
   Appointment,
   Product } = require('../models');
 
 const showMainUser = async (req, res) => {
     const services = await Service.findAll();
-    const staffs = await Staff.findAll();
-    res.render("user_home", { services: services, staffs: staffs });
+    const employees = await Employee.findAll();
+    res.render("user_home", { services: services, employees: employees });
 }
 
 const BookingService = async (req, res) => {
     const userId = 1;
     const service_id = req.params.service_id;
-    const { appointment_date, appointment_time, type, extra, staff } = req.body;
+    const { appointment_date, appointment_time, type, extra, employee } = req.body;
     const appointmentDateTime = new Date(`${appointment_date}T${appointment_time}`);
-    // Check if the staff is already booked for this service at the selected date and time
+    // Check if the employee is already booked for this service at the selected date and time
     const service = await Service.findByPk(service_id);
     if (!service) {
         return res.send('Service not found');
     }
     const existingAppointment = await Appointment.findOne({
         where: {
-        staff_id: staff,
+        employee_id: employee,
         service_id: service_id,
         appointment_date: {
             [sequelize.Op.between]: [
@@ -31,19 +31,19 @@ const BookingService = async (req, res) => {
                 new Date(appointmentDateTime.getTime() + (service.duration || 60) * 60000)
             ]
         },
-        staff_id: staff,
+        employee_id: employee,
         status: { [sequelize.Op.not]: 'canceled' }
         }
     });
     if (existingAppointment) {
-        return res.send('Staff is already booked for this service at the selected time.');
+        return res.send('Employee is already booked for this service at the selected time.');
     } if (!service) {
         return res.send('Service not found');
     } 
     const newAppointment = await Appointment.create({
         user_id: userId,
         service_id: service_id,
-        staff_id: staff,
+        employee_id: employee,
         appointment_date: appointmentDateTime,
         status: 'booked',
     });
@@ -59,7 +59,7 @@ const showBookingSpa = async (req, res) => {
     const service_id = req.params.service_id;
     const service = await Service.findByPk(service_id, {
         include: [
-            { model: Staff, 
+            { model: Employee, 
                 include: [
                 { model: User }
             ]}]
@@ -80,7 +80,7 @@ const showBookingHair = async (req, res) => {
     const service_id = req.params.service_id;
     const service = await Service.findByPk(service_id, {
         include: [
-            { model: Staff, 
+            { model: Employee, 
                 include: [
                 { model: User }
             ]}]
@@ -96,7 +96,7 @@ const showHistory = async (req, res) => {
     const appointments = await Appointment.findAll({
         where: { user_id: userId },
         include: [
-            {model: Staff, include: [{ model: User }]}, User, Service
+            {model: Employee, include: [{ model: User }]}, User, Service
         ],
         order: [['appointment_date', 'DESC']]
     });

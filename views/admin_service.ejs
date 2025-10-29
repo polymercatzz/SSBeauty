@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>History</title>
+  <!-- <link rel="stylesheet" href="./dist/output.css" /> -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Kapakana:wght@300..400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+    rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+
+  <!-- font -->
+  <!-- manu -->
+  <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+  <!-- arrow -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" />
+</head>
+
+<body class="bg-gray-50 min-h-screen m-0">
+
+  <!-- Header/Nav จากไฟล์รวม -->
+  <%- include('nav_main_admin', { activePage: 'service', activeTop: 'home' }) %>
+  
+  <!-- Main Content -->
+  <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Page Header -->
+    <div class="mb-6">
+      <h1 class="text-2xl font-bold text-gray-900">จัดการบริการ</h1>
+      <p class="text-sm text-gray-600 mt-1">จัดการและแก้ไขบริการต่างๆ ของร้าน</p>
+    </div>
+
+    <!-- Filter & Actions -->
+    <div class="flex justify-between items-start gap-4 mb-6 flex-wrap">
+      <div class="flex gap-3 flex-wrap bg-white rounded-lg shadow-sm p-4 flex-1 min-w-[300px]">
+        <div class="flex-1 min-w-[120px]">
+          <label class="block text-xs font-medium text-gray-700 mb-1">ประเภท</label>
+          <select id="filterType" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+            <option value="">ทั้งหมด</option>
+            <option value="spa">Spa</option>
+            <option value="hair">Hair</option>
+          </select>
+        </div>
+        <div class="flex-1 min-w-[200px]">
+          <label class="block text-xs font-medium text-gray-700 mb-1">ค้นหา</label>
+          <input id="searchInput" type="text" placeholder="ค้นหาชื่อบริการ..." class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+        </div>
+        <div class="flex items-end">
+          <button onclick="filterServices()" class="bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm">
+            ค้นหา
+          </button>
+        </div>
+      </div>
+      <button id="openServiceModal"
+        class="bg-[#A5848F] hover:bg-[#8a6f77] text-white p-3 rounded-lg shadow-md transition-all hover:shadow-lg flex items-center gap-2 font-medium">
+        <span class="text-2xl">+</span>
+        <span class="hidden sm:inline text-sm">เพิ่มบริการ</span>
+      </button>
+    </div>
+
+  <!-- Services Grid -->
+  <div id="servicesGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <% if (servicesData && servicesData.length > 0) { %>
+      <% servicesData.forEach(service => { %>
+    <!-- Service Card -->
+    <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow p-5 border border-gray-200 group service-card" 
+         data-type="<%= service.type %>" 
+         data-name="<%= service.name.toLowerCase() %>">
+      <div class="flex gap-4">
+        <% if (service.image1Url || service.image2Url || service.image3Url) { %>
+        <div class="w-32 h-24 rounded-lg flex-shrink-0 relative overflow-hidden bg-gray-100">
+          <img src="<%= service.image1Url || service.image2Url || service.image3Url %>" 
+               alt="<%= service.name %>"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+               class="w-full h-full object-cover">
+          <div class="hidden w-full h-full bg-gradient-to-br from-[#A5848F]/20 to-[#A5848F]/40 items-center justify-center absolute inset-0">
+            <span class="text-3xl"><%= service.type === 'spa' ? '🧖' : '💇' %></span>
+          </div>
+        </div>
+        <% } else { %>
+        <div class="w-32 h-24 bg-gradient-to-br from-[#A5848F]/20 to-[#A5848F]/40 rounded-lg flex items-center justify-center flex-shrink-0">
+          <span class="text-3xl font-bold text-[#A5848F]/60"><%= service.type === 'spa' ? '🧖' : '💇' %></span>
+        </div>
+        <% } %>
+        <div class="flex-1 space-y-2">
+          <div class="flex items-start justify-between gap-2">
+            <h3 class="font-semibold text-gray-900 group-hover:text-[#A5848F] transition-colors"><%= service.name %></h3>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium <%= service.type === 'spa' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800' %>">
+              <%= service.type === 'spa' ? 'Spa' : 'Hair' %>
+            </span>
+          </div>
+          <% if (service.description) { %>
+          <p class="text-xs text-gray-600 line-clamp-2"><%= service.description %></p>
+          <% } %>
+          <div class="space-y-1 text-sm text-gray-600">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span><%= service.duration %> นาที</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <span class="font-medium text-[#A5848F]"><%= parseFloat(service.price).toLocaleString() %> บาท</span>
+            </div>
+            <% if (service.Employees && service.Employees.length > 0) { %>
+            <div class="flex items-start gap-2 mt-2">
+              <svg class="w-4 h-4 text-gray-400 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+              </svg>
+              <div class="flex flex-wrap gap-1">
+                <% service.Employees.forEach(emp => { %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-700">
+                  <%= emp.User.first_name || 'N/A' %> <%= emp.User.last_name || '' %>
+                </span>
+                <% }); %>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <div class="mt-4 flex justify-end gap-2">
+        <button onclick="editService(<%= service.service_id %>)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+          แก้ไข
+        </button>
+        <button onclick="deleteService(<%= service.service_id %>, '<%= service.name %>')" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+          ลบ
+        </button>
+      </div>
+    </div>
+      <% }); %>
+    <% } else { %>
+    <div class="col-span-2 text-center py-12 text-gray-500">
+      <p class="text-lg">ไม่มีบริการในขณะนี้</p>
+      <p class="text-sm mt-2">คลิกปุ่ม "เพิ่มบริการ" เพื่อเริ่มต้น</p>
+    </div>
+    <% } %>
+  </div>
+  </main>
+
+  <!-- Add/Edit Service Modal -->
+  <div id="serviceModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden justify-center items-center z-50 p-4">
+    <div class="bg-white max-w-2xl w-full rounded-2xl shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      
+      <!-- Modal Header -->
+      <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-2xl">
+        <div class="flex justify-between items-center">
+          <h2 id="modalTitle" class="text-xl font-bold text-gray-900">เพิ่มบริการใหม่</h2>
+          <div class="flex items-center gap-2">
+            <button type="button" id="deleteServiceBtn" class="hidden text-gray-400 hover:text-red-500 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+            <button id="closeServiceModal" type="button"
+              class="text-gray-400 hover:text-gray-600 p-2 rounded-lg hover:bg-gray-100 transition-colors">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Body -->
+      <form id="serviceForm" action="/admin/manage-service/create" method="POST" enctype="multipart/form-data" class="p-6 space-y-5">
+        <input type="hidden" id="service_id" name="service_id">
+        
+        <!-- Service Name & Type -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อบริการ <span class="text-red-500">*</span></label>
+            <input type="text" id="name" name="name" required
+              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#A5848F] focus:border-transparent outline-none transition-shadow"
+              placeholder="กรอกชื่อบริการ">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">ประเภท <span class="text-red-500">*</span></label>
+            <select id="type" name="type" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#A5848F] focus:border-transparent outline-none">
+              <option value="">เลือกประเภท</option>
+              <option value="spa">Spa</option>
+              <option value="hair">Hair</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">รายละเอียด</label>
+          <textarea id="description" name="description" rows="3" 
+            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#A5848F] focus:border-transparent outline-none"
+            placeholder="กรอกรายละเอียดบริการ"></textarea>
+        </div>
+
+        <!-- Price & Duration -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">ราคา (บาท) <span class="text-red-500">*</span></label>
+            <input type="number" id="price" name="price" required min="0" step="0.01"
+              class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#A5848F] focus:border-transparent outline-none"
+              placeholder="0.00">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">ระยะเวลา (นาที) <span class="text-red-500">*</span></label>
+            <select id="duration" name="duration" required class="w-full border border-gray-300 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#A5848F] focus:border-transparent outline-none">
+              <option value="">เลือกระยะเวลา</option>
+              <option value="30">30 นาที</option>
+              <option value="60">60 นาที</option>
+              <option value="90">90 นาที</option>
+              <option value="120">120 นาที</option>
+              <option value="150">150 นาที</option>
+              <option value="180">180 นาที</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Employees Selection -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">พนักงานที่ให้บริการได้</label>
+          <div class="border border-gray-300 rounded-lg p-4 max-h-48 overflow-y-auto space-y-2">
+            <% if (employeesData && employeesData.length > 0) { %>
+              <% employeesData.forEach(emp => { %>
+            <label class="flex items-center gap-3 p-2 hover:bg-gray-50 rounded cursor-pointer">
+              <input type="checkbox" name="employee_ids" value="<%= emp.employee_id %>" 
+                class="w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+              <div class="flex items-center gap-2 flex-1">
+                <div class="w-8 h-8 bg-[#A5848F] text-white rounded-full flex items-center justify-center text-sm font-medium">
+                  <%= (emp.User?.first_name || 'N')[0] %>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-900"><%= emp.User.first_name || 'N/A' %> <%= emp.User.last_name || '' %></p>
+                  <p class="text-xs text-gray-500"><%= emp.position || 'ไม่ระบุตำแหน่ง' %></p>
+                </div>
+              </div>
+            </label>
+              <% }); %>
+            <% } else { %>
+            <p class="text-sm text-gray-500 text-center py-4">ไม่มีพนักงานในระบบ</p>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">รูปภาพบริการ (สูงสุด 3 รูป)</label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <!-- Image 1 -->
+            <div class="space-y-2">
+              <div id="preview1" class="hidden w-full h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-gray-50">
+                <img id="previewImg1" src="" alt="Preview 1" class="w-full h-full object-cover">
+              </div>
+              <input type="file" id="image1Input" name="image1" accept="image/*"
+                onchange="previewImage(this, 'preview1', 'previewImg1')"
+                class="w-full text-sm file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#A5848F] file:text-white hover:file:bg-[#8a6f77] file:cursor-pointer border border-gray-300 rounded-lg">
+              <p class="text-xs text-gray-500">รูปที่ 1 (หลัก)</p>
+            </div>
+            
+            <!-- Image 2 -->
+            <div class="space-y-2">
+              <div id="preview2" class="hidden w-full h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-gray-50">
+                <img id="previewImg2" src="" alt="Preview 2" class="w-full h-full object-cover">
+              </div>
+              <input type="file" id="image2Input" name="image2" accept="image/*"
+                onchange="previewImage(this, 'preview2', 'previewImg2')"
+                class="w-full text-sm file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 file:cursor-pointer border border-gray-300 rounded-lg">
+              <p class="text-xs text-gray-500">รูปที่ 2 (ตัวเลือก)</p>
+            </div>
+            
+            <!-- Image 3 -->
+            <div class="space-y-2">
+              <div id="preview3" class="hidden w-full h-32 border-2 border-dashed border-gray-300 rounded-lg overflow-hidden bg-gray-50">
+                <img id="previewImg3" src="" alt="Preview 3" class="w-full h-full object-cover">
+              </div>
+              <input type="file" id="image3Input" name="image3" accept="image/*"
+                onchange="previewImage(this, 'preview3', 'previewImg3')"
+                class="w-full text-sm file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200 file:cursor-pointer border border-gray-300 rounded-lg">
+              <p class="text-xs text-gray-500">รูปที่ 3 (ตัวเลือก)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex gap-3 pt-4">
+          <button type="button" id="cancelServiceBtn"
+            class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-colors">
+            ยกเลิก
+          </button>
+          <button type="submit"
+            class="flex-1 bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm">
+            บันทึก
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Services data from server
+    const servicesData = <%- JSON.stringify(servicesData) %>;
+
+    const openBtn = document.getElementById("openServiceModal");
+    const modal = document.getElementById("serviceModal");
+    const closeBtn = document.getElementById("closeServiceModal");
+    const cancelBtn = document.getElementById("cancelServiceBtn");
+    const serviceForm = document.getElementById("serviceForm");
+    const modalTitle = document.getElementById("modalTitle");
+    const deleteBtn = document.getElementById("deleteServiceBtn");
+
+    // Image preview function
+    function previewImage(input, previewId, imgId) {
+      const preview = document.getElementById(previewId);
+      const previewImg = document.getElementById(imgId);
+      
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          previewImg.src = e.target.result;
+          preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+      } else {
+        preview.classList.add('hidden');
+      }
+    }
+
+    // Make preview function global
+    window.previewImage = previewImage;
+
+    // Open modal for new service
+    openBtn.addEventListener("click", () => {
+      resetForm();
+      modalTitle.textContent = "เพิ่มบริการใหม่";
+      serviceForm.action = "/admin/manage-service/create";
+      serviceForm.enctype = "multipart/form-data";
+      deleteBtn.classList.add("hidden");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    });
+
+    // Close modal
+    closeBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    });
+
+    cancelBtn.addEventListener("click", () => {
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+    });
+
+    // Close on outside click
+    window.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }
+    });
+
+    // Reset form
+    function resetForm() {
+      serviceForm.reset();
+      document.getElementById("service_id").value = "";
+      document.querySelectorAll('input[name="employee_ids"]').forEach(cb => cb.checked = false);
+      
+      // Hide all image previews
+      ['preview1', 'preview2', 'preview3'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+    }
+
+    // Edit service
+    function editService(serviceId) {
+      const service = servicesData.find(s => s.service_id === serviceId);
+      if (!service) return;
+
+      // Set form values
+      document.getElementById("service_id").value = service.service_id;
+      document.getElementById("name").value = service.name;
+      document.getElementById("type").value = service.type;
+      document.getElementById("description").value = service.description || "";
+      document.getElementById("price").value = service.price;
+      document.getElementById("duration").value = service.duration;
+
+      // Show existing images
+      if (service.image1Url) {
+        document.getElementById('previewImg1').src = service.image1Url;
+        document.getElementById('preview1').classList.remove('hidden');
+      }
+      if (service.image2Url) {
+        document.getElementById('previewImg2').src = service.image2Url;
+        document.getElementById('preview2').classList.remove('hidden');
+      }
+      if (service.image3Url) {
+        document.getElementById('previewImg3').src = service.image3Url;
+        document.getElementById('preview3').classList.remove('hidden');
+      }
+
+      // Check employee checkboxes
+      document.querySelectorAll('input[name="employee_ids"]').forEach(cb => cb.checked = false);
+      if (service.Employees && service.Employees.length > 0) {
+        service.Employees.forEach(emp => {
+          const checkbox = document.querySelector(`input[name="employee_ids"][value="${emp.employee_id}"]`);
+          if (checkbox) checkbox.checked = true;
+        });
+      }
+
+      // Update modal
+      modalTitle.textContent = "แก้ไขบริการ";
+      serviceForm.action = `/admin/manage-service/update/${service.service_id}`;
+      serviceForm.enctype = "multipart/form-data";
+      deleteBtn.classList.remove("hidden");
+      
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    // Make editService global
+    window.editService = editService;
+
+    // Delete service
+    function deleteService(serviceId, serviceName) {
+      if (confirm(`คุณต้องการลบบริการ "${serviceName}" หรือไม่?\n\nการลบจะไม่สามารถย้อนกลับได้`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `/admin/manage-service/delete/${serviceId}`;
+        document.body.appendChild(form);
+        form.submit();
+      }
+    }
+
+    // Make deleteService global
+    window.deleteService = deleteService;
+
+    // Delete from modal
+    deleteBtn.addEventListener("click", () => {
+      const serviceId = document.getElementById("service_id").value;
+      const service = servicesData.find(s => s.service_id == serviceId);
+      if (service) {
+        deleteService(service.service_id, service.name);
+      }
+    });
+
+    // Filter services
+    function filterServices() {
+      const searchText = document.getElementById("searchInput").value.toLowerCase();
+      const filterType = document.getElementById("filterType").value;
+      const cards = document.querySelectorAll(".service-card");
+
+      cards.forEach(card => {
+        const name = card.dataset.name;
+        const type = card.dataset.type;
+        
+        const matchesSearch = !searchText || name.includes(searchText);
+        const matchesType = !filterType || type === filterType;
+
+        if (matchesSearch && matchesType) {
+          card.style.display = "";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    // Make filterServices global
+    window.filterServices = filterServices;
+
+    // Search on Enter key
+    document.getElementById("searchInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        filterServices();
+      }
+    });
+  </script>
+
+</body>
+
+</html>

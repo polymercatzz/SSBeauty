@@ -1,14 +1,14 @@
 const {   User,
-  Staff,
+  Employee,
   Service,
   Appointment,
   Product,
   ProductUsage } = require('../models');
 
 const showSchedule = async (req, res) => {
-    const staffId = 1; // แก้ไขให้เป็นsessions
+    const employeeId = 1; // แก้ไขให้เป็นsessions
     const appointments = await Appointment.findAll({
-        where: { staff_id: staffId },
+        where: { employee_id: employeeId },
         include: [
             { model: User },
             { model: Service },
@@ -29,16 +29,16 @@ const showSchedule = async (req, res) => {
 };
 
 const showStock = async (req, res) => {
-    const staffId = 1; // แก้ไขให้เป็นsessions
+    const employeeId = 1; // แก้ไขให้เป็นsessions
     const products = await Product.findAll({});
-    const staff = await Staff.findByPk(staffId, {
+    const employee = await Employee.findByPk(employeeId, {
         include: { model: User}
     });
-    res.render('emp_product_pickup', { products: products, staff: staff});
+    res.render('emp_product_pickup', { products: products, employee: employee});
 };
 
 const useProduct = async (req, res) => {
-    const staffId = 1; // แก้ไขให้เป็นsessions
+    const employeeId = 1; // แก้ไขให้เป็นsessions
     const { product_id } = req.params;
     const quantityInt = parseInt(req.body.quantity);
     // ตรวจสอบว่ามีสินค้านี้ในสต็อกหรือไม่
@@ -51,7 +51,7 @@ const useProduct = async (req, res) => {
     }
     // บันทึกการใช้ผลิตภัณฑ์
     await ProductUsage.create({
-        staff_id: staffId,
+        employee_id: employeeId,
         product_id: product_id,
         qty: quantityInt
     });

@@ -8,182 +8,216 @@
 
 </head>
 
-<body class="bg-gradient-to-r from-[#DBB3C1] to-[#F2F1EB] min-h-screen m-5">
-    <!-- Header -->
+<body class="bg-gray-50 min-h-screen m-0">
     <%- include('header_emp') %>
-        <!-- Filter เหลือทำให้filter-->
-        <div id="filter1" class="flex mt-4 w-80 border rounded-lg bg-white p-4 bg-opacity-60">
-            <div>
-                <p class="text-gray-500">ค้นหาสินค้า</p>
-                <input type="text" id="search-input" class="w-40 border rounded-lg px-3 py-1">
-            </div>
-            <div class="pt-6 mx-3">
-                <button id="search-btn"
-                    class="bg-pink-400 hover:bg-pink-500 text-white px-4 rounded-lg h-8">ค้นหา</button>
+    
+    <!-- Main Content -->
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">เบิกสินค้า</h1>
+            <p class="text-sm text-gray-600 mt-1">ค้นหาและเบิกสินค้าสำหรับการให้บริการ</p>
+        </div>
+
+        <!-- Filter Panel -->
+        <div class="bg-white shadow-sm rounded-lg border border-gray-200 p-4 mb-6">
+            <div class="flex flex-wrap items-end gap-4">
+                <div class="flex-1 min-w-[200px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ค้นหาสินค้า</label>
+                    <input type="text" id="search-input" 
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent"
+                        placeholder="ค้นหาชื่อสินค้า...">
+                </div>
+                <button id="search-btn" 
+                    class="bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
+                    ค้นหา
+                </button>
             </div>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mt-4 px-7 cursor-pointer " id="product-grid">
-            <!-- ทำให้มีหลายๆอัน -->
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4" id="product-grid">
             <% products.forEach(product=> { %>
-                <div onclick="openPopup(<%= product.product_id %>)" class="product-item">
-                    <div class="bg-white bg-opacity-60 p-4 rounded shadow text-[#A5848F]">
-                        <div class="text-center">
-                            <img src="/img/product1.png" alt="Product" class="mx-auto rounded-lg h-40">
-                            <p>ชื่อผลิตภัณฑ์ : <%= product.name %>
-                            </p>
+                <div onclick="openPopup(<%= product.product_id %>)" class="product-item cursor-pointer group">
+                    <div class="bg-white shadow-sm hover:shadow-md transition-shadow rounded-lg p-4 border border-gray-200">
+                        <div class="text-center mb-3">
+                            <img src="/img/product1.png" alt="<%= product.name %>" 
+                                class="mx-auto rounded-lg h-40 w-full object-cover"
+                                onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22160%22%3E%3Crect fill=%22%23f3f4f6%22 width=%22200%22 height=%22160%22/%3E%3Ctext fill=%22%23A5848F%22 font-family=%22Arial%22 font-size=%2214%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3ENo Image%3C/text%3E%3C/svg%3E'">
                         </div>
-                        <p>ราคา : <%= product.price %> บาท</p>
-                        <div class="flex space-x-2">
-                            <p class="">จำนวนคงเหลือ</p>
-                            <p class="bg-[#A5848F] px-2 text-sm rounded-lg text-white mt-1">
-                                <%= product.stock_qty %>
-                            </p>
-                            <p class="">
-                                <%= product.unit %>
-                            </p>
+                        <div class="space-y-2">
+                            <p class="product-name text-base font-semibold text-gray-900"><%= product.name %></p>
+                            <p class="text-base text-gray-700">ราคา: <span class="font-medium text-[#A5848F]"><%= product.price %> บาท</span></p>
+                            <div class="flex items-center gap-2">
+                                <span class="text-sm text-gray-600">คงเหลือ:</span>
+                                <span class="inline-flex items-center bg-[#A5848F] px-2.5 py-1 rounded-lg text-white text-sm font-medium">
+                                    <%= product.stock_qty %> <%= product.unit %>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>
             <% }); %>
         </div>
+    </main>
 
 
-        <!-- Popupprofile -->
-        <div id="popuppro" class="fixed inset-0 bg-black bg-opacity-40 hidden items-center justify-center">
-            <div class="h-10 bg-gray-100"></div>
-            <div class="bg-[#F2F1EB] rounded-xl shadow-lg w-[600px] p-6 relative">
-                <!-- ปุ่มปิด -->
-                <button class="absolute top-3 right-3 text-gray-500 hover:text-red-500"
-                    onclick="closePopupprofile()">✖</button>
-
-                <h2 class="text-lg font-bold mb-4">ข้อมูลพนังงาน</h2>
-
-                <div class="space-y-2 text-sm  p-3 rounded-lg">
-                    <div class="flex">
-                        <div class="flex">
-                            <label class="block text-gray-600 p-1"><b>ชื่อ:</b></label>
-                            <input type="text" value="" class="w-full border rounded-lg px-3 py-1" readonly>
-                        </div>
-                        <div class="flex">
-                            <label class="block text-gray-600 p-1"><b>ชื่อเล่น:</b></label>
-                            <input type="text" value="" class="w-20 border rounded-lg px-3 py-1" readonly>
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="flex">
-                            <label class="block text-gray-600 p-1"><b>เบอร์โทร: </b></label>
-                            <input type="text" value="" class=" border rounded-lg px-3 py-1" readonly>
-                        </div>
-                        <div class="flex">
-                            <label class="block text-gray-600 p-1"><b>Email: </b></label>
-                            <input type="text" value="" class="w-20 border rounded-lg px-3 py-1" readonly>
-                        </div>
-                    </div>
-                    <div class="flex">
-                        <div class="flex">
-                            <label class="block text-gray-600 p-1"><b>หน้าที่:</b></label>
-                            <select class="w-20 border rounded-lg px-3 py-1">
-                                <option value=""></option>
-                            </select>
-                        </div>
-                        <div class="flex">
-                            <label class="block text-gray-600 p-1"><b>โปรไฟล์:</b></label>
-                            <input type="file" accept="image/*" class=" border rounded-lg px-3 py-1"
-                                onchange="previewImage(event)">
-                            <img id="preview" class="w-20 h-20 ml-2 hidden" alt="Preview Image">
-                        </div>
-                    </div>
-                </div>
-                <h3 class="mt-4 font-semibold text-gray-600">สิ่งที่ทำได้:</h3>
-                <div class="flex space-x-3">
-                    <label class="flex items-center ">
-                        <input type="checkbox" name="services" value="" class="mr-2"> ตัดผม
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="services" value="" class="mr-2"> ย้อมผม
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="services" value="" class="mr-2"> ดัดผม
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="services" value="" class="mr-2"> ทำสปาผม
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="services" value="" class="mr-2"> ไดร์ผม
-                    </label>
-                </div>
-                <div class="flex space-x-3">
-                    <label class="flex items-center">
-                        <input type="checkbox" name="services" value="" class="mr-2"> นวดหน้า
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="services" value="" class="mr-2"> ทำเล็บ
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="services" value="" class="mr-2"> สปามือและเท้า
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="services" value="" class="mr-2"> ทำสปาผม
-                    </label>
-                    <label class="flex items-center">
-                        <input type="checkbox" name="services" value="" class="mr-2"> นวดตัว
-                    </label>
-                </div>
-                <h3 class="mt-4 font-semibold text-gray-600">แนะนำตัว:</h3>
-                <textarea class="w-full max-w-md border rounded-lg px-3 py-2 h-24" readonly></textarea>
-
-                <button class="mt-4 w-full bg-pink-500 hover:bg-pink-600 text-white py-2 rounded-lg">ยืนยัน</button>
+    <!-- Employee Profile Popup -->
+    <div id="popuppro" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 relative max-h-[90vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-lg flex items-center justify-between">
+                <h3 class="text-xl font-semibold text-gray-900">ข้อมูลพนักงาน</h3>
+                <button class="text-gray-400 hover:text-gray-600 text-2xl leading-none" onclick="closePopupprofile()">×</button>
             </div>
-        </div>
 
-        <!-- Popup -->
-        <% products.forEach(product=> { %>
-        <form action="/employee/use/<%= product.product_id %>" method="POST" id="popup-<%= product.product_id %>" class="fixed inset-0 bg-black/30 hidden items-center justify-center backdrop-blur-sm z-50">
-            <div class="bg-white rounded-2xl shadow-2xl w-[360px] p-6 relative transition-all duration-300">
-                <!-- ปุ่มปิด -->
-                <button class="absolute top-3 right-3 text-gray-400 hover:text-pink-500 transition"
-                    onclick="closePopup(<%= product.product_id %>)">
-                    ✕
-                </button>
-
-                <!-- หัวข้อ -->
-                <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">รายละเอียดการเบิก</h2>
-
-                <!-- ผู้เบิก -->
-                <div class="mb-3">
-                    <label class="block text-gray-600 mb-1 text-sm">ผู้เบิก</label>
-                    <input type="text" value="<%= staff.User.first_name %> <%= staff.User.last_name %>" readonly
-                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-gray-700 bg-gray-50 focus:outline-none" />
-                </div>
-
-                <!-- ผลิตภัณฑ์ -->
-                <div class="mb-3">
-                    <label class="block text-gray-600 mb-1 text-sm">ผลิตภัณฑ์</label>
-                    <input type="text" value="<%= product.name %>" readonly
-                        class="w-full border border-gray-200 rounded-lg px-3 py-2 text-gray-700 bg-gray-50 focus:outline-none" />
-                </div>
-
-                <!-- จำนวน / สำหรับ -->
-                <div class="grid grid-cols-2 gap-4 mt-3">
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6">
+                <!-- Personal Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-gray-600 mb-1 text-sm">จำนวน</label>
-                        <input
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-pink-400" name="quantity">
-                        </input>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ</label>
+                        <input type="text" value="" readonly
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base bg-gray-50">
                     </div>
                     <div>
-                        <label class="block text-gray-600 mb-1 text-sm">สำหรับ</label>
-                        <input
-                            class="w-full border border-gray-200 rounded-lg px-3 py-2 bg-white focus:outline-pink-400">
-                        </input>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อเล่น</label>
+                        <input type="text" value="" readonly
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base bg-gray-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทร</label>
+                        <input type="text" value="" readonly
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base bg-gray-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                        <input type="text" value="" readonly
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base bg-gray-50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">หน้าที่</label>
+                        <select class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+                            <option value="">เลือกหน้าที่</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">รูปโปรไฟล์</label>
+                        <input type="file" accept="image/*" 
+                            class="text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-[#A5848F] file:text-white hover:file:bg-[#8a6f77] file:cursor-pointer"
+                            onchange="previewImage(event)">
+                        <img id="preview" class="mt-2 w-20 h-20 rounded-lg border border-gray-200 object-cover hidden" alt="Preview">
                     </div>
                 </div>
 
-                <!-- ปุ่มยืนยัน -->
-                <button
-                    class="mt-6 w-full bg-pink-500 hover:bg-pink-600 text-white font-medium py-2.5 rounded-lg transition shadow-sm hover:shadow-md">
+                <!-- Services -->
+                <div>
+                    <h4 class="text-base font-semibold text-gray-900 mb-3">สิ่งที่ทำได้</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <label class="flex items-center text-base text-gray-700">
+                            <input type="checkbox" name="services" value="" class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]"> ตัดผม
+                        </label>
+                        <label class="flex items-center text-base text-gray-700">
+                            <input type="checkbox" name="services" value="" class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]"> ย้อมผม
+                        </label>
+                        <label class="flex items-center text-base text-gray-700">
+                            <input type="checkbox" name="services" value="" class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]"> ดัดผม
+                        </label>
+                        <label class="flex items-center text-base text-gray-700">
+                            <input type="checkbox" name="services" value="" class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]"> ทำสปาผม
+                        </label>
+                        <label class="flex items-center text-base text-gray-700">
+                            <input type="checkbox" name="services" value="" class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]"> ไดร์ผม
+                        </label>
+                        <label class="flex items-center text-base text-gray-700">
+                            <input type="checkbox" name="services" value="" class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]"> นวดหน้า
+                        </label>
+                        <label class="flex items-center text-base text-gray-700">
+                            <input type="checkbox" name="services" value="" class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]"> ทำเล็บ
+                        </label>
+                        <label class="flex items-center text-base text-gray-700">
+                            <input type="checkbox" name="services" value="" class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]"> สปามือและเท้า
+                        </label>
+                        <label class="flex items-center text-base text-gray-700">
+                            <input type="checkbox" name="services" value="" class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]"> นวดตัว
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Introduction -->
+                <div>
+                    <label class="block text-base font-semibold text-gray-900 mb-2">แนะนำตัว</label>
+                    <textarea readonly
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 h-24 text-base bg-gray-50 resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="border-t border-gray-200 px-6 py-4">
+                <button class="w-full bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
                     ยืนยัน
                 </button>
+            </div>
+        </div>
+    </div>
+
+        <!-- Product Pickup Popup -->
+        <% products.forEach(product=> { %>
+        <form action="/employee/use/<%= product.product_id %>" method="POST" 
+            id="popup-<%= product.product_id %>" 
+            class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 relative">
+                <!-- Modal Header -->
+                <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-lg flex items-center justify-between">
+                    <h3 class="text-xl font-semibold text-gray-900">รายละเอียดการเบิก</h3>
+                    <button type="button" class="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+                        onclick="closePopup(<%= product.product_id %>)">×</button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="p-6 space-y-4">
+                    <!-- ผู้เบิก -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ผู้เบิก</label>
+                        <input type="text" value="<%= employee.User.first_name %> <%= employee.User.last_name %>" readonly
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base bg-gray-50 text-gray-700" />
+                    </div>
+
+                    <!-- ผลิตภัณฑ์ -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ผลิตภัณฑ์</label>
+                        <input type="text" value="<%= product.name %>" readonly
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base bg-gray-50 text-gray-700" />
+                    </div>
+
+                    <!-- จำนวน / สำหรับ -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">จำนวน</label>
+                            <input type="number" name="quantity" required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent"
+                                placeholder="0">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">สำหรับ</label>
+                            <input type="text" name="for_customer"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent"
+                                placeholder="ชื่อลูกค้า">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="border-t border-gray-200 px-6 py-4 flex gap-3">
+                    <button type="button" onclick="closePopup(<%= product.product_id %>)"
+                        class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-colors text-base">
+                        ยกเลิก
+                    </button>
+                    <button type="submit"
+                        class="flex-1 bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
+                        ยืนยัน
+                    </button>
+                </div>
             </div>
         </form>
         <% }); %>

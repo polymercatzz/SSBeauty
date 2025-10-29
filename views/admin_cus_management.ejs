@@ -6,144 +6,341 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
-<body class="bg-gradient-to-r from-[#DBB3C1] to-[#F2F1EB] min-h-screen  m-5">
-    <!-- Header -->
-    <div class="flex items-center justify-between bg-gray-100 p-4 mt-8 shadow  rounded-lg bg-gradient-to-r from-[#B4919D] to-[#616162]">
-        <div class="flex items-center space-x-2">
-            <img src="" alt="logo" class="rounded-full">
-            <span class="text-xl font-bold ">SSBeauty</span>
-        </div>
-        <div class="flex items-center space-x-4">
-            <!-- เหลือใส่กดเชื่อม -->
-            <button  class="bg-white bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">หน้าหลัก</button>
-            <button class="hover:bg-white hover:bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">สถิติ</button>
-            <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer hover:bg-pink-50"></div>
-
-            
-        </div>
-    </div>
-    <!-- <nav class=" p-3 flex space-x-3 justify-center space-x-9">
-        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการชำระเงิน</button>
-        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบบริหารพนักงาน</button>
-        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 vhover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการบริการ</button>
-        <button class="px-4 py-2 bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-white">ระบบจัดการลูกค้า</button>
-        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการสต็อก</button>
-    </nav> -->
-    <%- include('nav_main_admin', { activePage: 'customer' }) %>
-    <!-- Filter เหลือทำให้filter-->
-    <div class="flex justify-between">
-        <div id="filter1" class="flex mt-4 w-[380px] border rounded-lg bg-white p-4 bg-opacity-60">
-            <div>
-                <p class="text-gray-500">ค้นหาลูกค้า</p>
-                <input type="text" id="search-input" value="" class="w-[250px] border rounded-lg px-3 py-1">
-            </div>
-            <div class="pt-6 mx-3">
-                <button class="bg-pink-400 hover:bg-pink-500 text-white px-4 rounded-lg h-8">ค้นหา</button>
-            </div>
-        </div>
-        <div class="border rounded-lg bg-[#A5848F] p-4 text-3xl w-20 text-center pt-5 h-20 mt-6 cursor-pointer hover:bg-pink-50" >
-            <p>+</p>
-        </div>
-    </div>
+<body class="bg-gray-50 min-h-screen m-0">
+    <%- include('nav_main_admin', { activePage: 'customer', activeTop: 'home' }) %>
     
-    <div class="flex w-full space-x-2 ">
-    <!-- กล่องซ้าย -->
-    <div class="space-y-4"> 
-        <div class="w-[450px] space-y-2 justify-center pt-4 customer-item" id="box1">
-            <div class="bg-white bg-opacity-60 shadow rounded-lg p-2 flex justify-between items-center cursor-pointer hover:bg-white border-[1.5px] border-[#A5848F]">
-                <div class="">
-                    <div class="flex space-x-4">
-                        <div class="flex">
-                            <div class="text-l text-gray-600 p-1">ชื่อ : </div>
-                            <input type="text" value="" class="w-[220px] border rounded-lg  py-1 " readonly>
-                        </div>
-                        <div class="flex">
-                            <div class="text-l text-gray-600 p-1 ">ชื่อเล่น : </div>
-                            <input type="text" value="" class="w-20 border rounded-lg  py-1 " readonly>
-                        </div>
-                    </div>
+    <!-- Main Content -->
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">จัดการลูกค้า</h1>
+            <p class="text-sm text-gray-600 mt-1">จัดการข้อมูลลูกค้าและประวัติการใช้บริการ</p>
+        </div>
+
+        <!-- Filter & Actions -->
+        <div class="flex justify-between items-start gap-4 mb-6 flex-wrap">
+            <div class="flex gap-3 flex-wrap bg-white rounded-lg shadow-sm p-4 flex-1 min-w-[300px]">
+                <div class="flex-1 min-w-[250px]">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ค้นหาลูกค้า</label>
+                    <input type="text" id="search-input" value="" 
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent"
+                        placeholder="ค้นหาชื่อลูกค้า...">
+                </div>
+                <div class="flex items-end">
+                    <button id="search-btn" class="bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg text-base font-medium transition-colors shadow-sm">
+                        ค้นหา
+                    </button>
                 </div>
             </div>
+            <button id="add-customer-btn" class="bg-[#A5848F] hover:bg-[#8a6f77] text-white p-3 rounded-lg shadow-md transition-all hover:shadow-lg flex items-center gap-2 font-medium">
+                <span class="text-2xl">+</span>
+                <span class="hidden sm:inline text-base">เพิ่มลูกค้า</span>
+            </button>
         </div>
-    </div>
-
-    <!-- กล่องขวา -->
-    <div class="w-[750px] space-y-2 mt-4 h-auto bg-white bg-opacity-60 border-[1.5px] p-4 rounded-lg border-[#7D5865]" id="rightPanel" style="display: none;">
-        <div id="contentDisplay"></div>
-    </div>
-</div>
-<div>
-
-</div>
-
-
-<script>
-    const boxes = document.querySelectorAll('#box1');
-    const rightPanel = document.getElementById('rightPanel');
-    const contentDisplay = document.getElementById('contentDisplay');
-
-    boxes.forEach(box => {
-        box.addEventListener('click', () => {
-            rightPanel.style.display = 'block'; // แสดงกล่องขวา
-            contentDisplay.innerHTML = `
-                <div class="rounded-lg p-4 text-gray-600">
-                    <h2 class="text-xl mb-3 text-[#7D5865]">ข้อมูลพนักงาน</h2>
-                    <div class="bg-white  p-4 rounded-lg" >
-                        <p>ชื่อ: สมหญิง สมหญิง &nbsp;&nbsp; ชื่อเล่น: หญิง</p>
-                        <p>เบอร์โทร: 0000000000 &nbsp;&nbsp; Email: som@email.com</p>
-                    </div>
-                    
-                    <div class="">
-                        <h2 class="text-xl mb-3 text-[#7D5865]">ประวัติการใช้บริการ</h2>
-                        <div class="bg-white rounded-lg p-2">
-                            <div class="">
-                                <div class="flex py-2 ">
-                                    <div class="text-sm text-white bg-[#ECCF7E] rounded-lg p-1 px-1 h-7">จ 20/08/2026</div>
-                                    <div class="text-l text-gray-600 px-1">9.00 น</div>
+        <!-- Customer List & Detail Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Customer List -->
+            <div class="lg:col-span-1 space-y-3" id="customer-list"> 
+                <% customers.forEach(customer => { %>
+                <div class="customer-item" data-customer-id="<%= customer.user_id %>">
+                    <div class="bg-white shadow-sm hover:shadow-md transition-shadow rounded-lg p-4 border border-gray-200 cursor-pointer group <%= customer.is_suspended ? 'opacity-60' : '' %>">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#A5848F] to-[#7D5865] flex items-center justify-center text-white font-semibold text-lg">
+                                    <%= customer.first_name.charAt(0) %>
                                 </div>
-                                <div class="flex space-x-2">
-                                    <div class="flex">
-                                        <div class="text-m text-gray-600 p-1">รายการ : </div>
-                                        <input type="text" value="" class="w-[200px] border rounded-lg  py-1 bg-[#DBB3C1] text-white" readonly>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="text-base font-medium text-gray-900"><%= customer.first_name %> <%= customer.last_name %></span>
+                                        <% if (customer.is_suspended) { %>
+                                        <span class="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">ระงับ</span>
+                                        <% } %>
                                     </div>
-                                    <div class="flex">
-                                        <div class="text-m text-gray-600 p-1 ">ช่าง :  </div>
-                                        <input type="text" value="" class="w-[150px] border rounded-lg  py-1 bg-[#DBB3C1] text-white" readonly>
+                                    <% if (customer.nickname) { %>
+                                    <div class="text-sm text-gray-600">
+                                        ชื่อเล่น: <%= customer.nickname %>
                                     </div>
-                                    <div class="flex">
-                                        <div class="text-m text-gray-600 p-1 ">ยอดค่าใช้จ่าย :  </div>
-                                        <input type="text" value="" class="w-[80px] border rounded-lg  py-1 bg-[#DBB3C1] text-white" readonly>
+                                    <% } %>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        <%= customer.appointments.length %> รายการ
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                        
-                        
-                    </div>
+                </div>
+                <% }); %>
+            </div>
 
-            `;
-        });
-    });
-     //filter
-    const searchBtn = document.getElementById("search-btn");
-    const searchInput = document.getElementById("search-input");
-    const employees = document.querySelectorAll(".customer-item");
+            <!-- Detail Panel -->
+            <div class="lg:col-span-2 bg-white shadow-sm rounded-lg border border-gray-200 p-6" id="rightPanel" style="display: none;">
+                <div id="contentDisplay"></div>
+            </div>
+        </div>
+    </main>
 
-    searchBtn.addEventListener("click", () => {
-        const searchText = searchInput.value.toLowerCase().trim();
 
-        employees.forEach(employee => {
-            const name = employee.querySelector(".customer-item").value.toLowerCase();
-            if (!searchText || name.includes(searchText)) {
-                employee.style.display = "block";
-            } else {
-                employee.style.display = "none";
+<script>
+    const customersData = <%- JSON.stringify(customers) %>;
+    const rightPanel = document.getElementById('rightPanel');
+    const contentDisplay = document.getElementById('contentDisplay');
+
+    // Show customer detail when clicked
+    document.querySelectorAll('.customer-item').forEach(item => {
+        item.addEventListener('click', function() {
+            const customerId = this.getAttribute('data-customer-id');
+            const customer = customersData.find(c => c.user_id == customerId);
+            if (customer) {
+                showCustomerDetail(customer);
             }
         });
     });
+
+    function showCustomerDetail(customer) {
+        rightPanel.style.display = 'block';
+        
+        const statusBadge = customer.is_suspended 
+            ? '<span class="bg-red-100 text-red-800 px-3 py-1 rounded-full font-medium">ระงับการใช้งาน</span>'
+            : '<span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">ใช้งานปกติ</span>';
+        
+        let appointmentsHTML = '';
+        if (customer.appointments && customer.appointments.length > 0) {
+            customer.appointments.forEach(apt => {
+                const date = new Date(apt.appointment_date);
+                const thaiDate = date.toLocaleDateString('th-TH', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric',
+                    weekday: 'short'
+                });
+                const time = date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+                
+                // Get day of week for color coding
+                const dayOfWeek = date.getDay();
+                let dayColor = 'bg-[#ECCF7E]'; // Default yellow
+                if (dayOfWeek === 0) { // Sunday - Red
+                    dayColor = 'bg-red-500';
+                } else if (dayOfWeek === 1) { // Monday - Yellow
+                    dayColor = 'bg-yellow-500';
+                } else if (dayOfWeek === 2) { // Tuesday - Pink
+                    dayColor = 'bg-pink-500';
+                } else if (dayOfWeek === 3) { // Wednesday - Green
+                    dayColor = 'bg-green-500';
+                } else if (dayOfWeek === 4) { // Thursday - Orange
+                    dayColor = 'bg-orange-500';
+                } else if (dayOfWeek === 5) { // Friday - Blue
+                    dayColor = 'bg-blue-500';
+                } else if (dayOfWeek === 6) { // Saturday - Purple
+                    dayColor = 'bg-purple-500';
+                }
+                
+                let statusBadgeColor = 'bg-gray-100 text-gray-800';
+                let statusText = apt.status;
+                if (apt.status === 'completed') {
+                    statusBadgeColor = 'bg-green-100 text-green-800';
+                    statusText = 'เสร็จสิ้น';
+                } else if (apt.status === 'in_progress') {
+                    statusBadgeColor = 'bg-blue-100 text-blue-800';
+                    statusText = 'กำลังดำเนินการ';
+                } else if (apt.status === 'booked') {
+                    statusBadgeColor = 'bg-yellow-100 text-yellow-800';
+                    statusText = 'จองแล้ว';
+                } else if (apt.status === 'canceled') {
+                    statusBadgeColor = 'bg-red-100 text-red-800';
+                    statusText = 'ยกเลิก';
+                }
+                
+                appointmentsHTML += `
+                    <div class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors">
+                        <div class="flex flex-wrap items-center gap-3 mb-3">
+                            <div class="${dayColor} text-white rounded-lg px-3 py-1.5 text-sm font-medium">
+                                ${thaiDate}
+                            </div>
+                            <span class="text-gray-700 text-base">${time}</span>
+                            <span class="${statusBadgeColor} px-2 py-1 rounded text-xs font-medium">${statusText}</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">รายการ</label>
+                                <input type="text" value="${apt.service_name || '-'}" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base bg-white" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ช่าง</label>
+                                <input type="text" value="${apt.employee_name || '-'}" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base bg-white" readonly>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ยอดค่าใช้จ่าย</label>
+                                <input type="text" value="${apt.price || 0} บาท" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base bg-white" readonly>
+                            </div>
+                        </div>
+                        ${apt.status === 'booked' ? `
+                        <div class="mt-3 flex justify-end">
+                            <form action="/admin/manage-customer/cancel-appointment/${apt.appointment_id}" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ที่จะยกเลิกการนัดหมายนี้?');">
+                                <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                                    ยกเลิกการนัดหมาย
+                                </button>
+                            </form>
+                        </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+        } else {
+            appointmentsHTML = '<p class="text-gray-500 text-center py-4">ไม่มีประวัติการใช้บริการ</p>';
+        }
+        
+        contentDisplay.innerHTML = `
+            <div class="space-y-6">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-bold text-gray-900">ข้อมูลลูกค้า</h2>
+                        ${statusBadge}
+                    </div>
+                    <form id="edit-customer-form" action="/admin/manage-customer/update/${customer.user_id}" method="POST">
+                        <div class="bg-gray-50 p-5 rounded-lg space-y-3 text-base">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ</label>
+                                    <input type="text" name="first_name" value="${customer.first_name}" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">นามสกุล</label>
+                                    <input type="text" name="last_name" value="${customer.last_name}" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base" required>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อเล่น</label>
+                                    <input type="text" name="nickname" value="${customer.nickname || ''}" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทร</label>
+                                    <input type="tel" name="phone" value="${customer.phone || ''}" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                <input type="email" name="email" value="${customer.email}" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">ประวัติการใช้บริการ</h2>
+                    <div class="space-y-3">
+                        ${appointmentsHTML}
+                    </div>
+                </div>
+
+                <div class="flex gap-3 pt-4">
+                    <button onclick="closePanel()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-colors text-base">
+                        ปิด
+                    </button>
+                    <form action="/admin/manage-customer/suspend/${customer.user_id}" method="POST" class="flex-1">
+                        <button type="submit" class="w-full ${customer.is_suspended ? 'bg-green-600 hover:bg-green-700' : 'bg-red-600 hover:bg-red-700'} text-white px-6 py-2.5 rounded-lg font-medium transition-colors text-base">
+                            ${customer.is_suspended ? 'ยกเลิกระงับ' : 'ระงับการใช้งาน'}
+                        </button>
+                    </form>
+                    <button onclick="document.getElementById('edit-customer-form').submit()" class="flex-1 bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
+                        บันทึกการแก้ไข
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function closePanel() {
+        rightPanel.style.display = 'none';
+    }
+
+    // Add customer modal
+    document.getElementById('add-customer-btn').addEventListener('click', function() {
+        showCreateCustomerModal();
+    });
+
+    function showCreateCustomerModal() {
+        rightPanel.style.display = 'block';
+        contentDisplay.innerHTML = `
+            <div class="space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold text-gray-900 mb-4">เพิ่มลูกค้าใหม่</h2>
+                    <form id="create-customer-form" action="/admin/manage-customer/add" method="POST">
+                        <div class="bg-gray-50 p-5 rounded-lg space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อ *</label>
+                                    <input type="text" name="first_name" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base" required>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">นามสกุล *</label>
+                                    <input type="text" name="last_name" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base" required>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ชื่อเล่น</label>
+                                    <input type="text" name="nickname" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">เบอร์โทร</label>
+                                    <input type="tel" name="phone" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+                                <input type="email" name="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">รหัสผ่าน *</label>
+                                <input type="password" name="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base" required minlength="6">
+                            </div>
+                        </div>
+                        <div class="flex gap-3 mt-6">
+                            <button type="button" onclick="closePanel()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-colors text-base">
+                                ยกเลิก
+                            </button>
+                            <button type="submit" class="flex-1 bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
+                                เพิ่มลูกค้า
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+    }
+
+    // Search functionality
+    const searchBtn = document.getElementById("search-btn");
+    const searchInput = document.getElementById("search-input");
+    const customerItems = document.querySelectorAll(".customer-item");
+
+    searchBtn?.addEventListener("click", performSearch);
+    searchInput?.addEventListener("keypress", function(e) {
+        if (e.key === 'Enter') {
+            performSearch();
+        }
+    });
+
+    function performSearch() {
+        const searchText = searchInput.value.toLowerCase().trim();
+        customerItems.forEach(item => {
+            const customerId = item.getAttribute('data-customer-id');
+            const customer = customersData.find(c => c.user_id == customerId);
+            if (customer) {
+                const fullName = `${customer.first_name} ${customer.last_name}`.toLowerCase();
+                const nickname = (customer.nickname || '').toLowerCase();
+                const email = (customer.email || '').toLowerCase();
+                
+                if (!searchText || fullName.includes(searchText) || nickname.includes(searchText) || email.includes(searchText)) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            }
+        });
+    }
 </script>
-
-
+    </main>
 </body>
 </html>

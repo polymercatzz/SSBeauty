@@ -6,119 +6,226 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
 </head>
-<body class="bg-gradient-to-r from-[#DBB3C1] to-[#F2F1EB] min-h-screen  m-5">
-    <!-- Header -->
-    <div class="flex items-center justify-between bg-gray-100 p-4 mt-8 shadow  rounded-lg bg-gradient-to-r from-[#B4919D] to-[#616162]">
-        <div class="flex items-center space-x-2">
-            <img src="" alt="logo" class="rounded-full">
-            <span class="text-xl font-bold ">SSBeauty</span>
+<body class="bg-gray-50 min-h-screen m-0">
+    <%- include('nav_main_admin', { activePage: 'payment', activeTop: 'home' }) %>
+    
+    <!-- Main Content -->
+    <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h1 class="text-2xl font-bold text-gray-900">จัดการชำระเงิน</h1>
+            <p class="text-sm text-gray-600 mt-1">จัดการและตรวจสอบการชำระเงินของลูกค้า</p>
         </div>
-        <div class="flex items-center space-x-4">
-            <!-- เหลือใส่กดเชื่อม -->
-            <button  class="bg-white bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">หน้าหลัก</button>
-            <button class="hover:bg-white hover:bg-opacity-30 text-white px-4 py-2 rounded-lg text-xl">สถิติ</button>
-            <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer hover:bg-pink-50"></div>
 
-            
-        </div>
-    </div>
-    <!-- <nav class=" p-3 flex space-x-3 justify-center space-x-9">
-        <button class="px-4 py-2 bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-white">ระบบจัดการชำระเงิน</button>
-        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบบริหารพนักงาน</button>
-        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 vhover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการบริการ</button>
-        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการลูกค้า</button>
-        <button class="px-4 py-2 bg-[#F1EEE9] bg-opacity-30 hover:bg-[#A5848F] border-[1.5px] border-[#7D5865] rounded-lg shadow text-xl text-[#A5848F] hover:text-white">ระบบจัดการสต็อก</button>
-    </nav> -->
-    <%- include('nav_main_admin', { activePage: 'payment' }) %>
-    <div class="flex w-full space-x-2 ">
-    <!-- กล่องซ้าย -->
-    <% appointments.forEach(a => { %>
-        <div class="space-y-4">
-            <div class="w-[500px] space-y-2 justify-center" id="box1">
-                <div class="bg-white bg-opacity-60 shadow rounded-lg p-2 flex justify-between items-center cursor-pointer hover:bg-pink-50 ">
-                <div class="">
-                    <div class="flex py-2">
-                    <!-- วันที่และเวลา -->
-                    <div class="text-sm text-white bg-[#ECCF7E] rounded-lg p-1 px-1 h-7">
-                        <%= new Date(a.appointment_date).toLocaleDateString('th-TH') %>
+        <!-- Appointments & Receipt Panel -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Appointments List -->
+            <div class="lg:col-span-1 space-y-3">
+                <% appointments.forEach((a, index) => { %>
+                    <div class="appointment-item cursor-pointer" onclick="openReceipt(<%= index %>)">
+                        <div class="bg-white shadow-sm hover:shadow-md transition-shadow rounded-lg p-4 border border-gray-200 group">
+                            <div class="space-y-3">
+                                <div class="flex items-center gap-3">
+                                    <% 
+                                        const dayOfWeek = new Date(a.appointment_date).getDay();
+                                        const dayColors = {
+                                            0: 'bg-red-500',      // Sunday
+                                            1: 'bg-yellow-500',   // Monday
+                                            2: 'bg-pink-500',     // Tuesday
+                                            3: 'bg-green-500',    // Wednesday
+                                            4: 'bg-orange-500',   // Thursday
+                                            5: 'bg-blue-500',     // Friday
+                                            6: 'bg-purple-500'    // Saturday
+                                        };
+                                        const bgColor = dayColors[dayOfWeek] || 'bg-[#A5848F]';
+                                    %>
+                                    <div class="<%= bgColor %> text-white rounded-lg px-3 py-1.5 text-sm font-medium">
+                                        <%= new Date(a.appointment_date).toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' }) %>
+                                    </div>
+                                    <span class="text-gray-700 text-base font-medium">
+                                        <%= new Date(a.appointment_date).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) %> น.
+                                    </span>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-sm font-medium text-gray-700 min-w-[80px]">รายการ:</label>
+                                        <input type="text" value="<%= a.Service ? a.Service.name : '' %>" 
+                                            class="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-base bg-gray-50" readonly>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <label class="text-sm font-medium text-gray-700 min-w-[80px]">ลูกค้า:</label>
+                                        <input type="text" value="<%= a.User ? a.User.first_name + ' ' + a.User.last_name : '' %>" 
+                                            class="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-base bg-gray-50" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="text-l text-gray-600 p-1">
-                        <%= new Date(a.appointment_date).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) %> น
-                    </div>
-                    </div>
+                <% }) %>
+            </div>
 
-                    <div class="flex">
-                    <div class="flex">
-                        <div class="text-l text-gray-600 p-1">รายการ : </div>
-                        <input type="text" value="<%= a.Service ? a.Service.name : '' %>" class="w-20 border rounded-lg py-1" readonly>
-                    </div>
+            <!-- Receipt Panel -->
+            <div class="lg:col-span-2 bg-white shadow-sm rounded-lg border border-gray-200 p-6 h-fit max-h-[calc(100vh-12rem)] overflow-y-auto" id="rightPanel" style="display: none;">
+                <div id="contentDisplay">
+                    <div class="max-w-2xl mx-auto">
+                        <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">ใบเสร็จรับเงิน</h2>
+                        <div class="border-b pb-4 mb-4 space-y-2 text-base">
+                            <div class="flex justify-between">
+                                <span class="font-medium text-gray-700">ร้าน:</span>
+                                <span class="text-gray-900">SSBeauty</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="font-medium text-gray-700">วันที่:</span>
+                                <span class="text-gray-900">20/08/2026</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="font-medium text-gray-700">เวลา:</span>
+                                <span class="text-gray-900">09:00 น.</span>
+                            </div>
+                        </div>
+                        
+                        <table class="w-full text-left mb-6 text-base">
+                            <thead class="border-b-2 border-gray-300">
+                                <tr>
+                                    <th class="py-3 font-semibold text-gray-900">รายการ</th>
+                                    <th class="py-3 text-right font-semibold text-gray-900">ราคา (บาท)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-200">
+                                <tr>
+                                    <td class="py-3 text-gray-700">นวดหน้า</td>
+                                    <td class="py-3 text-right text-gray-900">500</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-3 text-gray-700">ทำเล็บ</td>
+                                    <td class="py-3 text-right text-gray-900">300</td>
+                                </tr>
+                                <tr class="font-semibold border-t-2 border-gray-300">
+                                    <td class="py-3 text-gray-900">รวมทั้งหมด</td>
+                                    <td class="py-3 text-right text-[#A5848F] text-lg">800</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="text-center mt-6">
+                            <p class="text-base text-gray-600">ขอบคุณที่ใช้บริการ</p>
+                        </div>
 
-                    <div class="flex">
-                        <div class="text-l text-gray-600 p-1">ผู้ใช้บริการ : </div>
-                        <input type="text" value="<%= a.User ? a.User.username : '' %>" class="border rounded-lg py-1" readonly>
+                        <div class="flex gap-3 pt-6 mt-6 border-t">
+                            <button onclick="closeReceipt()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-colors text-base">
+                                ปิด
+                            </button>
+                            <button class="flex-1 bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
+                                พิมพ์ใบเสร็จ
+                            </button>
+                        </div>
                     </div>
-                    </div>
-                </div>
-                <div class="text-gray-500">edit</div>
                 </div>
             </div>
         </div>
-    <% }) %>
-
-
-    <!-- กล่องขวา -->
-    <div class="w-[700px] h-[auto] bg-white bg-opacity-60 border-[1.5px] p-4 rounded-lg border-[#7D5865]" id="rightPanel" style="display: none;">
-        <div id="contentDisplay">
-            <div class="bg-white p-6 rounded-lg shadow-md text-gray-800">
-                    <h2 class="text-2xl text-center mb-4">ใบเสร็จ</h2>
-                    <div class="border-b pb-2 mb-2">
-                        <p><span class="">ร้าน:</span> SSBeauty</p>
-                        <p><span class="">วันที่:</span> 20/08/2026</p>
-                        <p><span class="">เวลา:</span> 09:00 น.</p>
-                    </div>
-                    
-                    <table class="w-full text-left mb-4">
-                        <thead>
-                            <tr class="border-b">
-                                <th class="py-2">รายการ</th>
-                                <th class="py-2 text-right">ราคา (บาท)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="py-2">นวดหน้า</td>
-                                <td class="py-2 text-right">500</td>
-                            </tr>
-                            <tr>
-                                <td class="py-2">ทำเล็บ</td>
-                                <td class="py-2 text-right">300</td>
-                            </tr>
-                            <tr>
-                                <td class="py-2">รวมทั้งหมด</td>
-                                <td class="py-2 text-right ">800</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    
-                    <div class="text-center mt-4">
-                        <p class="text-sm">ขอบคุณที่ใช้บริการ</p>
-                    </div>
-                </div>
-        </div>
-    </div>
-</div>
-
+    </main>
 
 <script>
-    const boxes = document.querySelectorAll('#box1'); // ถ้ามีหลายกล่องก็เพิ่ม #box2, #box3,...
     const rightPanel = document.getElementById('rightPanel');
+    const appointmentsData = [
+        <% appointments.forEach((a, index) => { %>
+            {
+                appointmentId: '<%= a.appointment_id %>',
+                date: '<%= new Date(a.appointment_date).toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" }) %>',
+                time: '<%= new Date(a.appointment_date).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) %>',
+                service: '<%= a.Service ? a.Service.name : "" %>',
+                customer: '<%= a.User ? a.User.first_name + " " + a.User.last_name : "" %>',
+                price: '<%= a.Service ? a.Service.price : 0 %>'
+            }<%= index < appointments.length - 1 ? ',' : '' %>
+        <% }) %>
+    ];
 
-    boxes.forEach(box => {
-        box.addEventListener('click', () => {
-            rightPanel.style.display = 'block'; // แสดงกล่องขวา
-        });
-    });
+    function openReceipt(index) {
+        const appointment = appointmentsData[index];
+        
+        // Update receipt content
+        const receiptHTML = `
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">ใบเสร็จรับเงิน</h2>
+                <div class="border-b pb-4 mb-4 space-y-2 text-base">
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-700">ร้าน:</span>
+                        <span class="text-gray-900">SSBeauty</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-700">วันที่:</span>
+                        <span class="text-gray-900">${appointment.date}</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-700">เวลา:</span>
+                        <span class="text-gray-900">${appointment.time} น.</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="font-medium text-gray-700">ลูกค้า:</span>
+                        <span class="text-gray-900">${appointment.customer}</span>
+                    </div>
+                </div>
+                
+                <table class="w-full text-left mb-6 text-base">
+                    <thead class="border-b-2 border-gray-300">
+                        <tr>
+                            <th class="py-3 font-semibold text-gray-900">รายการ</th>
+                            <th class="py-3 text-right font-semibold text-gray-900">ราคา (บาท)</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr>
+                            <td class="py-3 text-gray-700">${appointment.service}</td>
+                            <td class="py-3 text-right text-gray-900">${appointment.price}</td>
+                        </tr>
+                        <tr class="font-semibold border-t-2 border-gray-300">
+                            <td class="py-3 text-gray-900">รวมทั้งหมด</td>
+                            <td class="py-3 text-right text-[#A5848F] text-lg">${appointment.price}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="text-center mt-6">
+                    <p class="text-base text-gray-600">ขอบคุณที่ใช้บริการ</p>
+                </div>
+
+                <div class="flex gap-3 pt-6 mt-6 border-t">
+                    <button onclick="closeReceipt()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-colors text-base">
+                        ปิด
+                    </button>
+                    <button onclick="confirmPayment('${appointment.appointmentId}')" class="flex-1 bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
+                        ยืนยันการชำระเงิน
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('contentDisplay').innerHTML = receiptHTML;
+        rightPanel.style.display = 'block';
+    }
+
+    function closeReceipt() {
+        rightPanel.style.display = 'none';
+    }
+
+    function confirmPayment(appointmentId) {
+        if (confirm('ยืนยันการชำระเงินสำหรับการนัดหมายนี้?')) {
+            // Create form and submit
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/admin/manage-payment/${appointmentId}`;
+            
+            // Add hidden input for status
+            const statusInput = document.createElement('input');
+            statusInput.type = 'hidden';
+            statusInput.name = 'status';
+            statusInput.value = 'completed';
+            form.appendChild(statusInput);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
 </script>
-
 </body>
 </html>

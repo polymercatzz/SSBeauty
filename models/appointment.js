@@ -6,7 +6,7 @@ module.exports = (sequelize) => {
     appointment_id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     user_id: { type: DataTypes.INTEGER, allowNull: false },
     service_id: { type: DataTypes.INTEGER, allowNull: false },
-    staff_id: { type: DataTypes.INTEGER, allowNull: false },
+    employee_id: { type: DataTypes.INTEGER, allowNull: false, field: 'staff_id' },
     appointment_date: { type: DataTypes.DATE },
     status: { type: DataTypes.ENUM('booked', 'in_progress', 'completed', 'canceled'), defaultValue: 'booked' },
   }, {

@@ -102,12 +102,12 @@
                     <div class=" space-y-4 justify-center  flex flex-col">
                         <div class="flex items-center gap-2  font-[inter] text-[#616162] text-[2vh]">
                             <img src="/img/user.png" alt="" class="w-[2vh]">
-                            <p>ช่าง: <%= appointment.Staff.User.first_name %> <%= appointment.Staff.User.last_name %></p>
+                            <p>ช่าง: <%= appointment.Employee.User.first_name %> <%= appointment.Employee.User.last_name %></p>
                         </div>
                         <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
                             <img src="/img/calendar.png" alt="" class="w-[2vh]">
                             <div class="flex flex-wrap">
-                                <p>จองวันที่:</p>
+                                <p>จองวันที่: </p>
                                 <% date = new Date(appointment.appointment_date) 
                                 const hours = date.getHours();
                                 const minutes = date.getMinutes();
@@ -122,7 +122,7 @@
                         <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
                             <img src="/img/alarm-clock.png" alt="" class="w-[2vh]">
                             <div class="flex flex-wrap">
-                                <p>เวลา:</p>
+                                <p>เวลา: </p>
                             <p><%= hhmm %> น.</p>
                             </div>
                         </div>

@@ -7,6 +7,11 @@ const sequelize = new Sequelize(
   {
     host: process.env.DB_HOST,
     dialect: 'mysql',
+    timezone: '+07:00',
+    dialectOptions: {
+      dateStrings: true,
+      useUTC: false,
+    },
     logging: false,
     define: {
         charset: 'utf8mb4',
@@ -16,34 +21,34 @@ const sequelize = new Sequelize(
 );
 
 const User = require('./user')(sequelize);
-const Staff = require('./staff')(sequelize);
+const Employee = require('./employee')(sequelize);
 const Service = require('./service')(sequelize);
-const StaffService = require('./staffService')(sequelize);
+const EmployeeService = require('./employeeService')(sequelize);
 const Appointment = require('./appointment')(sequelize);
 const Product = require('./product')(sequelize);
 const ProductUsage = require('./productUsage')(sequelize);
 
 
 // Relations
-User.hasOne(Staff, { foreignKey: 'user_id' });
-Staff.belongsTo(User, { foreignKey: 'user_id' });
+User.hasOne(Employee, { foreignKey: 'user_id' });
+Employee.belongsTo(User, { foreignKey: 'user_id' });
 
-Staff.belongsToMany(Service, { through: StaffService, foreignKey: 'staff_id' });
-Service.belongsToMany(Staff, { through: StaffService, foreignKey: 'service_id' });
-StaffService.belongsTo(Staff, { foreignKey: 'staff_id' });
-StaffService.belongsTo(Service, { foreignKey: 'service_id' });
+Employee.belongsToMany(Service, { through: EmployeeService, foreignKey: 'employee_id' });
+Service.belongsToMany(Employee, { through: EmployeeService, foreignKey: 'service_id' });
+EmployeeService.belongsTo(Employee, { foreignKey: 'employee_id' });
+EmployeeService.belongsTo(Service, { foreignKey: 'service_id' });
 
 User.hasMany(Appointment, { foreignKey: 'user_id' });
 Appointment.belongsTo(User, { foreignKey: 'user_id' });
 
-Staff.hasMany(Appointment, { foreignKey: 'staff_id' });
-Appointment.belongsTo(Staff, { foreignKey: 'staff_id' });
+Employee.hasMany(Appointment, { foreignKey: 'employee_id' });
+Appointment.belongsTo(Employee, { foreignKey: 'employee_id' });
 
 Service.hasMany(Appointment, { foreignKey: 'service_id' });
 Appointment.belongsTo(Service, { foreignKey: 'service_id' });
 
-Staff.hasMany(ProductUsage, { foreignKey: 'staff_id' });
-ProductUsage.belongsTo(Staff, { foreignKey: 'staff_id' });
+Employee.hasMany(ProductUsage, { foreignKey: 'employee_id' });
+ProductUsage.belongsTo(Employee, { foreignKey: 'employee_id' });
 
 Product.hasMany(ProductUsage, { foreignKey: 'product_id' });
 ProductUsage.belongsTo(Product, { foreignKey: 'product_id' });
@@ -51,9 +56,9 @@ ProductUsage.belongsTo(Product, { foreignKey: 'product_id' });
 module.exports = {
   sequelize,
   User,
-  Staff,
+  Employee,
   Service,
-  StaffService,
+  EmployeeService,
   Appointment,
   Product,
   ProductUsage

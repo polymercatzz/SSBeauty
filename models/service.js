@@ -9,8 +9,12 @@ module.exports = (sequelize) => {
     description: { type: DataTypes.TEXT },
     price: { type: DataTypes.DECIMAL(10,2) },
     duration: { type: DataTypes.INTEGER }, // นาที
+    image1: { type: DataTypes.STRING(255) }, // S3 key for image 1
+    image2: { type: DataTypes.STRING(255) }, // S3 key for image 2
+    image3: { type: DataTypes.STRING(255) }, // S3 key for image 3
   }, {
     tableName: 'services',
     timestamps: false,
   });
 };
+
