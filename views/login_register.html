@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login / Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kapakana:wght@300..400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #e2c9cc;
+            /* สีพื้นหลังเดียวกับ container */
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overscroll-behavior: none;
+        }
+
+        .container {
+            position: absolute;
+            /* เปลี่ยนจาก fixed เป็น absolute เพื่อให้พอดีขอบ */
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-width: 100vw;
+            height: 100%;
+            min-height: 100vh;
+            background: #e2c9cc;
+            overflow: hidden;
+            transition: all 0.6s ease-in-out;
+
+        }
+
+        .form-container {
+            position: absolute;
+            /* top: 10%; */
+            height: 100%;
+            width: 50%;
+            background: #e2c9cc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .sign-up-container {
+            left: 100%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .container.active .sign-up-container {
+            transform: translateX(-100%);
+            opacity: 1;
+            z-index: 5;
+        }
+
+        .container.active .sign-in-container {
+            transform: translateX(-100%);
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 150px 0 0 100px;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .container.active .overlay-container {
+            transform: translateX(-100%);
+            border-radius: 0 150px 100px 0;
+        }
+
+        .overlay {
+            background: #F2F1EB;
+            position: relative;
+            color: #3f3f3f;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+            display: flex;
+        }
+
+        .container.active .overlay {
+            transform: translateX(50%);
+        }
+
+        .overlay-panel {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 0 40px;
+            text-align: center;
+            width: 50%;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .container.active .overlay-left {
+            transform: translateX(0);
+        }
+
+        .overlay-right {
+            transform: translateX(0);
+        }
+
+        .container.active .overlay-right {
+            transform: translateX(20%);
+        }
+
+        .res {
+            display: none;
+        }
+
+        @media (max-width: 1110px) {
+            .container {
+                overflow-y: auto;
+            }
+
+            .overlay-container {
+                display: none;
+            }
+
+            .form-container {
+                width: 80% !important;
+                left: 0 !important;
+                right: 0;
+                position: absolute;
+                margin: auto;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                top: 0;
+                bottom: 0;
+            }
+
+            .res {
+                display: block;
+            }
+
+            .sign-in-container,
+            .sign-up-container {
+                left: 0 !important;
+                opacity: 1 !important;
+                z-index: 1 !important;
+                transform: none !important;
+                transition: none !important;
+                width: 80% !important;
+                position: absolute !important;
+            }
+
+            .sign-up-container {
+                left: 0 !important;
+                top: 50%;
+                opacity: 1 !important;
+                z-index: 1 !important;
+                transform: none !important;
+                transition: none !important;
+                width: 80% !important;
+                position: absolute !important;
+            }
+
+            .sign-in-container.hidden,
+            .sign-up-container.hidden {
+                display: none !important;
+            }
+
+
+
+
+        }
+    </style>
+</head>
+
+<body class="font-['Libre_Baskerville']">
+
+    <div class="container " id="container">
+
+        <!-- Sign In -->
+        <div class="form-container sign-in-container text-[#616162] flex-col">
+            <div class="bg-[#e8d8db] rounded-2xl p-8 shadow-xl  w-full max-w-[500px]">
+                <p class="text-center text-[3vh] font-semibold mb-10">Log - In</p>
+                <div class="text-[2vh]">
+                    <label for="">Email:</label>
+                    <input type="email"
+                        class="font-[inter] w-full p-2 mb-8 mt-3 rounded-lg border border-gray-300 focus:outline-none">
+                    <label for="">Password:</label>
+                    <input type="password"
+                        class="font-[inter] w-full p-2 mb-4 mt-3 rounded-lg border border-gray-300 focus:outline-none">
+                </div>
+                <button
+                    class="bg-[#c49ba3] text-white px-6 py-2 rounded-lg w-fit text-[2vh] mt-6 block mx-auto hover:bg-[#b0858e]">Log
+                    - In</button>
+            </div>
+            <div class="res">
+                <p class="text-[2.4vh] mt-5 text-[#c49ba3]">If your don't have any account?</p>
+                <button
+                    class="text-[2vh] mt-2 bg-white text-[#c49ba3] px-6 py-2 rounded-lg border border-[#c49ba3] hover:bg-[#f5f3f2] mx-auto block"
+                    id="mobileSignUp">Sign - Up</button>
+            </div>
+        </div>
+
+        <!-- Sign Up -->
+        <div class="form-container sign-up-container text-[#616162] flex-col ">
+            <div class="bg-[#e8d8db] rounded-2xl p-6 w-full max-w-[450px] shadow">
+                <h2 class="text-center text-2xl font-semibold mb-8 text-[3vh]">Sign - Up</h2>
+                <div class="text-[2vh] px-[2vh]">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="">Firstname:</label>
+                            <input type="text"
+                                class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
+
+                        </div>
+                        <div>
+                            <label for="">Lastname:</label>
+                            <input type="text"
+                                class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
+
+                        </div>
+                    </div>
+                    <label for="">Nickname:</label>
+                    <input type="text"
+                        class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
+                    <label for="">Email:</label>
+                    <input type="email"
+                        class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
+                    <label for="">Tel:</label>
+                    <input type="number"
+                        class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="">Password:</label>
+                            <input type="password"
+                                class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
+                        </div>
+                        <div>
+                            <label for="">Confirm Password:</label>
+                            <input type="password"
+                                class="font-[inter] w-full p-2 mb-3  mt-2 rounded-lg border border-gray-300 focus:outline-none">
+                        </div>
+                    </div>
+                    <button
+                        class="bg-[#c49ba3] text-white px-6 py-2 rounded-lg w-fit text-[2vh] mt-6 block mx-auto hover:bg-[#b0858e]">Submit</button>
+
+                </div>
+            </div>
+
+            <div class="res ">
+                <p class="text-[2vh] mt-5 text-[#c49ba3]">To keep connected please login with your info</p>
+                <button
+                    class="mt-5 bg-white text-[#c49ba3] px-6 py-2 rounded-lg border border-[#c49ba3] hover:bg-[#f5f3f2] mx-auto block mb-[10vh]"
+                    id="mobileSignIn">Log - In</button>
+            </div>
+
+        </div>
+
+        <!-- Overlay -->
+        <div class="overlay-container">
+            <div class="overlay">
+                <div class="overlay-panel overlay-left">
+                    <img src="salon.png" class="w-[60vh] mb-4">
+                    <p class="text-[2vh] mt-5 text-[#c49ba3]">To keep connected please login with your info</p>
+                    <button
+                        class="mt-5 bg-white text-[#c49ba3] px-6 py-2 rounded-lg border border-[#c49ba3] hover:bg-[#f5f3f2]"
+                        id="signIn">Log - In</button>
+                </div>
+
+                <div class="overlay-panel overlay-right">
+                    <img src="salon.png" class="w-[60vh] mb-4">
+                    <div class="flex-col justify-center items-center space-x-4">
+                        <p class="text-[2vh] mt-5 text-[#c49ba3]">If your don't have any account?</p>
+                        <button
+                            class="mt-5 bg-white text-[#c49ba3] px-6 py-2 rounded-lg border border-[#c49ba3] hover:bg-[#f5f3f2]"
+                            id="signUp">Sign - Up</button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+        const container = document.getElementById('container');
+        signUpButton.addEventListener('click', () => container.classList.add("active"));
+        signInButton.addEventListener('click', () => container.classList.remove("active"));
+
+
+
+        function handleMobileFormSwitch() {
+            const signIn = document.querySelector('.sign-in-container');
+            const signUp = document.querySelector('.sign-up-container');
+            const mobileSignUp = document.getElementById('mobileSignUp');
+            const mobileSignIn = document.getElementById('mobileSignIn');
+
+            if (window.innerWidth <= 1110) {
+                // ซ่อน Sign Up ตอนเข้า mobile mode ครั้งแรก
+                if (!signIn.classList.contains('hidden') && !signUp.classList.contains('hidden')) {
+                    signUp.classList.add('hidden');
+                }
+                if (mobileSignUp) {
+                    mobileSignUp.onclick = () => {
+                        signIn.classList.add('hidden');
+                        signUp.classList.remove('hidden');
+                    };
+                }
+                if (mobileSignIn) {
+                    mobileSignIn.onclick = () => {
+                        signUp.classList.add('hidden');
+                        signIn.classList.remove('hidden');
+                    };
+                }
+            } else {
+                signIn.classList.remove('hidden');
+                signUp.classList.remove('hidden');
+            }
+        }
+        window.addEventListener('resize', handleMobileFormSwitch);
+        window.addEventListener('DOMContentLoaded', handleMobileFormSwitch);
+
+
+    </script>
+
+</body>
+
+</html>
