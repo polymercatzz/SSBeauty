@@ -19,6 +19,14 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Health check endpoint for ALB
+app.get('/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'healthy',
+        timestamp: new Date().toISOString()
+    });
+});
+
 // Set EJS
 app.set('view engine', 'ejs');
 
