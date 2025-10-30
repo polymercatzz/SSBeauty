@@ -10,7 +10,7 @@ const { sequelize } = require('./models');  // ดึง instance sequelize
 
 const path = require("path");
 
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
@@ -47,6 +47,8 @@ app.get("/logout", (req, res) => {
 sequelize.sync({ alter: true })
   .then(() => {
     console.log("Database synced");
-    app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server listening on http://0.0.0.0:${PORT}`);
+    });
   })
   .catch(err => console.error("DB Error:", err));

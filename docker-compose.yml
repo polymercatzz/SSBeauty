@@ -14,7 +14,7 @@ services:
       - AWS_REGION=${AWS_REGION}
       - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
       - AWS_SECRET_KEY=${AWS_SECRET_KEY}
-      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+      - AWS_BUCKET=${AWS_BUCKET}
       - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
     restart: unless-stopped
     depends_on:
