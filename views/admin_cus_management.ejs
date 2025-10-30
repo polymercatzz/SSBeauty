@@ -170,9 +170,21 @@
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 mb-1">ยอดค่าใช้จ่าย</label>
-                                <input type="text" value="${apt.price || 0} บาท" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base bg-white" readonly>
+                                    <input type="text" value="${apt.price || 0} บาท" class="w-full border border-gray-300 rounded-lg px-3 py-1.5 text-base bg-white" readonly>
                             </div>
                         </div>
+                        
+                        <!-- Extras list -->
+                        ${apt.extras && apt.extras.length > 0 ? `
+                        <div class="mt-3 text-sm text-gray-700">
+                            <div class="font-medium mb-1">บริการเสริม</div>
+                            <div class="space-y-1">
+                                ${apt.extras.map(ex => `<div class="flex justify-between"><div>${ex.name}</div><div>${parseFloat(ex.cost).toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท</div></div>`).join('')}
+                            </div>
+                            <div class="flex justify-end font-medium mt-2">ยอดบริการเสริม: <span class="ml-2 text-[#A5848F]">${(apt.extrasTotal || 0).toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท</span></div>
+                        </div>
+                        ` : ''}
+
                         ${apt.status === 'booked' ? `
                         <div class="mt-3 flex justify-end">
                             <form action="/admin/manage-customer/cancel-appointment/${apt.appointment_id}" method="POST" onsubmit="return confirm('คุณแน่ใจหรือไม่ที่จะยกเลิกการนัดหมายนี้?');">

@@ -18,18 +18,47 @@ const upload = multer({
 });
 
 const {   User,
-  Employee,
-  Service,
-  EmployeeService,
-  Appointment,
-  Product } = require('../models');
+    Employee,
+    Service,
+    EmployeeService,
+    Appointment,
+    Product,
+    ProductUsage } = require('../models');
+const bcrypt = require('bcrypt');
 
 
 const showManagepayment = async (req, res) => {
-    const appointments = await Appointment.findAll({
+    const rawAppointments = await Appointment.findAll({
         include: [ User, Employee, Service ],
         where: { status: 'in_progress' }
     });
+
+    // Process appointments: parse extras JSON and compute extras total and total amount
+    const appointments = rawAppointments.map(a => {
+        const ao = a.toJSON ? a.toJSON() : a;
+        let extrasArr = [];
+        let extrasTotal = 0;
+        try {
+            extrasArr = ao.extras ? JSON.parse(ao.extras) : [];
+            extrasTotal = extrasArr.reduce((s, it) => s + (Number(it.cost) || 0), 0);
+        } catch (e) {
+            extrasArr = [];
+            extrasTotal = 0;
+        }
+        const servicePrice = Number(ao.Service?.price) || 0;
+        const totalAmount = servicePrice + extrasTotal;
+
+        return {
+            appointment_id: ao.appointment_id,
+            appointment_date: ao.appointment_date,
+            Service: { name: ao.Service?.name || '', price: servicePrice },
+            User: { first_name: ao.User?.first_name || '', last_name: ao.User?.last_name || '' },
+            extrasArr,
+            extrasTotal,
+            totalAmount
+        };
+    });
+
     res.render("admin_manage_payment", { appointments: appointments });
 };
 
@@ -110,6 +139,22 @@ const CreateEmp = async (req, res) => {
     const schedule = req.body.schedule ? req.body.schedule.join(', ') : '';
     
     try {
+        // Basic validation
+        if (!first_name || !last_name || !email || !password) {
+            console.error('Missing required fields for CreateEmp');
+            return res.status(400).send('Missing required fields');
+        }
+
+        // Check existing email
+        const existing = await User.findOne({ where: { email } });
+        if (existing) {
+            console.error('Email already exists for CreateEmp:', email);
+            return res.status(400).send('Email already registered');
+        }
+
+        // Hash password
+        const hashed = await bcrypt.hash(password, 10);
+
         // Create User first
         const newUser = await User.create({
             first_name: first_name,
@@ -117,10 +162,10 @@ const CreateEmp = async (req, res) => {
             nickname: nickname || null,
             phone: phone || null,
             email: email,
-            password: password, // In production, hash this password!
+            password: hashed,
             role: role || 'staff'
         });
-        
+
         // Create Employee record
         await Employee.create({
             user_id: newUser.user_id,
@@ -130,7 +175,7 @@ const CreateEmp = async (req, res) => {
             salary: salary || 0,
             commission_rate: commission_rate || 0
         });
-        
+
         res.redirect("/admin/manage-employee");
     } catch (error) {
         console.error('Error creating employee:', error);
@@ -340,6 +385,9 @@ const showManageCus = async (req, res) => {
             status: apt.status,
             service_name: apt.Service ? apt.Service.name : '',
             price: apt.Service ? apt.Service.price : 0,
+            // parse extras JSON (stored as TEXT) and include for views
+            extras: (function(){ try { return apt.extras ? JSON.parse(apt.extras) : []; } catch(e) { return []; } })(),
+            extrasTotal: (function(){ try { const arr = apt.extras ? JSON.parse(apt.extras) : []; return arr.reduce((s, it) => s + (parseFloat(it.cost)||0), 0); } catch(e) { return 0; } })(),
             employee_name: apt.Employee && apt.Employee.User ? `${apt.Employee.User.first_name} ${apt.Employee.User.last_name}` : ''
         })).sort((a, b) => new Date(b.appointment_date) - new Date(a.appointment_date)) : []
     }));
@@ -347,8 +395,22 @@ const showManageCus = async (req, res) => {
 };
 const CreateCus = async (req, res) => {
     const { first_name, last_name, nickname, email, phone, password } = req.body;
-    await User.create({ first_name, last_name, nickname, email, phone, password, role: 'customer', is_suspended: false });
-    res.redirect("/admin/manage-customer");
+    try {
+        if (!first_name || !last_name || !email || !password) {
+            return res.status(400).send('Missing required fields');
+        }
+        // Check existing
+        const existing = await User.findOne({ where: { email } });
+        if (existing) {
+            return res.status(400).send('Email already registered');
+        }
+        const hashed = await bcrypt.hash(password, 10);
+        await User.create({ first_name, last_name, nickname, email, phone, password: hashed, role: 'customer', is_suspended: false });
+        res.redirect("/admin/manage-customer");
+    } catch (error) {
+        console.error('Error creating customer:', error);
+        res.status(500).send('Error creating customer');
+    }
 };
 
 const EditCus = async (req, res) => {
@@ -500,7 +562,7 @@ const showStat = async (req, res) => {
             },
             include: [Service]
         });
-        const todayTotal = todayRevenue.reduce((sum, apt) => sum + (apt.Service?.price || 0), 0);
+    const todayTotal = todayRevenue.reduce((sum, apt) => sum + (Number(apt.Service?.price) || 0), 0);
         
         // 3. Calculate this month's revenue
         const monthRevenue = await Appointment.findAll({
@@ -513,7 +575,7 @@ const showStat = async (req, res) => {
             },
             include: [Service]
         });
-        const monthTotal = monthRevenue.reduce((sum, apt) => sum + (apt.Service?.price || 0), 0);
+    const monthTotal = monthRevenue.reduce((sum, apt) => sum + (Number(apt.Service?.price) || 0), 0);
         
         // 4. Get products with low stock
         const lowStockProducts = await Product.findAll({
@@ -547,7 +609,19 @@ const showStat = async (req, res) => {
                 include: [Service]
             });
             
-            const dayTotal = dayAppointments.reduce((sum, apt) => sum + (apt.Service?.price || 0), 0);
+                // include extras (if any) in appointment totals
+                const dayTotal = dayAppointments.reduce((sum, apt) => {
+                    const servicePrice = parseFloat(apt.Service?.price) || 0;
+                    let extrasTotal = 0;
+                    try {
+                        const a = apt.toJSON ? apt.toJSON() : apt;
+                        const extrasArr = a.extras ? JSON.parse(a.extras) : [];
+                        extrasTotal = extrasArr.reduce((s, it) => s + (parseFloat(it.cost) || 0), 0);
+                    } catch (e) {
+                        extrasTotal = 0;
+                    }
+                    return sum + servicePrice + extrasTotal;
+                }, 0);
             dailyRevenue.push({
                 date: dayStart.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' }),
                 revenue: dayTotal
@@ -571,7 +645,20 @@ const showStat = async (req, res) => {
                 include: [Service]
             });
             
-            const monthRev = monthAppointments.reduce((sum, apt) => sum + (apt.Service?.price || 0), 0);
+            // include extras in monthly revenue
+            const monthRev = monthAppointments.reduce((sum, apt) => {
+                const servicePrice = parseFloat(apt.Service?.price) || 0;
+                let extrasTotal = 0;
+                try {
+                    const a = apt.toJSON ? apt.toJSON() : apt;
+                    const extrasArr = a.extras ? JSON.parse(a.extras) : [];
+                    extrasTotal = extrasArr.reduce((s, it) => s + (parseFloat(it.cost) || 0), 0);
+                } catch (e) {
+                    extrasTotal = 0;
+                }
+                return sum + servicePrice + extrasTotal;
+            }, 0);
+
             monthlyRevenue.push({
                 month: monthStart.toLocaleDateString('th-TH', { month: 'short' }),
                 revenue: monthRev
@@ -580,7 +667,8 @@ const showStat = async (req, res) => {
         
         // 7. Monthly profit data for last 6 months (revenue, cost estimate, profit)
         const monthlyProfit = [];
-        for (let i = 5; i >= 0; i--) {
+    // compute last 4 months (instead of 6)
+    for (let i = 3; i >= 0; i--) {
             const monthStart = new Date(today.getFullYear(), today.getMonth() - i, 1);
             const monthEnd = new Date(today.getFullYear(), today.getMonth() - i + 1, 1);
             
@@ -595,21 +683,84 @@ const showStat = async (req, res) => {
                 include: [Service]
             });
             
-            const revenue = monthAppointments.reduce((sum, apt) => sum + (apt.Service?.price || 0), 0);
-            const cost = revenue * 0.45; // Estimate 45% cost
-            const profit = revenue * 0.55; // 55% profit margin
-            
+            // Calculate revenue including extras
+            const revenue = monthAppointments.reduce((sum, apt) => {
+                const servicePrice = parseFloat(apt.Service?.price) || 0;
+                let extrasTotal = 0;
+                try {
+                    const a = apt.toJSON ? apt.toJSON() : apt;
+                    const extrasArr = a.extras ? JSON.parse(a.extras) : [];
+                    extrasTotal = extrasArr.reduce((s, it) => s + (parseFloat(it.cost) || 0), 0);
+                } catch (e) {
+                    extrasTotal = 0;
+                }
+                return sum + servicePrice + extrasTotal;
+            }, 0);
+
+            // Calculate actual cost from product usage records for the month
+            const usages = await ProductUsage.findAll({
+                where: {
+                    usage_date: {
+                        [Op.gte]: monthStart,
+                        [Op.lt]: monthEnd
+                    }
+                },
+                include: [Product]
+            });
+            const cost = usages.reduce((s, u) => {
+                const price = parseFloat(u.Product?.price) || 0;
+                const qty = parseInt(u.qty) || 0;
+                return s + (price * qty);
+            }, 0);
+
+            const profit = revenue - cost;
+
             monthlyProfit.push({
-                month: monthStart.toLocaleDateString('th-TH', { month: 'short', year: '2-digit' }),
+                // numeric month for chart label mapping (1-12)
+                month: monthStart.getMonth() + 1,
+                // readable label for tooltips if needed
+                label: monthStart.toLocaleDateString('th-TH', { month: 'short', year: '2-digit' }),
                 revenue: Math.round(revenue),
                 cost: Math.round(cost),
                 profit: Math.round(profit)
             });
         }
         
-        // Calculate net profit (55% of monthly revenue as estimate)
-        const netProfit = Math.round(monthTotal * 0.55);
+        // Calculate net profit for this month using actual product usage cost
+        // (replace previous heuristic 55% margin so summary matches the chart)
+        let netProfit = 0;
+        try {
+            const monthUsages = await ProductUsage.findAll({
+                where: {
+                    usage_date: {
+                        [Op.gte]: startOfMonth,
+                        [Op.lt]: startOfNextMonth
+                    }
+                },
+                include: [Product]
+            });
+            const costThisMonth = monthUsages.reduce((s, u) => {
+                const price = Number(u.Product?.price) || 0;
+                const qty = Number(u.qty) || 0;
+                return s + (price * qty);
+            }, 0);
+            netProfit = Math.round(Number(monthTotal || 0) - costThisMonth);
+        } catch (e) {
+            console.error('Error calculating netProfit from ProductUsage:', e);
+            netProfit = Math.round(Number(monthTotal || 0) * 0.55);
+        }
         
+        console.log('admin_stat data:', {
+            todayTotal: todayTotal,
+            monthTotal: monthTotal,
+            monthTotalType: typeof monthTotal,
+            dailyRevenueLength: dailyRevenue.length,
+            monthlyRevenueLength: monthlyRevenue.length,
+            monthlyProfitLength: monthlyProfit.length,
+            monthlyProfitSample: monthlyProfit,
+            netProfit: netProfit
+        });
+
         res.render("admin_stat", {
             todayCustomers,
             todayRevenue: Math.round(todayTotal),

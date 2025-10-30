@@ -166,11 +166,12 @@ const useProduct = async (req, res) => {
             return res.status(400).send(`Insufficient stock. Available: ${product.stock_qty} ${product.unit}`);
         }
         
-        // Record product usage
+        // Record product usage with timestamp
         await ProductUsage.create({
             employee_id: employeeId,
             product_id: product_id,
-            qty: quantityInt
+            qty: quantityInt,
+            usage_date: new Date()
         });
         
         // Update product stock

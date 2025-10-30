@@ -2,9 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const adminControl = require('../controllers/admin_control');
+const { verifyToken, isAdmin } = require('../middleware/auth');
+
+// Protect all admin routes: require authenticated admin user
+router.use(verifyToken, isAdmin);
 
 // Admin routers
-
 router.get("/manage-payment", adminControl.showManagepayment);
 router.get("/manage-employee", adminControl.showManageEmp);
 router.get("/manage-service", adminControl.showManageService);

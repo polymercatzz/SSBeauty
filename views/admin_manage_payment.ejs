@@ -12,9 +12,14 @@
     <!-- Main Content -->
     <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
         <!-- Page Header -->
-        <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">จัดการชำระเงิน</h1>
-            <p class="text-sm text-gray-600 mt-1">จัดการและตรวจสอบการชำระเงินของลูกค้า</p>
+        <div class="mb-6 flex items-start justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-900">จัดการชำระเงิน</h1>
+                <p class="text-sm text-gray-600 mt-1">จัดการและตรวจสอบการชำระเงินของลูกค้า</p>
+            </div>
+            <div>
+                <button id="refreshBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded">รีเฟรช</button>
+            </div>
         </div>
 
         <!-- Appointments & Receipt Panel -->
@@ -84,28 +89,17 @@
                             </div>
                         </div>
                         
-                        <table class="w-full text-left mb-6 text-base">
-                            <thead class="border-b-2 border-gray-300">
-                                <tr>
-                                    <th class="py-3 font-semibold text-gray-900">รายการ</th>
-                                    <th class="py-3 text-right font-semibold text-gray-900">ราคา (บาท)</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                <tr>
-                                    <td class="py-3 text-gray-700">นวดหน้า</td>
-                                    <td class="py-3 text-right text-gray-900">500</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-3 text-gray-700">ทำเล็บ</td>
-                                    <td class="py-3 text-right text-gray-900">300</td>
-                                </tr>
-                                <tr class="font-semibold border-t-2 border-gray-300">
-                                    <td class="py-3 text-gray-900">รวมทั้งหมด</td>
-                                    <td class="py-3 text-right text-[#A5848F] text-lg">800</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                <table class="w-full text-left mb-6 text-base">
+                                    <thead class="border-b-2 border-gray-300">
+                                        <tr>
+                                            <th class="py-3 font-semibold text-gray-900">รายการ</th>
+                                            <th class="py-3 text-right font-semibold text-gray-900">ราคา (บาท)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200" id="receiptItems">
+                                        <!-- Service and extras will be injected by JS -->
+                                    </tbody>
+                                </table>
                         
                         <div class="text-center mt-6">
                             <p class="text-base text-gray-600">ขอบคุณที่ใช้บริการ</p>
@@ -127,23 +121,26 @@
 
 <script>
     const rightPanel = document.getElementById('rightPanel');
-    const appointmentsData = [
-        <% appointments.forEach((a, index) => { %>
-            {
-                appointmentId: '<%= a.appointment_id %>',
-                date: '<%= new Date(a.appointment_date).toLocaleDateString("th-TH", { day: "2-digit", month: "2-digit", year: "numeric" }) %>',
-                time: '<%= new Date(a.appointment_date).toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) %>',
-                service: '<%= a.Service ? a.Service.name : "" %>',
-                customer: '<%= a.User ? a.User.first_name + " " + a.User.last_name : "" %>',
-                price: '<%= a.Service ? a.Service.price : 0 %>'
-            }<%= index < appointments.length - 1 ? ',' : '' %>
-        <% }) %>
-    ];
+    const appointmentsData = <%- JSON.stringify(appointments || []) %>;
 
     function openReceipt(index) {
         const appointment = appointmentsData[index];
         
         // Update receipt content
+        // build items rows (service + extras)
+        let itemsRows = '';
+        const serviceName = appointment.Service ? appointment.Service.name : appointment.service || '';
+        const servicePrice = Number(appointment.Service ? appointment.Service.price : appointment.price) || 0;
+        itemsRows += `<tr><td class="py-3 text-gray-700">${serviceName}</td><td class="py-3 text-right text-gray-900">${servicePrice}</td></tr>`;
+        if (appointment.extrasArr && appointment.extrasArr.length > 0) {
+            appointment.extrasArr.forEach(ex => {
+                const exName = ex.name || ex.label || 'บริการเสริม';
+                const exCost = Number(ex.cost || ex.price || 0) || 0;
+                itemsRows += `<tr><td class="py-3 text-gray-700">+ ${exName}</td><td class="py-3 text-right text-gray-900">${exCost}</td></tr>`;
+            });
+        }
+        const totalAmount = Number(appointment.totalAmount || servicePrice) || servicePrice;
+
         const receiptHTML = `
             <div class="max-w-2xl mx-auto">
                 <h2 class="text-2xl font-bold text-center text-gray-900 mb-6">ใบเสร็จรับเงิน</h2>
@@ -174,13 +171,10 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-200">
-                        <tr>
-                            <td class="py-3 text-gray-700">${appointment.service}</td>
-                            <td class="py-3 text-right text-gray-900">${appointment.price}</td>
-                        </tr>
+                        ${itemsRows}
                         <tr class="font-semibold border-t-2 border-gray-300">
                             <td class="py-3 text-gray-900">รวมทั้งหมด</td>
-                            <td class="py-3 text-right text-[#A5848F] text-lg">${appointment.price}</td>
+                            <td class="py-3 text-right text-[#A5848F] text-lg">${totalAmount}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -226,6 +220,10 @@
             form.submit();
         }
     }
+
+    // Minimal refresh handler for header button
+    const _refreshBtn = document.getElementById('refreshBtn');
+    if (_refreshBtn) _refreshBtn.addEventListener('click', () => window.location.reload());
 </script>
 </body>
 </html>

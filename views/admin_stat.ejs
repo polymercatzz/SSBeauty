@@ -49,11 +49,11 @@
       </div>
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
         <p class="text-sm font-medium text-gray-600 mb-3">รายได้เดือนนี้</p>
-        <p class="text-2xl font-bold text-[#A5848F]"><%= monthRevenue.toLocaleString() %> บาท</p>
+  <p class="text-2xl font-bold text-[#A5848F]"><%= (Number(monthRevenue) || 0).toLocaleString() %> บาท</p>
       </div>
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
         <p class="text-sm font-medium text-gray-600 mb-3">กำไรสุทธิเดือนนี้</p>
-        <p class="text-2xl font-bold text-[#A5848F]"><%= netProfit.toLocaleString() %> บาท</p>
+  <p class="text-2xl font-bold text-[#A5848F]"><%= (Number(netProfit) || 0).toLocaleString() %> บาท</p>
       </div>
     </div>
 
@@ -72,7 +72,7 @@
     <!-- Bottom Section -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">การวิเคราะห์กำไร (6 เดือนล่าสุด)</h3>
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">การวิเคราะห์กำไร (4 เดือนล่าสุด)</h3>
         <div id="bar-chart2"></div>
       </div>
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -130,9 +130,9 @@
 
   <script>
     // Prepare data from server
-    const dailyRevenue = <%- JSON.stringify(dailyRevenue) %>;
-    const monthlyRevenue = <%- JSON.stringify(monthlyRevenue) %>;
-    const monthlyProfit = <%- JSON.stringify(monthlyProfit) %>;
+  const dailyRevenue = <%- JSON.stringify(typeof dailyRevenue !== 'undefined' ? dailyRevenue : []) %>;
+  const monthlyRevenue = <%- JSON.stringify(typeof monthlyRevenue !== 'undefined' ? monthlyRevenue : []) %>;
+  const monthlyProfit = <%- JSON.stringify(typeof monthlyProfit !== 'undefined' ? monthlyProfit : []) %>;
 
     // Thai month names
     const thaiMonths = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
@@ -142,7 +142,7 @@
       series: [
         {
           name: 'รายได้',
-          data: dailyRevenue.map(d => d.revenue),
+    data: dailyRevenue.map(d => Number(d.revenue) || 0),
         },
       ],
       chart: {
@@ -168,10 +168,8 @@
         show: false,
       },
       xaxis: {
-        categories: dailyRevenue.map(d => {
-          const date = new Date(d.date);
-          return `${date.getDate()}/${date.getMonth() + 1}`;
-        }),
+        // use the already-formatted localized date string from the server
+  categories: dailyRevenue.map(d => d.date || ''),
       },
       yaxis: {
         title: {
@@ -200,7 +198,7 @@
       series: [
         {
           name: 'รายได้',
-          data: monthlyRevenue.map(m => m.revenue),
+    data: monthlyRevenue.map(m => Number(m.revenue) || 0),
         },
       ],
       chart: {
@@ -217,7 +215,8 @@
       stroke: {
         curve: 'smooth',
       },
-      labels: monthlyRevenue.map(m => thaiMonths[m.month - 1]),
+  // use the localized short month string provided by the server
+  labels: monthlyRevenue.map(m => m.month || ''),
 
       markers: {
         size: 0,
@@ -260,21 +259,21 @@
       series: [
         {
           name: 'รายได้ (฿)',
-          data: monthlyProfit.map(m => m.revenue),
+    data: monthlyProfit.map(m => Number(m.revenue) || 0),
         },
         {
           name: 'ต้นทุน (฿)',
-          data: monthlyProfit.map(m => m.cost),
+    data: monthlyProfit.map(m => Number(m.cost) || 0),
         },
         {
           name: 'กำไรสุทธิ (฿)',
-          data: monthlyProfit.map(m => m.profit),
+    data: monthlyProfit.map(m => Number(m.profit) || 0),
         },
       ],
       chart: {
         type: 'bar',
         height: 400,
-        width: 900,
+        // remove fixed width so chart is responsive and doesn't overflow the container
         toolbar: {
           show: false,
         },
@@ -296,7 +295,12 @@
         colors: ['transparent'],
       },
       xaxis: {
-        categories: monthlyProfit.map(m => thaiMonths[m.month - 1]),
+        categories: monthlyProfit.map(m => {
+          // prefer explicit label, otherwise map numeric month to thaiMonths
+          if (m.label) return m.label;
+          if (typeof m.month === 'number') return thaiMonths[m.month - 1] || '';
+          return '';
+        }),
       },
       yaxis: {
         title: {
