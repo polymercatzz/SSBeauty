@@ -1,53 +1,97 @@
 <!DOCTYPE html>
-<html lang="th"></html>
+<html lang="th">
 <head>
   <meta charset="UTF-8">
-  <title>SSBeauty ตารางงาน</title>
+  <title>SSBeauty ตารางงานทั้งหมด</title>
   <script src="https://cdn.tailwindcss.com"></script>
-
 </head>
 <body class="bg-gray-50 min-h-screen m-0">
     <%- include('header_emp') %>
     
     <!-- Main Content -->
     <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-        <!-- Page Header with Filter and Summary -->
+        <!-- Page Header -->
         <div class="mb-6">
-            <h1 class="text-2xl font-bold text-gray-900 mb-1">ตารางงานวันนี้</h1>
-            <p class="text-sm text-gray-600">รายการนัดหมายและรายได้ของวันนี้</p>
+            <h1 class="text-2xl font-bold text-gray-900 mb-1">ตารางงานทั้งหมด</h1>
+            <p class="text-sm text-gray-600">ประวัติการทำงานและรายได้รวม</p>
         </div>
 
-        <!-- Filter and Summary Row -->
-        <div class="flex flex-col lg:flex-row gap-4 mb-6">
-            <!-- Quick Stats Panel -->
-            <div class="flex-1 bg-white shadow-sm rounded-lg border border-gray-200 p-4">
-                <h3 class="text-base font-semibold text-gray-900 mb-3">สรุปงานวันนี้</h3>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-blue-600"><%= appointments.filter(a => a.status === 'booked').length %></div>
-                        <div class="text-xs text-gray-600 mt-1">รอเริ่มงาน</div>
+        <!-- Summary and Filter Row -->
+        <div class="mb-6 space-y-4">
+            <!-- Summary Card -->
+            <div class="bg-white shadow-sm rounded-lg border border-gray-200 p-5">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 mb-2">เงินเดือนพื้นฐาน</p>
+                        <p class="text-2xl font-bold text-gray-900"><%= employee.salary ? parseFloat(employee.salary).toLocaleString('th-TH', { minimumFractionDigits: 2 }) : '0.00' %> บาท</p>
                     </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-orange-600"><%= appointments.filter(a => a.status === 'in_progress').length %></div>
-                        <div class="text-xs text-gray-600 mt-1">กำลังทำ</div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 mb-2">รายได้จากคอมมิชชั่น</p>
+                        <p class="text-2xl font-bold text-[#A5848F]"><%= totalIncome.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %> บาท</p>
+                        <p class="text-xs text-gray-500 mt-1">อัตรา <%= employee.commission_rate ? parseFloat(employee.commission_rate) : 0 %>%</p>
                     </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-green-600"><%= appointments.filter(a => a.status === 'completed').length %></div>
-                        <div class="text-xs text-gray-600 mt-1">เสร็จแล้ว</div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 mb-2">งานทั้งหมด</p>
+                        <p class="text-2xl font-bold text-gray-900"><%= appointments.length %> งาน</p>
                     </div>
-                    <div class="text-center">
-                        <div class="text-2xl font-bold text-[#A5848F]"><%= appointments.length %></div>
-                        <div class="text-xs text-gray-600 mt-1">ทั้งหมด</div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-600 mb-2">งานที่เสร็จสิ้น</p>
+                        <p class="text-2xl font-bold text-green-600"><%= appointments.filter(a => a.status === 'completed').length %> งาน</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Summary Card -->
-            <div class="lg:w-64">
-                <div class="bg-white shadow-sm rounded-lg border border-gray-200 p-5">
-                    <p class="text-sm font-medium text-gray-600 mb-3">รายได้วันนี้</p>
-                    <p class="text-2xl font-bold text-[#A5848F]"><%= totalIncome.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %> บาท</p>
-                    <p class="text-xs text-gray-500 mt-1">จากงานที่เสร็จสิ้น <%= appointments.filter(a => a.status === 'completed').length %> งาน</p>
+            <!-- Filter Panel -->
+            <div class="bg-white shadow-sm rounded-lg border border-gray-200 p-4">
+                <h3 class="text-base font-semibold text-gray-900 mb-3">ค้นหาและกรอง</h3>
+                <div class="flex flex-wrap items-end gap-4">
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">สถานะ</label>
+                        <select id="status-filter" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+                            <option value="all">ทั้งหมด</option>
+                            <option value="booked">จองแล้ว</option>
+                            <option value="in_progress">กำลังดำเนินการ</option>
+                            <option value="completed">เสร็จสิ้น</option>
+                            <option value="canceled">ยกเลิก</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เดือน</label>
+                        <select id="month-filter" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+                            <option value="all">ทั้งหมด</option>
+                            <option value="0">มกราคม</option>
+                            <option value="1">กุมภาพันธ์</option>
+                            <option value="2">มีนาคม</option>
+                            <option value="3">เมษายน</option>
+                            <option value="4">พฤษภาคม</option>
+                            <option value="5">มิถุนายน</option>
+                            <option value="6">กรกฎาคม</option>
+                            <option value="7">สิงหาคม</option>
+                            <option value="8">กันยายน</option>
+                            <option value="9">ตุลาคม</option>
+                            <option value="10">พฤศจิกายน</option>
+                            <option value="11">ธันวาคม</option>
+                        </select>
+                    </div>
+                    <div class="flex-1 min-w-[200px]">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">วัน</label>
+                        <select id="day-filter" class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+                            <option value="all">ทั้งหมด</option>
+                            <option value="0">อาทิตย์</option>
+                            <option value="1">จันทร์</option>
+                            <option value="2">อังคาร</option>
+                            <option value="3">พุธ</option>
+                            <option value="4">พฤหัสบดี</option>
+                            <option value="5">ศุกร์</option>
+                            <option value="6">เสาร์</option>
+                        </select>
+                    </div>
+                    <button onclick="filterSchedule()" class="bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
+                        ค้นหา
+                    </button>
+                    <button onclick="resetFilter()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-colors text-base">
+                        รีเซ็ต
+                    </button>
                 </div>
             </div>
         </div>
@@ -56,7 +100,7 @@
         <div class="space-y-3">
             <% if (appointments.length === 0) { %>
                 <div class="bg-white shadow-sm rounded-lg p-8 border border-gray-200 text-center">
-                    <p class="text-gray-500 text-lg">ไม่มีนัดหมายสำหรับวันนี้</p>
+                    <p class="text-gray-500 text-lg">ไม่มีนัดหมาย</p>
                 </div>
             <% } else { %>
             <% appointments.forEach((appointment, index) => { %>
@@ -84,25 +128,24 @@
                     const dayNames = ['อาทิตย์', 'จันทร์', 'อังคาร', 'พุธ', 'พฤหัสบดี', 'ศุกร์', 'เสาร์'];
                     const dayName = dayNames[dayOfWeek];
                 %>
-                <div class="job bg-white shadow-sm hover:shadow-md transition-shadow rounded-lg p-4 border border-gray-200 cursor-pointer group" 
-                    onclick="openPopup(<%= index %>)">
+                <div class="appointment-card bg-white shadow-sm hover:shadow-md transition-shadow rounded-lg p-4 border border-gray-200" 
+                    data-status="<%= appointment.status %>" 
+                    data-month="<%= date.getMonth() %>" 
+                    data-day="<%= dayOfWeek %>">
                     <div class="space-y-3">
                         <!-- Date and Time -->
-                        <div class="flex items-center gap-3">
-                            <div class="<%= dayColor %> text-white rounded-lg px-3 py-1.5 text-sm font-medium">
-                                <%= dayName %> <%= date.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' }) %>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="<%= dayColor %> text-white rounded-lg px-3 py-1.5 text-sm font-medium">
+                                    <%= dayName %> <%= date.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' }) %>
+                                </div>
+                                <span class="text-gray-700 text-base font-medium"><%= hhmm %> น.</span>
                             </div>
-                            <span class="text-gray-700 text-base font-medium"><%= hhmm %> น.</span>
-                            
-                            <!-- Status Badge/Button -->
-                            <div class="ml-auto" onclick="event.stopPropagation()">
+                            <div>
                                 <% if (appointment.status === 'booked') { %>
-                                    <form method="POST" action="/employee/update-status/<%= appointment.appointment_id %>" style="display: inline;">
-                                        <input type="hidden" name="status" value="in_progress">
-                                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
-                                            เริ่มทำงาน
-                                        </button>
-                                    </form>
+                                    <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-700">
+                                        📅 จองแล้ว
+                                    </span>
                                 <% } else if (appointment.status === 'in_progress') { %>
                                     <span class="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-blue-100 text-blue-800">
                                         🔄 กำลังดำเนินการ
@@ -132,15 +175,25 @@
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base bg-gray-50">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">ผลการให้บริการ</label>
-                                <input type="text" value="<%= appointment.showstatus %>" readonly
-                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base bg-gray-50 <%= appointment.status === 'completed' ? 'text-green-700' : appointment.status === 'canceled' ? 'text-red-700' : 'text-gray-900' %>">
+                                <label class="block text-sm font-medium text-gray-700 mb-1">ราคาบริการ</label>
+                                <input type="text" value="<%= appointment.Service ? parseFloat(appointment.Service.price).toLocaleString('th-TH', { minimumFractionDigits: 2 }) + ' บาท' : '-' %>" readonly
+                                    class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base bg-gray-50">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">รายได้</label>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">รายได้ของคุณ</label>
                                 <input type="text" value="<%= appointment.employeeIncome > 0 ? appointment.employeeIncome.toLocaleString('th-TH', { minimumFractionDigits: 2 }) + ' บาท' : '-' %>" readonly
                                     class="w-full border border-gray-300 rounded-lg px-3 py-2 text-base bg-gray-50 font-medium text-[#A5848F]">
                             </div>
+                        </div>
+                        
+                        <!-- Customer Info Button -->
+                        <div class="flex justify-end">
+                            <button onclick="openPopup(<%= index %>)" class="text-[#A5848F] hover:text-[#8a6f77] text-sm font-medium flex items-center gap-1">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                ดูข้อมูลลูกค้า
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -161,7 +214,7 @@
             <!-- Modal Body -->
             <div class="p-6 space-y-4">
                 <!-- Customer Info -->
-                <div class="bg-gray-50 rounded-lg p-4 space-y-2 text-base" id="customerInfo">
+                <div class="bg-gray-50 rounded-lg p-4 space-y-2 text-base">
                     <div class="flex items-center gap-2">
                         <span class="font-semibold text-gray-900">ชื่อ:</span>
                         <span class="text-gray-700" id="customerName">-</span>
@@ -221,7 +274,6 @@
         </div>
     </div>
 
-    <!-- ทำfilter -->
     <script>
         // Appointment data from server
         const appointmentsData = [
@@ -262,29 +314,65 @@
             document.getElementById("popup").classList.add("hidden");
             document.getElementById("popup").classList.remove("flex");
         }
-        
-        function openPopupprofile(){
-            document.getElementById("popuppro").classList.remove("hidden");
-            document.getElementById("popuppro").classList.add("flex");
-        }
-        
-        function closePopupprofile() {
-            document.getElementById("popuppro").classList.add("hidden");
-        }
-        
-        function previewImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const preview = document.getElementById('preview');
-                    preview.src = e.target.result;
-                    preview.classList.remove('hidden');
+
+        // Filter functionality
+        function filterSchedule() {
+            const selectedStatus = document.getElementById("status-filter").value;
+            const selectedMonth = document.getElementById("month-filter").value;
+            const selectedDay = document.getElementById("day-filter").value;
+            const appointments = document.querySelectorAll(".appointment-card");
+
+            let visibleCount = 0;
+
+            appointments.forEach(appointment => {
+                const appointmentStatus = appointment.dataset.status;
+                const appointmentMonth = appointment.dataset.month;
+                const appointmentDay = appointment.dataset.day;
+
+                const matchStatus = selectedStatus === "all" || appointmentStatus === selectedStatus;
+                const matchMonth = selectedMonth === "all" || appointmentMonth === selectedMonth;
+                const matchDay = selectedDay === "all" || appointmentDay === selectedDay;
+
+                if (matchStatus && matchMonth && matchDay) {
+                    appointment.style.display = "block";
+                    visibleCount++;
+                } else {
+                    appointment.style.display = "none";
                 }
-                reader.readAsDataURL(file);
+            });
+
+            // Show message if no results
+            const noResults = document.getElementById("no-results");
+            if (visibleCount === 0) {
+                if (!noResults) {
+                    const msg = document.createElement('div');
+                    msg.id = "no-results";
+                    msg.className = "bg-white shadow-sm rounded-lg p-8 border border-gray-200 text-center";
+                    msg.innerHTML = '<p class="text-gray-500 text-lg">ไม่พบรายการที่ตรงกับเงื่อนไขการค้นหา</p>';
+                    document.querySelector(".space-y-3").appendChild(msg);
+                }
+            } else {
+                if (noResults) {
+                    noResults.remove();
+                }
             }
         }
 
+        function resetFilter() {
+            document.getElementById("status-filter").value = "all";
+            document.getElementById("month-filter").value = "all";
+            document.getElementById("day-filter").value = "all";
+            
+            const appointments = document.querySelectorAll(".appointment-card");
+            appointments.forEach(appointment => {
+                appointment.style.display = "block";
+            });
+
+            const noResults = document.getElementById("no-results");
+            if (noResults) {
+                noResults.remove();
+            }
+        }
     </script>
 
     <%- include('emp_profile_popup') %>

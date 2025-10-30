@@ -1,0 +1,173 @@
+<!-- Employee Profile Popup (Editable) -->
+<div id="popuppro" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl mx-4 relative max-h-[90vh] overflow-y-auto">
+        <form action="/employee/update-profile" method="POST">
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 rounded-t-lg flex items-center justify-between">
+                <h3 class="text-xl font-semibold text-gray-900">แก้ไขข้อมูลพนักงาน</h3>
+                <button type="button" class="text-gray-400 hover:text-gray-600 text-2xl leading-none" onclick="closePopupprofile()">×</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-6">
+                <!-- Personal Info -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อ *</label>
+                        <input type="text" name="first_name" value="<%= employee.User.first_name %>" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">นามสกุล *</label>
+                        <input type="text" name="last_name" value="<%= employee.User.last_name %>" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">ชื่อเล่น</label>
+                        <input type="text" name="nickname" value="<%= employee.User.nickname || '' %>"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เบอร์โทร *</label>
+                        <input type="tel" name="phone" value="<%= employee.User.phone %>" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                        <input type="email" name="email" value="<%= employee.User.email %>" required
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">หน้าที่</label>
+                        <input type="text" value="<%= employee.position %>" readonly
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base bg-gray-50 text-gray-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">เงินเดือน</label>
+                        <input type="text" value="<%= employee.salary.toLocaleString() %> บาท" readonly
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-base bg-gray-50 text-gray-600">
+                    </div>
+                </div>
+
+                <!-- Services -->
+                <div>
+                    <h4 class="text-base font-semibold text-gray-900 mb-3">บริการที่ให้ *</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <% 
+                        const employeeServiceIds = employee.Services ? employee.Services.map(s => s.service_id) : [];
+                        allServices.forEach(service => { 
+                        %>
+                            <label class="flex items-center text-base text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                                <input type="checkbox" name="service_ids" value="<%= service.service_id %>" disabled
+                                    <%= employeeServiceIds.includes(service.service_id) ? 'checked' : '' %>
+                                    class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                                <%= service.name %>
+                            </label>
+                        <% }); %>
+                    </div>
+                </div>
+
+                <!-- Skills/Expertise -->
+                <div>
+                    <h4 class="text-base font-semibold text-gray-900 mb-3">ความสามารถพิเศษ/ทักษะเฉพาะ</h4>
+                    <p class="text-sm text-gray-600 mb-3">เลือกทักษะที่คุณถนัด (เช่น ตัดผมทรงเฉพาะ, เทคนิคย้อมสี, ฯลฯ)</p>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        <% 
+                        let employeeSkills = [];
+                        try {
+                            employeeSkills = employee.skills ? JSON.parse(employee.skills) : [];
+                        } catch(e) {
+                            employeeSkills = [];
+                        }
+                        %>
+                        <label class="flex items-center text-sm text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                            <input type="checkbox" name="skills" value="ตัดผมสั้น" 
+                                <%= employeeSkills.includes('ตัดผมสั้น') ? 'checked' : '' %>
+                                class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                            ตัดผมสั้นผู้ชาย
+                        </label>
+                        <label class="flex items-center text-sm text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                            <input type="checkbox" name="skills" value="ตัดผมยาว" 
+                                <%= employeeSkills.includes('ตัดผมยาว') ? 'checked' : '' %>
+                                class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                            ตัดผมยาวผู้หญิง
+                        </label>
+                        <label class="flex items-center text-sm text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                            <input type="checkbox" name="skills" value="ย้อมสีแฟชั่น" 
+                                <%= employeeSkills.includes('ย้อมสีแฟชั่น') ? 'checked' : '' %>
+                                class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                            ย้อมสีแฟชั่น/ไฮไลท์
+                        </label>
+                        <label class="flex items-center text-sm text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                            <input type="checkbox" name="skills" value="ดัดลอน" 
+                                <%= employeeSkills.includes('ดัดลอน') ? 'checked' : '' %>
+                                class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                            ดัดลอน/ยืดผม
+                        </label>
+                        <label class="flex items-center text-sm text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                            <input type="checkbox" name="skills" value="นวดไทย" 
+                                <%= employeeSkills.includes('นวดไทย') ? 'checked' : '' %>
+                                class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                            นวดแผนไทย
+                        </label>
+                        <label class="flex items-center text-sm text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                            <input type="checkbox" name="skills" value="นวดอโรมา" 
+                                <%= employeeSkills.includes('นวดอโรมา') ? 'checked' : '' %>
+                                class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                            นวดอโรมาเธอราพี
+                        </label>
+                        <label class="flex items-center text-sm text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                            <input type="checkbox" name="skills" value="ทำเล็บเจล" 
+                                <%= employeeSkills.includes('ทำเล็บเจล') ? 'checked' : '' %>
+                                class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                            ทำเล็บเจล/ต่อเล็บ
+                        </label>
+                        <label class="flex items-center text-sm text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                            <input type="checkbox" name="skills" value="ทำสปาหน้า" 
+                                <%= employeeSkills.includes('ทำสปาหน้า') ? 'checked' : '' %>
+                                class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                            ทรีทเมนท์ผิวหน้า
+                        </label>
+                        <label class="flex items-center text-sm text-gray-700 cursor-pointer hover:text-[#A5848F]">
+                            <input type="checkbox" name="skills" value="แต่งหน้า" 
+                                <%= employeeSkills.includes('แต่งหน้า') ? 'checked' : '' %>
+                                class="mr-2 w-4 h-4 text-[#A5848F] border-gray-300 rounded focus:ring-[#A5848F]">
+                            แต่งหน้า/เมคอัพ
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Introduction -->
+                <div>
+                    <label class="block text-base font-semibold text-gray-900 mb-2">แนะนำตัว</label>
+                    <textarea name="bio"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 h-24 text-base focus:ring-2 focus:ring-[#A5848F] focus:border-transparent resize-none"
+                        placeholder="เขียนแนะนำตัวเอง..."><%= employee.bio || '' %></textarea>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="border-t border-gray-200 px-6 py-4 flex gap-3">
+                <button type="button" onclick="closePopupprofile()"
+                    class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-colors text-base">
+                    ยกเลิก
+                </button>
+                <button type="submit"
+                    class="flex-1 bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
+                    บันทึกการเปลี่ยนแปลง
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openPopupprofile() {
+        document.getElementById("popuppro").classList.remove("hidden");
+        document.getElementById("popuppro").classList.add("flex");
+    }
+    function closePopupprofile() {
+        document.getElementById("popuppro").classList.add("hidden");
+        document.getElementById("popuppro").classList.remove("flex");
+    }
+</script>

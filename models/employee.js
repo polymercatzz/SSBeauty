@@ -7,6 +7,7 @@ module.exports = (sequelize) => {
     user_id: { type: DataTypes.INTEGER, allowNull: false },
     position: { type: DataTypes.STRING(50) },
     bio: { type: DataTypes.TEXT },
+    skills: { type: DataTypes.TEXT },
     schedule: { type: DataTypes.TEXT },
     salary: { type: DataTypes.DECIMAL(10,2) },
     commission_rate: { type: DataTypes.DECIMAL(10,2) },

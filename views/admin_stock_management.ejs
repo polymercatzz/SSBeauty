@@ -31,7 +31,7 @@
                     ค้นหา
                 </button>
                 <button id="add-product-btn" onclick="openCreatePopup()"
-                    class="bg-green-600 hover:bg-green-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base flex items-center gap-2">
+                    class="bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base flex items-center gap-2">
                     <span class="text-xl">+</span>
                     <span>เพิ่มสินค้าใหม่</span>
                 </button>
@@ -58,10 +58,10 @@
                             <span class="inline-flex items-center <%= product.stock_qty < 10 ? 'bg-red-500' : 'bg-[#A5848F]' %> px-2.5 py-1 rounded-lg text-white text-sm font-medium"><%= product.stock_qty %></span>
                         </div>
                         <div class="flex gap-2 mt-3">
-                            <button onclick="openEditPopup(<%= product.product_id %>)" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded text-sm font-medium transition-colors">
+                            <button onclick="openEditPopup(<%= product.product_id %>)" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
                                 แก้ไข
                             </button>
-                            <button onclick="deleteProduct(<%= product.product_id %>, '<%= product.name %>')" class="flex-1 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded text-sm font-medium transition-colors">
+                            <button onclick="deleteProduct(<%= product.product_id %>, '<%= product.name %>')" class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors">
                                 ลบ
                             </button>
                         </div>

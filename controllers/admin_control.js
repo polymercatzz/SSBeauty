@@ -187,28 +187,22 @@ const CreateService = async (req, res) => {
         const { name, type, description, price, duration, employee_ids } = req.body;
         const files = req.files || {};
 
-        console.log('Creating service with files:', files);
-
         // Upload images to S3
         let image1 = null, image2 = null, image3 = null;
         
         if (files.image1 && files.image1[0]) {
-            console.log('Uploading image1...');
             const fileName = `services/${Date.now()}-${files.image1[0].originalname}`;
             image1 = await uploadFile(files.image1[0].buffer, fileName, files.image1[0].mimetype);
         }
         if (files.image2 && files.image2[0]) {
-            console.log('Uploading image2...');
             const fileName = `services/${Date.now()}-${files.image2[0].originalname}`;
             image2 = await uploadFile(files.image2[0].buffer, fileName, files.image2[0].mimetype);
         }
         if (files.image3 && files.image3[0]) {
-            console.log('Uploading image3...');
             const fileName = `services/${Date.now()}-${files.image3[0].originalname}`;
             image3 = await uploadFile(files.image3[0].buffer, fileName, files.image3[0].mimetype);
         }
 
-        console.log('Image keys:', { image1, image2, image3 });
 
         // Create service
         const service = await Service.create({
@@ -222,7 +216,6 @@ const CreateService = async (req, res) => {
             image3
         });
 
-        console.log('Service created:', service.service_id);
 
         // Add employee associations
         if (employee_ids && employee_ids.length > 0) {
@@ -232,7 +225,6 @@ const CreateService = async (req, res) => {
                 employee_id: parseInt(emp_id)
             }));
             await EmployeeService.bulkCreate(associations);
-            console.log('Employee associations created');
         }
 
         res.redirect('/admin/manage-service');
