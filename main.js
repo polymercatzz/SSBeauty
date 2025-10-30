@@ -59,8 +59,8 @@ app.get("/logout", (req, res) => {
 sequelize.sync({ alter: true })
   .then(() => {
     console.log("Database synced");
-    app.listen(PORT, 'localhost', () => {
-      console.log(`Server listening on http://localhost:${PORT}`);
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server listening on http://0.0.0.0:${PORT}`);
     });
   })
   .catch(err => console.error("DB Error:", err));
