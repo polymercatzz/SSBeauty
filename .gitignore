@@ -1,5 +1,29 @@
+# Dependencies
 /node_modules
-.DS_Store
-.env
 
+# Environment variables
+.env
+.env.local
+.env.production
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker
 /dockertest
+docker-compose.override.yml
+
+# Uploads (if stored locally)
+/uploads
+/public/uploads

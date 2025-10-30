@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_ACCESS_KEY=${AWS_ACCESS_KEY}
+      - AWS_SECRET_KEY=${AWS_SECRET_KEY}
+      - S3_BUCKET_NAME=${S3_BUCKET_NAME}
+      - AWS_SESSION_TOKEN=${AWS_SESSION_TOKEN}
+    restart: unless-stopped
+    depends_on:
+      - setup
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  setup:
+    image: alpine:latest
+    command: sh -c "echo 'Environment setup complete'"
+    restart: "no"
