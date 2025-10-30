@@ -313,24 +313,43 @@
     <div class="swiper2 overflow-hidden rounded-2xl max-w-full">
       <ul class="swiper-wrapper">
         <% employees.forEach(employee => { %>
-            <li class="swiper-slide ">
+            <li class="swiper-slide">
               <a href="#" class="select-none block bg-white p-4 rounded-2xl no-underline 
                       border-2 border-transparent shadow-md 
                       hover:border-[#7B9CC8] active:cursor-grabbing">
-                <div class="flex">
+                <div class="flex flex-col md:flex-row gap-3">
                   <img src="https://www.shutterstock.com/image-photo/smiling-small-beauty-salon-owner-600nw-2059364630.jpg"
-                    alt="" class="w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
-                  <div class="font-[inter] text-[#616162]  p-2">
-                    <p class="bg-pink-100 p-2 rounded-xl text-[2vh]">Jane Doe(Hair Stylish)</p>
-                    <p class="text-[1.7vh] p-2">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae et odit
-                      dolorem excepturi qui illo eaquep>
-                    <p class="text-[1.7vh] flex justify-end">rating:4.5⭐️</p>
-
+                    alt="<%= employee.User ? `${employee.User.first_name} ${employee.User.last_name}` : 'Employee' %>" 
+                    class="w-full md:w-[20vh] mb-2 aspect-[4/3] object-cover rounded-xl">
+                  <div class="font-[inter] text-[#616162] flex-1">
+                    <p class="bg-pink-100 p-2 rounded-xl text-[2vh] font-semibold mb-2">
+                      <%= employee.User ? `${employee.User.first_name} ${employee.User.last_name}` : 'Unknown' %>
+                      <% if (employee.User && employee.User.nickname) { %>
+                        (<%= employee.User.nickname %>)
+                      <% } %>
+                    </p>
+                    <p class="text-[1.5vh] bg-blue-50 p-2 rounded-lg mb-2 font-medium">
+                      <%= employee.position || 'Specialist' %>
+                    </p>
+                    <p class="text-[1.6vh] p-2 text-gray-600 line-clamp-3">
+                      <%= employee.bio || 'Experienced professional dedicated to making you look and feel your best.' %>
+                    </p>
                   </div>
                 </div>
               </a>
             </li>
-          <% }); %>
+        <% }); %>
+        <% if (employees.length === 0) { %>
+          <li class="swiper-slide">
+            <div class="text-center p-8 text-gray-500">
+              <p class="text-[2vh]">No employees available at the moment.</p>
+            </div>
+          </li>
+        <% } %>
+      </ul>
+      <div class="swiper-pagination2 items-center justify-center flex my-5"></div>
+    </div>
+  </section>
         <!-- <li class="swiper-slide ">
           <a href="#" class="select-none block bg-white p-4 rounded-2xl no-underline 
                   border-2 border-transparent shadow-md 

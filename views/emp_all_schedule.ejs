@@ -186,6 +186,31 @@
                             </div>
                         </div>
                         
+                        <!-- Extras (บริการเสริม) -->
+                        <% 
+                            let extrasArr = [];
+                            try {
+                                extrasArr = appointment.extras ? JSON.parse(appointment.extras) : [];
+                            } catch (e) {
+                                extrasArr = [];
+                            }
+                            const extrasTotal = extrasArr.reduce((s, ex) => s + (parseFloat(ex.cost) || 0), 0);
+                        %>
+                        <% if (extrasArr.length > 0) { %>
+                        <div class="mt-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">บริการเสริม</label>
+                            <div class="text-sm text-gray-700 space-y-1">
+                                <% extrasArr.forEach(ex => { %>
+                                    <div class="flex items-center justify-between">
+                                        <div><%= ex.name %></div>
+                                        <div class="text-gray-600"><%= parseFloat(ex.cost).toLocaleString('th-TH', { minimumFractionDigits: 2 }) %> บาท</div>
+                                    </div>
+                                <% }) %>
+                                <div class="flex items-center justify-end font-medium text-gray-900 mt-1">ยอดบริการเสริม: <span class="ml-2 text-[#A5848F]"><%= extrasTotal.toLocaleString('th-TH', { minimumFractionDigits: 2 }) %> บาท</span></div>
+                            </div>
+                        </div>
+                        <% } %>
+
                         <!-- Customer Info Button -->
                         <div class="flex justify-end">
                             <button onclick="openPopup(<%= index %>)" class="text-[#A5848F] hover:text-[#8a6f77] text-sm font-medium flex items-center gap-1">
@@ -261,6 +286,16 @@
                                 <span class="text-gray-700 text-base">บาท</span>
                             </div>
                         </div>
+                        <!-- Extras placeholder in popup will be populated by JS -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">บริการเสริม</label>
+                            <div id="extrasList" class="text-sm text-gray-700 min-h-[24px]">-</div>
+                            <div class="flex items-center gap-2 mt-2">
+                                <span class="font-semibold text-gray-900">ยอดบริการเสริม:</span>
+                                <span id="extrasTotal" class="text-[#A5848F]">-</span>
+                                <span class="text-gray-700">บาท</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -286,7 +321,9 @@
                     serviceName: '<%= appointment.Service ? appointment.Service.name : "-" %>',
                     servicePrice: '<%= appointment.Service ? parseFloat(appointment.Service.price).toLocaleString("th-TH", { minimumFractionDigits: 2 }) : "0.00" %>',
                     status: '<%= appointment.showstatus %>',
-                    employeeIncome: '<%= appointment.employeeIncome > 0 ? appointment.employeeIncome.toLocaleString("th-TH", { minimumFractionDigits: 2 }) : "0.00" %>'
+                    employeeIncome: '<%= appointment.employeeIncome > 0 ? appointment.employeeIncome.toLocaleString("th-TH", { minimumFractionDigits: 2 }) : "0.00" %>',
+                    extras: <%- JSON.stringify( appointment.extras ? (typeof appointment.extras === 'string' ? (function(){ try { return JSON.parse(appointment.extras); } catch(e){ return []; } })() : appointment.extras) : [] ) %>,
+                    extrasTotal: <%= (function(){ try{ const arr = appointment.extras ? (typeof appointment.extras === 'string' ? JSON.parse(appointment.extras) : appointment.extras) : []; return arr.reduce((s,a)=> s + (parseFloat(a.cost)||0),0); } catch(e){ return 0; } })() %>
                 }<%= index < appointments.length - 1 ? ',' : '' %>
             <% }); %>
         ];
@@ -305,6 +342,22 @@
             document.getElementById('servicePrice').value = appointment.servicePrice;
             document.getElementById('serviceStatus').value = appointment.status;
             document.getElementById('employeeIncome').value = appointment.employeeIncome;
+            // Populate extras
+            try {
+                const extrasArr = appointment.extras || [];
+                if (extrasArr.length > 0) {
+                    const html = extrasArr.map(e => `${e.name} : ${parseFloat(e.cost).toLocaleString('th-TH', { minimumFractionDigits: 2 })} บาท`).join('<br>');
+                    document.getElementById('extrasList').innerHTML = html;
+                    const total = appointment.extrasTotal || extrasArr.reduce((s, e) => s + (parseFloat(e.cost) || 0), 0);
+                    document.getElementById('extrasTotal').textContent = parseFloat(total).toLocaleString('th-TH', { minimumFractionDigits: 2 });
+                } else {
+                    document.getElementById('extrasList').innerHTML = '-';
+                    document.getElementById('extrasTotal').textContent = '0.00';
+                }
+            } catch (err) {
+                document.getElementById('extrasList').innerHTML = '-';
+                document.getElementById('extrasTotal').textContent = '0.00';
+            }
             
             document.getElementById("popup").classList.remove("hidden");
             document.getElementById("popup").classList.add("flex");

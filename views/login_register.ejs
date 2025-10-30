@@ -214,19 +214,26 @@
 
         <!-- Sign In -->
         <div class="form-container sign-in-container text-[#616162] flex-col">
-            <div class="bg-[#e8d8db] rounded-2xl p-8 shadow-xl  w-full max-w-[500px]">
-                <p class="text-center text-[3vh] font-semibold mb-10">Log - In</p>
-                <div class="text-[2vh]">
-                    <label for="">Email:</label>
-                    <input type="email"
-                        class="font-[inter] w-full p-2 mb-8 mt-3 rounded-lg border border-gray-300 focus:outline-none">
-                    <label for="">Password:</label>
-                    <input type="password"
-                        class="font-[inter] w-full p-2 mb-4 mt-3 rounded-lg border border-gray-300 focus:outline-none">
-                </div>
-                <button
-                    class="bg-[#c49ba3] text-white px-6 py-2 rounded-lg w-fit text-[2vh] mt-6 block mx-auto hover:bg-[#b0858e]">Log
-                    - In</button>
+            <div class="bg-[#e8d8db] rounded-2xl p-8 shadow-xl w-full max-w-[500px]">
+                <p class="text-center text-[3vh] font-semibold mb-8">Log - In</p>
+                <div id="loginError" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm"></div>
+                <form id="loginForm">
+                    <div class="text-[2vh]">
+                        <div class="mb-6">
+                            <label for="loginEmail" class="block mb-2">Email:</label>
+                            <input type="email" id="loginEmail" name="email" required
+                                class="font-[inter] w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c49ba3]">
+                        </div>
+                        <div class="mb-6">
+                            <label for="loginPassword" class="block mb-2">Password:</label>
+                            <input type="password" id="loginPassword" name="password" required
+                                class="font-[inter] w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c49ba3]">
+                        </div>
+                    </div>
+                    <button type="submit"
+                        class="bg-[#c49ba3] text-white px-8 py-2.5 rounded-lg w-fit text-[2vh] mt-4 block mx-auto hover:bg-[#b0858e] transition-colors">Log
+                        - In</button>
+                </form>
             </div>
             <div class="res">
                 <p class="text-[2.4vh] mt-5 text-[#c49ba3]">If your don't have any account?</p>
@@ -238,48 +245,54 @@
 
         <!-- Sign Up -->
         <div class="form-container sign-up-container text-[#616162] flex-col ">
-            <div class="bg-[#e8d8db] rounded-2xl p-6 w-full max-w-[450px] shadow">
-                <h2 class="text-center text-2xl font-semibold mb-8 text-[3vh]">Sign - Up</h2>
-                <div class="text-[2vh] px-[2vh]">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="">Firstname:</label>
-                            <input type="text"
-                                class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
-
+            <div class="bg-[#e8d8db] rounded-2xl p-8 w-full max-w-[550px] shadow-xl">
+                <h2 class="text-center text-2xl font-semibold mb-6 text-[3vh]">Sign - Up</h2>
+                <div id="registerError" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm"></div>
+                <form id="registerForm">
+                    <div class="text-[2vh]">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="firstName" class="block mb-2">Firstname:</label>
+                                <input type="text" id="firstName" name="first_name" required
+                                    class="font-[inter] w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c49ba3]">
+                            </div>
+                            <div>
+                                <label for="lastName" class="block mb-2">Lastname:</label>
+                                <input type="text" id="lastName" name="last_name" required
+                                    class="font-[inter] w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c49ba3]">
+                            </div>
                         </div>
-                        <div>
-                            <label for="">Lastname:</label>
-                            <input type="text"
-                                class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
-
+                        <div class="mb-4">
+                            <label for="nickname" class="block mb-2">Nickname:</label>
+                            <input type="text" id="nickname" name="nickname"
+                                class="font-[inter] w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c49ba3]">
                         </div>
+                        <div class="mb-4">
+                            <label for="registerEmail" class="block mb-2">Email:</label>
+                            <input type="email" id="registerEmail" name="email" required
+                                class="font-[inter] w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c49ba3]">
+                        </div>
+                        <div class="mb-4">
+                            <label for="phone" class="block mb-2">Tel:</label>
+                            <input type="tel" id="phone" name="phone"
+                                class="font-[inter] w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c49ba3]">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="registerPassword" class="block mb-2">Password:</label>
+                                <input type="password" id="registerPassword" name="password" required
+                                    class="font-[inter] w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c49ba3]">
+                            </div>
+                            <div>
+                                <label for="confirmPassword" class="block mb-2">Confirm Password:</label>
+                                <input type="password" id="confirmPassword" name="confirm_password" required
+                                    class="font-[inter] w-full px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:border-[#c49ba3]">
+                            </div>
+                        </div>
+                        <button type="submit"
+                            class="bg-[#c49ba3] text-white px-8 py-2.5 rounded-lg w-fit text-[2vh] mt-4 block mx-auto hover:bg-[#b0858e] transition-colors">Submit</button>
                     </div>
-                    <label for="">Nickname:</label>
-                    <input type="text"
-                        class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
-                    <label for="">Email:</label>
-                    <input type="email"
-                        class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
-                    <label for="">Tel:</label>
-                    <input type="number"
-                        class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="">Password:</label>
-                            <input type="password"
-                                class="font-[inter] w-full p-2 mb-3 mt-2 rounded-lg border border-gray-300 focus:outline-none">
-                        </div>
-                        <div>
-                            <label for="">Confirm Password:</label>
-                            <input type="password"
-                                class="font-[inter] w-full p-2 mb-3  mt-2 rounded-lg border border-gray-300 focus:outline-none">
-                        </div>
-                    </div>
-                    <button
-                        class="bg-[#c49ba3] text-white px-6 py-2 rounded-lg w-fit text-[2vh] mt-6 block mx-auto hover:bg-[#b0858e]">Submit</button>
-
-                </div>
+                </form>
             </div>
 
             <div class="res ">
@@ -295,7 +308,7 @@
         <div class="overlay-container">
             <div class="overlay">
                 <div class="overlay-panel overlay-left">
-                    <img src="salon.png" class="w-[60vh] mb-4">
+                    <img src="/img/salon.png" class="w-[60vh] mb-4">
                     <p class="text-[2vh] mt-5 text-[#c49ba3]">To keep connected please login with your info</p>
                     <button
                         class="mt-5 bg-white text-[#c49ba3] px-6 py-2 rounded-lg border border-[#c49ba3] hover:bg-[#f5f3f2]"
@@ -303,7 +316,7 @@
                 </div>
 
                 <div class="overlay-panel overlay-right">
-                    <img src="salon.png" class="w-[60vh] mb-4">
+                    <img src="/img/salon.png" class="w-[60vh] mb-4">
                     <div class="flex-col justify-center items-center space-x-4">
                         <p class="text-[2vh] mt-5 text-[#c49ba3]">If your don't have any account?</p>
                         <button
@@ -323,8 +336,6 @@
         const container = document.getElementById('container');
         signUpButton.addEventListener('click', () => container.classList.add("active"));
         signInButton.addEventListener('click', () => container.classList.remove("active"));
-
-
 
         function handleMobileFormSwitch() {
             const signIn = document.querySelector('.sign-in-container');
@@ -357,7 +368,84 @@
         window.addEventListener('resize', handleMobileFormSwitch);
         window.addEventListener('DOMContentLoaded', handleMobileFormSwitch);
 
+        // Login Form Handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
 
+            try {
+                const response = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Redirect based on user role
+                    if (data.user.role === 'admin') {
+                        window.location.href = '/admin/home';
+                    } else if (data.user.role === 'staff') {
+                        window.location.href = '/employee/home';
+                    } else {
+                        window.location.href = '/user/home';
+                    }
+                } else {
+                    errorDiv.textContent = data.message;
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorDiv.textContent = 'An error occurred during login. Please try again.';
+                errorDiv.classList.remove('hidden');
+            }
+        });
+
+        // Register Form Handler
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData);
+            const errorDiv = document.getElementById('registerError');
+
+            // Check if passwords match
+            if (data.password !== data.confirm_password) {
+                errorDiv.textContent = 'Passwords do not match!';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            try {
+                const response = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Registration successful, redirect to user home
+                    window.location.href = '/user/home';
+                } else {
+                    errorDiv.textContent = result.message;
+                    errorDiv.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                errorDiv.textContent = 'An error occurred during registration. Please try again.';
+                errorDiv.classList.remove('hidden');
+            }
+        });
     </script>
 
 </body>

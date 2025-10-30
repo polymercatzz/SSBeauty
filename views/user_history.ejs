@@ -76,6 +76,24 @@
     <!-- history -->
    
     <div class="md:pt-[16vh] pt-[13vh] space-y-5 pb-10">
+        <% if (appointments.length === 0) { %>
+            <!-- Empty State -->
+            <div class="max-w-[75%] mx-auto rounded-3xl shadow-lg bg-white/60 backdrop-blur-md p-10 text-center">
+                <svg class="mx-auto h-24 w-24 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <h3 class="text-2xl font-[kanit] text-[#616162] mb-2">ยังไม่มีประวัติการจอง</h3>
+                <p class="text-[#616162] font-[kanit] mb-6">คุณยังไม่มีการจองบริการใดๆ</p>
+                <div class="flex gap-4 justify-center">
+                    <a href="/user/hair" class="bg-gradient-to-r from-[#DBB3C1] to-[#A5848F] text-white font-[kanit] px-6 py-2 rounded-xl hover:scale-105 transition-transform duration-300">
+                        จองบริการทำผม
+                    </a>
+                    <a href="/user/spa" class="bg-gradient-to-r from-[#DBB3C1] to-[#A5848F] text-white font-[kanit] px-6 py-2 rounded-xl hover:scale-105 transition-transform duration-300">
+                        จองบริการสปา
+                    </a>
+                </div>
+            </div>
+        <% } %>
         <% appointments.forEach(appointment => { %>
             <div class="max-w-[75%]  mx-auto rounded-3xl shadow-lg shadow-black-200  
                 bg-white/60 backdrop-blur-md p-5 flex flex-wrap max-[500px]:max-w-[90%]">
@@ -93,8 +111,23 @@
                         </div>
                         <div class="flex items-center gap-2  font-[kanit] text-[#616162] text-[2vh]">
                             <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
-                            <p><%= appointment.Service.price %> บาท</p>
+                                                        <p><%= appointment.Service.price %> บาท</p>
                         </div>
+                                                <% let extrasTotal = 0; %>
+                                                <% if (appointment.extrasObj && appointment.extrasObj.length) { %>
+                                                    <div class="flex items-start gap-2 font-[kanit] text-[#616162] text-[1.9vh]">
+                                                        <div class="w-[2vh]"></div>
+                                                        <div>
+                                                            <p class="font-semibold">บริการเสริม:</p>
+                                                            <ul class="list-disc ml-6">
+                                                                <% appointment.extrasObj.forEach(function(ex) { %>
+                                                                    <% extrasTotal += parseFloat(ex.cost) || 0; %>
+                                                                    <li><%= ex.name %> — <%= ex.cost %> บาท</li>
+                                                                <% }) %>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                <% } %>
                     </div>
                 </a>
 
@@ -133,6 +166,15 @@
                             <div class="flex flex-wrap">
                                 <p>สถานะ:</p>
                             <p><%= appointment.showstatus %></p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 font-[kanit] text-[#616162] text-[2vh]">
+                            <img src="/img/usd-circle.png" alt="" class="w-[2vh]">
+                            <div class="flex flex-col">
+                                <p>ยอดรวม:</p>
+                                <% const svcPrice = parseFloat(appointment.Service.price) || 0; %>
+                                <% const totalAmount = svcPrice + (typeof extrasTotal !== 'undefined' ? extrasTotal : 0); %>
+                                <p class="font-semibold"><%= Number(totalAmount).toFixed(0) %> บาท</p>
                             </div>
                         </div>
                         <% if (appointment.status === 'completed') { %>

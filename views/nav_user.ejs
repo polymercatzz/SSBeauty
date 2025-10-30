@@ -37,14 +37,15 @@
                 History</a>
             </li>
             <li>
-              <a href="/logout"
-                class="p-2 md:hover:bg-white text-[#E5408E] md:rounded-xl bg-pink-100 rounded-xl">Logout</a>
+              <button onclick="confirmUserLogout()"
+                class="p-2 md:hover:bg-white text-[#E5408E] md:rounded-xl bg-pink-100 rounded-xl cursor-pointer">Logout</button>
             </li>
           </ul>
         </div>
         <div class="flex items-center">
-          <a href="">
-            <img src="profile.png" alt="" class="w-[5vh] mr-2">
+          <a href="#" class="relative group" onclick="openProfileModal(); return false;">
+            <img id="userProfileImg" src="/img/profile.png" alt="Profile" class="w-[5vh] mr-2 hover:opacity-80 transition-opacity"
+              onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2240%22 height=%2240%22%3E%3Ccircle fill=%22%23A5848F%22 cx=%2220%22 cy=%2220%22 r=%2220%22/%3E%3Ctext fill=%22white%22 font-family=%22Arial%22 font-size=%2218%22 font-weight=%22bold%22 x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22%3EU%3C/text%3E%3C/svg%3E'">
           </a>
           <ion-icon onclick="menuToggle(this)" name="menu"
             class="text-3xl cursor-pointer md:hidden text-white"></ion-icon>
@@ -53,3 +54,121 @@
     </nav>
   </header>
   <!--  end navbar -->
+
+  <!-- Profile edit modal -->
+  <div id="profileModal" class="fixed inset-0 flex items-center justify-center hidden bg-black/40 z-[9999]">
+    <div class="bg-white rounded-xl p-6 w-[90%] max-w-md relative z-[10000] max-h-[90vh] overflow-auto">
+      <h3 class="text-xl font-bold mb-3">Edit Profile</h3>
+      <form id="profileForm">
+        <div class="mb-2">
+          <label class="block text-sm">First name</label>
+          <input name="first_name" class="w-full border rounded px-2 py-1" />
+        </div>
+        <div class="mb-2">
+          <label class="block text-sm">Last name</label>
+          <input name="last_name" class="w-full border rounded px-2 py-1" />
+        </div>
+        <div class="mb-2">
+          <label class="block text-sm">Nickname</label>
+          <input name="nickname" class="w-full border rounded px-2 py-1" />
+        </div>
+        <div class="mb-2">
+          <label class="block text-sm">Phone</label>
+          <input name="phone" class="w-full border rounded px-2 py-1" />
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm">Profile image</label>
+          <input type="file" name="profile_image" accept="image/*" />
+        </div>
+        <div class="flex justify-end gap-2">
+          <button type="button" onclick="closeProfileModal()" class="px-4 py-2 rounded bg-gray-200">Cancel</button>
+          <button type="submit" class="px-4 py-2 rounded bg-pink-200 text-[#E5408E]">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Fetch current user info and set profile image
+    async function loadCurrentUserProfile() {
+      try {
+        const res = await fetch('/auth/me', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data && data.user) {
+          const img = document.getElementById('userProfileImg');
+          if (data.user.profile_image_url) {
+            img.src = data.user.profile_image_url;
+          } else if (data.user.profile_image) {
+            // fallback to build a public path if applicable
+            img.src = '/img/profile.png';
+          }
+          // Prefill form inputs
+          const form = document.getElementById('profileForm');
+          if (form) {
+            form.first_name.value = data.user.first_name || '';
+            form.last_name.value = data.user.last_name || '';
+            form.nickname.value = data.user.nickname || '';
+            form.phone.value = data.user.phone || '';
+          }
+        }
+      } catch (e) {
+        console.error('Error loading user profile:', e);
+      }
+    }
+
+    function openProfileModal() {
+      document.getElementById('profileModal').classList.remove('hidden');
+    }
+    function closeProfileModal() {
+      document.getElementById('profileModal').classList.add('hidden');
+    }
+
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.currentTarget;
+      const fd = new FormData(form);
+      try {
+        const res = await fetch('/user/profile', {
+          method: 'POST',
+          credentials: 'include',
+          body: fd
+        });
+        const data = await res.json();
+        if (data.success && data.user) {
+          const img = document.getElementById('userProfileImg');
+          if (data.user.profile_image_url) img.src = data.user.profile_image_url;
+          closeProfileModal();
+          alert('Profile updated');
+        } else {
+          alert('Failed to update profile');
+        }
+      } catch (err) {
+        console.error('Profile update error:', err);
+        alert('Server error');
+      }
+    });
+
+    // Keep existing logout confirm function below
+    function confirmUserLogout() {
+      if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
+        fetch('/auth/logout', {
+          method: 'POST',
+          credentials: 'include'
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            window.location.href = '/auth/login';
+          }
+        })
+        .catch(error => {
+          console.error('Logout error:', error);
+          window.location.href = '/auth/login';
+        });
+      }
+    }
+
+    // Load on script run
+    loadCurrentUserProfile();
+  </script>

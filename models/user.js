@@ -7,6 +7,7 @@ module.exports = (sequelize) => {
     first_name: { type: DataTypes.STRING(255), allowNull: false },
     last_name: { type: DataTypes.STRING(255), allowNull: false },
     nickname: { type: DataTypes.STRING(255), allowNull: true },
+    profile_image: { type: DataTypes.STRING(255), allowNull: true },
     password: { type: DataTypes.STRING(255), allowNull: false },
     email: { type: DataTypes.STRING(255), allowNull: false },
     role: { type: DataTypes.ENUM('customer', 'staff', 'admin'), allowNull: false }, // Note: 'staff' in DB refers to 'employee' in code

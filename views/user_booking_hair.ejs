@@ -82,7 +82,7 @@
     <!-- รูปใหญ่ -->
     <div class="md:col-span-2">
       <img
-        src="https://cdn.prod.website-files.com/667a8e3de4fbbd05a23d72ec/674146b8066d5cd240bb2a00_Facial%20Massage.webp"
+        src="<%= service.image1_url || '/img/default_service.jpg' %>"
         alt=""
         class="w-full h-full object-cover rounded-xl">
     </div>
@@ -90,11 +90,11 @@
     <!-- รูปเล็ก 2 รูป -->
     <div class="flex flex-col gap-4">
       <img 
-        src="https://inwfile.com/s-de/pbx3es.jpg"
+        src="<%= service.image2_url || '/img/default_service.jpg' %>"
         alt=""
         class="w-full h-[50%] object-cover rounded-xl">
       <img
-        src="https://plantnery.com/wp-content/uploads/2021/08/%E0%B8%99%E0%B8%A7%E0%B8%94%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B8%AD%E0%B8%A2%E0%B9%88%E0%B8%B2%E0%B8%87%E0%B9%84%E0%B8%A3%E0%B9%83%E0%B8%AB%E0%B9%89-%E0%B8%AB%E0%B8%99%E0%B9%89%E0%B8%B2%E0%B9%80%E0%B8%94%E0%B9%87%E0%B8%81-%E0%B8%A5%E0%B8%94%E0%B8%A3%E0%B8%B4%E0%B9%89%E0%B8%A7%E0%B8%A3%E0%B8%AD%E0%B8%A2-5.jpg"
+        src="<%= service.image3_url || '/img/default_service.jpg' %>"
         alt=""
         class="w-full h-[50%] object-cover rounded-xl">
     </div>
@@ -127,10 +127,17 @@
       </div>
     </div>
 
-    <button id="openModalBtn"
-      class="bg-gradient-to-r from-[#DBB3C1] to-[#A5848F] text-white font-[kanit] text-[3vh] px-10 py-2 rounded-3xl shadow-lg hover:scale-105 transition-transform duration-300 mt-5 w-full">
-      Book Now
-    </button>
+    <% if (service.Employees && service.Employees.length > 0) { %>
+      <button id="openModalBtn"
+        class="bg-gradient-to-r from-[#DBB3C1] to-[#A5848F] text-white font-[kanit] text-[3vh] px-10 py-2 rounded-3xl shadow-lg hover:scale-105 transition-transform duration-300 mt-5 w-full">
+        Book Now
+      </button>
+    <% } else { %>
+      <button disabled
+        class="bg-gray-400 text-white font-[kanit] text-[3vh] px-10 py-2 rounded-3xl shadow-lg cursor-not-allowed mt-5 w-full">
+        ไม่มีช่างให้บริการ
+      </button>
+    <% } %>
   </div>
 </div>
 
@@ -185,20 +192,20 @@
                   <div id="dropdownMenu"
                     class="absolute z-10 w-full mt-1 bg-white border rounded-lg shadow-lg hidden max-h-40 overflow-y-auto">
                     <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
-                      <input type="checkbox" name="extra" value="สครับหน้า" class="w-4 h-4 text-[#A5848F]">
-                      <span>สครับหน้า</span>
+                      <input type="checkbox" name="extra" value="สครับหน้า" data-cost="200" class="w-4 h-4 text-[#A5848F]">
+                      <span>สครับหน้า (200฿)</span>
                     </label>
                     <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
-                      <input type="checkbox" name="extra" value="นวดคอ" class="w-4 h-4 text-[#A5848F]">
-                      <span>นวดคอ</span>
+                      <input type="checkbox" name="extra" value="นวดคอ" data-cost="150" class="w-4 h-4 text-[#A5848F]">
+                      <span>นวดคอ (150฿)</span>
                     </label>
                     <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
-                      <input type="checkbox" name="extra" value="นวดไหล่" class="w-4 h-4 text-[#A5848F]">
-                      <span>นวดไหล่</span>
+                      <input type="checkbox" name="extra" value="นวดไหล่" data-cost="150" class="w-4 h-4 text-[#A5848F]">
+                      <span>นวดไหล่ (150฿)</span>
                     </label>
                     <label class="flex items-center p-2 gap-2 cursor-pointer hover:bg-gray-100">
-                      <input type="checkbox" name="extra" value="นวดเท้า" class="w-4 h-4 text-[#A5848F]">
-                      <span>นวดเท้า</span>
+                      <input type="checkbox" name="extra" value="นวดเท้า" data-cost="180" class="w-4 h-4 text-[#A5848F]">
+                      <span>นวดเท้า (180฿)</span>
                     </label>
                   </div>
                 </div>
@@ -206,18 +213,31 @@
 
               <div>
                 <label class="block font-[kanit] text-gray-700 mb-1">ช่าง:</label>
-                <select id="employeeSelect" name="employee" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none" required>
-                  <option value="">-- เลือก --</option>
-                  <% service.Employees.forEach(employee => { %>
-                    <option value="<%= employee.employee_id %>">ช่าง <%= employee.User.first_name %> <%= employee.User.last_name %></option>
-                  <% }); %>
-                </select>
+                <% if (service.Employees && service.Employees.length > 0) { %>
+                  <select id="employeeSelect" name="employee" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-[#DBB3C1] outline-none" required>
+                    <option value="">-- เลือก --</option>
+                    <% service.Employees.forEach(employee => { %>
+                      <option value="<%= employee.employee_id %>">ช่าง <%= employee.User.first_name %> <%= employee.User.last_name %></option>
+                    <% }); %>
+                  </select>
+                <% } else { %>
+                  <div class="w-full border rounded-lg p-2 bg-gray-100 text-gray-500">
+                    ไม่มีช่างให้บริการในขณะนี้
+                  </div>
+                <% } %>
               </div>
               <!-- ปุ่มยืนยัน -->
-              <button type="submit"
-                class="bg-[#A5848F] text-white font-[kanit] w-fit px-6 py-2 rounded-lg hover:bg-[#8a6f77] transition block mx-auto">
-                ยืนยันการจอง
-              </button>
+              <% if (service.Employees && service.Employees.length > 0) { %>
+                <button type="submit"
+                  class="bg-[#A5848F] text-white font-[kanit] w-fit px-6 py-2 rounded-lg hover:bg-[#8a6f77] transition block mx-auto">
+                  ยืนยันการจอง
+                </button>
+              <% } else { %>
+                <button type="button" disabled
+                  class="bg-gray-400 text-white font-[kanit] w-fit px-6 py-2 rounded-lg cursor-not-allowed block mx-auto">
+                  ไม่สามารถจองได้
+                </button>
+              <% } %>
             </form>
         </div>
     </div>
@@ -226,7 +246,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
-    document.getElementById('bookingForm').addEventListener('submit', function(e) {
+  document.getElementById('bookingForm').addEventListener('submit', function(e) {
               const dateInput = document.getElementById('dateInput');
               const timeInput = document.getElementById('timeInput');
               const employeeSelect = document.getElementById('employeeSelect');
@@ -262,6 +282,22 @@
                 dateInput.focus();
                 e.preventDefault();
                 return;
+              }
+
+              // Collect selected extras (name + cost) and append as hidden input
+              const selectedExtras = Array.from(document.querySelectorAll('#dropdownMenu input[type="checkbox"]:checked'))
+                .map(cb => ({ name: cb.value, cost: parseFloat(cb.dataset.cost) || 0 }));
+
+              // Remove existing hidden extras input if present
+              const existing = document.querySelector('input[name="extras"]');
+              if (existing) existing.remove();
+
+              if (selectedExtras.length > 0) {
+                const hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'extras';
+                hidden.value = JSON.stringify(selectedExtras);
+                this.appendChild(hidden);
               }
             });
   </script>

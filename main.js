@@ -1,10 +1,12 @@
 require('dotenv').config();
 
 const express = require("express");
+const cookieParser = require('cookie-parser');
 
 const userRoutes = require("./routes/userRoute"); // import routes user
 const adminRoutes = require("./routes/adminRoute"); // import routes admin
 const empRoutes = require("./routes/empRoute"); // import routes employee
+const authRoutes = require("./routes/authRoute"); // import routes auth
 
 const { sequelize } = require('./models');  // ดึง instance sequelize
 
@@ -18,6 +20,7 @@ const app = express();
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 // Health check endpoint for ALB
 app.get('/health', (req, res) => {
@@ -34,29 +37,30 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
+app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/admin", adminRoutes);
 app.use("/employee", empRoutes);
 
 // Main route
 app.get("/", (req, res) => {
-    res.send('Home SSbeauty');
+    res.redirect('/auth/login');
 })
 
 app.get("/login", (req, res) => {
-    res.send('login SSbeauty');
+    res.redirect('/auth/login');
 })
 
 app.get("/logout", (req, res) => {
-    res.send('logout SSbeauty');
+    res.redirect('/auth/login');
 })
 
 
 sequelize.sync({ alter: true })
   .then(() => {
     console.log("Database synced");
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server listening on http://0.0.0.0:${PORT}`);
+    app.listen(PORT, 'localhost', () => {
+      console.log(`Server listening on http://localhost:${PORT}`);
     });
   })
   .catch(err => console.error("DB Error:", err));

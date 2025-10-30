@@ -71,7 +71,22 @@
     
     function confirmLogout() {
         if (confirm('คุณต้องการออกจากระบบใช่หรือไม่?')) {
-            window.location.href = '/logout';
+            // Call logout API
+            fetch('/auth/logout', {
+                method: 'POST',
+                credentials: 'include'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/auth/login';
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                // Redirect anyway
+                window.location.href = '/auth/login';
+            });
         }
     }
     

@@ -7,8 +7,22 @@ const {   User,
 
 const { getSignedUrl } = require('../src/services/s3Service');
 
+// Resolve employee id from session/JWT or DB
+async function resolveEmployeeId(req) {
+    if (!req.user) return null;
+    if (req.user.employee_id) return req.user.employee_id;
+    if (req.user.user_id) {
+        const emp = await Employee.findOne({ where: { user_id: req.user.user_id } });
+        return emp ? emp.employee_id : null;
+    }
+    return null;
+}
+
 const showSchedule = async (req, res) => {
-    const employeeId = 1; // แก้ไขให้เป็นsessions
+    const employeeId = await resolveEmployeeId(req);
+    if (!employeeId) {
+        return res.status(404).send('Employee not found for current session');
+    }
     
     // Get employee details with services
     const employee = await Employee.findByPk(employeeId, {
@@ -69,6 +83,13 @@ const showSchedule = async (req, res) => {
         } else {
             appointment.employeeIncome = 0;
         }
+        // Parse extras JSON if present so views can read appointment.extrasObj
+        try {
+            const a = appointment.toJSON ? appointment.toJSON() : appointment;
+            appointment.extrasObj = a.extras ? JSON.parse(a.extras) : null;
+        } catch (e) {
+            appointment.extrasObj = null;
+        }
     });
     
     res.render('emp_work_schedule', { 
@@ -80,7 +101,10 @@ const showSchedule = async (req, res) => {
 };
 
 const showStock = async (req, res) => {
-    const employeeId = 1; // แก้ไขให้เป็นsessions
+    const employeeId = await resolveEmployeeId(req);
+    if (!employeeId) {
+        return res.status(404).send('Employee not found for current session');
+    }
     
     // Get all products
     const products = await Product.findAll({
@@ -118,7 +142,10 @@ const showStock = async (req, res) => {
 
 const useProduct = async (req, res) => {
     try {
-        const employeeId = 1; // แก้ไขให้เป็นsessions
+        const employeeId = await resolveEmployeeId(req);
+        if (!employeeId) {
+            return res.status(404).send('Employee not found for current session');
+        }
         const { product_id } = req.params;
         const { quantity } = req.body;
         const quantityInt = parseInt(quantity);
@@ -158,7 +185,10 @@ const useProduct = async (req, res) => {
 };
 
 const showAllSchedule = async (req, res) => {
-    const employeeId = 1; // แก้ไขให้เป็นsessions
+    const employeeId = await resolveEmployeeId(req);
+    if (!employeeId) {
+        return res.status(404).send('Employee not found for current session');
+    }
     
     // Get employee details with services
     const employee = await Employee.findByPk(employeeId, {
@@ -207,6 +237,13 @@ const showAllSchedule = async (req, res) => {
         } else {
             appointment.employeeIncome = 0;
         }
+        // Parse extras JSON if present so views can read appointment.extrasObj
+        try {
+            const a = appointment.toJSON ? appointment.toJSON() : appointment;
+            appointment.extrasObj = a.extras ? JSON.parse(a.extras) : null;
+        } catch (e) {
+            appointment.extrasObj = null;
+        }
     });
     
     res.render('emp_all_schedule', { 
@@ -239,7 +276,10 @@ const updateAppointmentStatus = async (req, res) => {
 
 const updateProfile = async (req, res) => {
     try {
-        const employeeId = 1; // แก้ไขให้เป็นsessions
+        const employeeId = await resolveEmployeeId(req);
+        if (!employeeId) {
+            return res.status(404).send('Employee not found for current session');
+        }
         const { first_name, last_name, nickname, phone, email, bio, service_ids, skills } = req.body;
         
         // Get employee with user
