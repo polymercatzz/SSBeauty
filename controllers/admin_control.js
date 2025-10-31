@@ -65,7 +65,7 @@ const showManagepayment = async (req, res) => {
 const updatePaymentStatus = async (req, res) => {
     const appointmentId = req.params.appointment_id;
     const { status } = req.body;
-
+    console.log('Updating payment status:', { appointmentId, status });
     await Appointment.update({ status }, { where: { appointment_id: appointmentId } });
     res.redirect("/admin/manage-payment");
 };

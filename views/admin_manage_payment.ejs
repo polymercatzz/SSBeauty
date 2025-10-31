@@ -125,6 +125,10 @@
 
     function openReceipt(index) {
         const appointment = appointmentsData[index];
+        const appointmentDate = new Date(appointment.appointment_date);
+        const dateStr = appointmentDate.toLocaleDateString('th-TH', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const timeStr = appointmentDate.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+        const customerName = appointment.User ? (appointment.User.first_name + ' ' + appointment.User.last_name) : (appointment.customer || '');
         
         // Update receipt content
         // build items rows (service + extras)
@@ -151,15 +155,15 @@
                     </div>
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-700">วันที่:</span>
-                        <span class="text-gray-900">${appointment.date}</span>
+                        <span class="text-gray-900">${dateStr}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-700">เวลา:</span>
-                        <span class="text-gray-900">${appointment.time} น.</span>
+                        <span class="text-gray-900">${timeStr} น.</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="font-medium text-gray-700">ลูกค้า:</span>
-                        <span class="text-gray-900">${appointment.customer}</span>
+                        <span class="text-gray-900">${customerName}</span>
                     </div>
                 </div>
                 
@@ -187,7 +191,7 @@
                     <button onclick="closeReceipt()" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-2.5 rounded-lg font-medium transition-colors text-base">
                         ปิด
                     </button>
-                    <button onclick="confirmPayment('${appointment.appointmentId}')" class="flex-1 bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
+                    <button onclick="confirmPayment('${appointment.appointment_id}')" class="flex-1 bg-[#A5848F] hover:bg-[#8a6f77] text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm text-base">
                         ยืนยันการชำระเงิน
                     </button>
                 </div>
